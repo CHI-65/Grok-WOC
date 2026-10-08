@@ -47,11 +47,19 @@
   html, body { margin: 0; padding: 0; }
   body {
     font-family: Georgia, "Iowan Old Style", Palatino, serif;
-    background: var(--bg);
+    background-color: var(--bg);
+    background-image: linear-gradient(rgba(246,241,232,0.8), rgba(246,241,232,0.8)), url("images/wheel-mark.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     color: var(--ink);
     font-size: 20px;
     line-height: 1.45;
     min-height: 100vh;
+  }
+  html[data-theme="dark"] body {
+    background-image: linear-gradient(rgba(22,19,15,0.8), rgba(22,19,15,0.8)), url("images/wheel-mark.jpg");
   }
   button, input, select {
     font: inherit;
