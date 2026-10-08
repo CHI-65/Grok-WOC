@@ -87,6 +87,15 @@
   }
   .brand { font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; }
   .version { margin: 0; font-size: 22px; font-weight: 700; }
+  .update-banner {
+    border: 3px solid var(--ok);
+    background: var(--card);
+    border-radius: 12px;
+    padding: 12px;
+    margin: 0 0 12px;
+  }
+  .update-banner p { font-size: 22px; font-weight: 700; margin: 0 0 8px; }
+
   .screen-label {
     font-size: 22px; font-weight: 700; margin: 8px 0 4px;
   }
@@ -164,9 +173,14 @@
 </head>
 <body>
 <div class="wrap">
-  <header class="app">
+  <div id="updateBanner" class="update-banner hidden" role="status">
+  <p id="updateText">New version available.</p>
+  <button type="button" id="updateBtn">Load new version</button>
+</div>
+<header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <p class="version" id="versionLabel">Version 1.1</p>
+    <p class="version" id="versionLabel">Version 1.2</p>
+    <button type="button" id="refreshBtn">Refresh</button>
     <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
   <p id="screenMeta" class="screen-label">Screen 1 of 11 · Two-Door Entry</p>
@@ -425,6 +439,39 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 }
 renderIndex();
 render();
+
+const APP_VERSION = "1.2";
+
+async function loadNewest() {
+  if ("serviceWorker" in navigator) {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map((reg) => reg.unregister()));
+  }
+  if (window.caches) {
+    const keys = await caches.keys();
+    await Promise.all(keys.map((key) => caches.delete(key)));
+  }
+  location.reload();
+}
+
+async function checkVersion() {
+  try {
+    const res = await fetch("version.json?ts=" + Date.now(), { cache: "no-store" });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.version && data.version !== APP_VERSION) {
+      const banner = document.getElementById("updateBanner");
+      document.getElementById("updateText").textContent = "New version available. You have " + APP_VERSION + ". Newest is " + data.version + ".";
+      banner.classList.remove("hidden");
+    }
+  } catch (err) {}
+}
+
+document.getElementById("refreshBtn").onclick = loadNewest;
+document.getElementById("updateBtn").onclick = loadNewest;
+checkVersion();
+setInterval(checkVersion, 60000);
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch(() => {});
