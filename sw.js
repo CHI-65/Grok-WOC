@@ -1,10 +1,10 @@
-const CACHE = "woc-scaffolding-v6";
+const CACHE = "woc-scaffolding-v7";
 const FILES = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./icons/icon.svg",
-  "./images/wheel-mark.jpg"
+  "./images/wheel-mark.png"
 ];
 
 self.addEventListener("install", (event) => {
