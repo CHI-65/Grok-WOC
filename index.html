@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#8a3d2a">
+<meta name="description" content="Wheel of Creativity scaffolding. Illumination journey and full-course review.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Wheel">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon.svg">
+<title>Wheel of Creativity — Scaffolding</title>
+<style>
+  :root {
+    --bg: #f6f1e8;
+    --ink: #1c1612;
+    --muted: #4a4038;
+    --card: #fffaf3;
+    --line: #2a211b;
+    --accent: #8a3d2a;
+    --accent-ink: #fff8f4;
+    --focus: #0b5cab;
+    --placeholder: #6b4e1e;
+    --pay: #5c2a4a;
+    --ok: #1e5c3a;
+    --shadow: 0 1px 0 rgba(28,22,18,0.06);
+    color-scheme: light;
+  }
+  html[data-theme="dark"] {
+    --bg: #16130f;
+    --ink: #f6efe6;
+    --muted: #d4c7b8;
+    --card: #241e18;
+    --line: #f0e6da;
+    --accent: #e07a62;
+    --accent-ink: #1c1210;
+    --focus: #ffd36a;
+    --placeholder: #e6c27a;
+    --pay: #f0b4d4;
+    --ok: #8fd9ae;
+    --shadow: none;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, "Iowan Old Style", Palatino, serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 20px;
+    line-height: 1.45;
+    min-height: 100vh;
+  }
+  button, input, select {
+    font: inherit;
+    color: inherit;
+  }
+  button {
+    min-height: 56px;
+    padding: 12px 16px;
+    border: 2px solid var(--line);
+    background: var(--card);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+  }
+  button:hover { outline: 3px solid var(--focus); }
+  button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+  a { color: var(--accent); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 16px 16px 40px; }
+  header.app {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    justify-content: space-between; margin-bottom: 12px;
+  }
+  .brand { font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; }
+  .screen-label {
+    font-size: 22px; font-weight: 700; margin: 8px 0 4px;
+  }
+  .journey {
+    display: inline-block; font-size: 16px; letter-spacing: 0.06em;
+    text-transform: uppercase; border: 2px solid var(--line);
+    padding: 4px 8px; border-radius: 999px;
+  }
+  .journey.paid { border-color: var(--pay); color: var(--pay); }
+  h1 { font-size: 34px; line-height: 1.15; margin: 8px 0 12px; }
+  h2 { font-size: 26px; margin: 0 0 8px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--muted); }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+  .primary {
+    background: var(--accent); color: var(--accent-ink); border-color: var(--accent);
+    font-weight: 700;
+  }
+  .grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  @media (max-width: 420px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .door { min-height: 96px; font-size: 22px; font-weight: 700; }
+  .tag {
+    display: inline-block; font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+    border: 2px dashed var(--placeholder); color: var(--placeholder);
+    padding: 2px 6px; border-radius: 6px; margin-bottom: 6px;
+  }
+  .ph {
+    border: 2px dashed var(--placeholder); border-radius: 12px;
+    padding: 12px; margin: 8px 0; background: transparent;
+  }
+  .cardish {
+    background: var(--card); border: 2px solid var(--line); border-radius: 14px;
+    padding: 12px; box-shadow: var(--shadow);
+  }
+  label { display: block; font-weight: 700; margin: 8px 0 6px; }
+  input[type="email"] {
+    width: 100%; min-height: 56px; padding: 10px 12px;
+    border: 2px solid var(--line); border-radius: 12px; background: var(--card);
+  }
+  .paywall {
+    margin: 18px 0; padding: 14px; border: 3px solid var(--pay); border-radius: 14px;
+    background: var(--card);
+  }
+  .paywall strong { color: var(--pay); }
+  details { margin: 10px 0 16px; }
+  summary {
+    min-height: 56px; display: flex; align-items: center;
+    cursor: pointer; font-weight: 700;
+  }
+  .index { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .wheel {
+    position: relative; width: min(100%, 520px); aspect-ratio: 1;
+    margin: 12px auto 20px;
+  }
+  .wheel-center {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 42%; text-align: center; font-size: 18px; font-weight: 700;
+  }
+  .station-btn {
+    position: absolute; width: 108px; min-height: 56px; font-size: 15px;
+    transform: translate(-50%, -50%); padding: 6px 8px; text-align: center;
+  }
+  .station-btn.here { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .notice {
+    border: 3px solid var(--ok); padding: 12px; border-radius: 12px; font-weight: 700;
+  }
+  footer.tools { margin-top: 22px; border-top: 2px solid var(--line); padding-top: 12px; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="app">
+    <p class="brand">Wheel of Creativity · scaffolding</p>
+    <button type="button" id="themeBtn">Switch to dark mode</button>
+  </header>
+  <p id="screenMeta" class="screen-label">Screen 1 of 11 · Two-Door Entry</p>
+  <p><span id="journey" class="journey">Free · Illumination journey</span></p>
+  <main id="main"></main>
+  <footer class="tools">
+    <div class="row">
+      <button type="button" id="backBtn">Back</button>
+      <button type="button" id="restartBtn">Start over</button>
+    </div>
+    <details>
+      <summary>Jump to screen</summary>
+      <div class="index" id="index"></div>
+    </details>
+  </footer>
+</div>
+<script>
+const STATIONS = [
+  { id: 1, quarter: "Vision", name: "Hunger", challenge: "Uncertainty", phrase: "PLACEHOLDER phrase for Hunger.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." },
+  { id: 2, quarter: "Vision", name: "Appetite", challenge: "Vagueness", phrase: "PLACEHOLDER phrase for Appetite.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." },
+  { id: 3, quarter: "Vision", name: "Anorexia", challenge: "Inertia", phrase: "PLACEHOLDER phrase for Anorexia.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." },
+  { id: 4, quarter: "Exploration", name: "Launch", challenge: "Burnout", phrase: "PLACEHOLDER phrase for Launch.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." },
+  { id: 5, quarter: "Exploration", name: "Isolation", challenge: "Distraction", phrase: "PLACEHOLDER phrase for Isolation.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." },
+  { id: 6, quarter: "Exploration", name: "Crisis", challenge: "Overwhelm", phrase: "PLACEHOLDER phrase for Crisis.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." },
+  { id: 7, quarter: "Incubation", name: "Conception", challenge: "Shock", phrase: "PLACEHOLDER phrase for Conception.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." },
+  { id: 8, quarter: "Incubation", name: "Gestation", challenge: "Doubt", phrase: "PLACEHOLDER phrase for Gestation.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." },
+  { id: 9, quarter: "Incubation", name: "Breakthrough", challenge: "Perfectionism", phrase: "PLACEHOLDER phrase for Breakthrough.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." },
+  { id: 10, quarter: "Cultivation", name: "Nurturing", challenge: "Pressure", phrase: "PLACEHOLDER phrase for Nurturing.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." },
+  { id: 11, quarter: "Cultivation", name: "Pruning", challenge: "Fatigue", phrase: "PLACEHOLDER phrase for Pruning.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." },
+  { id: 12, quarter: "Cultivation", name: "Harvest", challenge: "Resistance", phrase: "PLACEHOLDER phrase for Harvest.", task: "PLACEHOLDER task.", reward: "PLACEHOLDER reward.", direction: "PLACEHOLDER direction." }
+];
+
+const SCREENS = [
+  { n: 1, name: "Two-Door Entry", paid: false },
+  { n: 2, name: "Felt-Word Grid", paid: false },
+  { n: 3, name: "Discovery Draw", paid: false },
+  { n: 4, name: "Recognition", paid: false },
+  { n: 5, name: "Illumination", paid: false },
+  { n: 6, name: "Wheel Map", paid: false },
+  { n: 7, name: "Go Deeper Prompt", paid: false },
+  { n: 8, name: "Email Capture", paid: false },
+  { n: 9, name: "Unlock Offer", paid: true },
+  { n: 10, name: "Purchase / Checkout", paid: true },
+  { n: 11, name: "Welcome / Course Home", paid: true }
+];
+
+const state = {
+  screen: 1,
+  history: [],
+  door: null,
+  pick: null,
+  stationId: 1,
+  emailNote: ""
+};
+
+const main = document.getElementById("main");
+const screenMeta = document.getElementById("screenMeta");
+const journey = document.getElementById("journey");
+const index = document.getElementById("index");
+
+function stationById(id) { return STATIONS.find(s => s.id === id); }
+
+function go(n, push) {
+  if (push !== false && state.screen !== n) state.history.push(state.screen);
+  state.screen = n;
+  render();
+  window.scrollTo(0, 0);
+  const h = document.querySelector("h1");
+  if (h) h.focus();
+}
+
+function back() {
+  if (!state.history.length) return;
+  state.screen = state.history.pop();
+  render();
+}
+
+function restart() {
+  state.screen = 1;
+  state.history = [];
+  state.door = null;
+  state.pick = null;
+  state.stationId = 1;
+  state.emailNote = "";
+  render();
+}
+
+function chooseStation(id, label, via) {
+  state.stationId = id;
+  state.pick = label;
+  state.door = via;
+  go(4);
+}
+
+function renderIndex() {
+  index.innerHTML = "";
+  SCREENS.forEach(s => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = "Screen " + s.n + " · " + s.name + (s.paid ? " (paid)" : " (free)");
+    b.addEventListener("click", () => go(s.n));
+    index.appendChild(b);
+  });
+}
+
+function field(label, text) {
+  return '<div class="ph"><span class="tag">Placeholder</span><p><strong>' + label + '</strong></p><p>' + text + '</p></div>';
+}
+
+function render() {
+  const s = SCREENS[state.screen - 1];
+  const st = stationById(state.stationId);
+  screenMeta.textContent = "Screen " + s.n + " of 11 · " + s.name;
+  journey.textContent = s.paid ? "Paid · Full course" : "Free · Illumination journey";
+  journey.className = s.paid ? "journey paid" : "journey";
+  document.getElementById("backBtn").disabled = state.history.length === 0;
+  let html = "";
+  if (s.n === 9) {
+    html += '<div class="paywall"><strong>Paywall boundary.</strong> Free illumination journey ends here. What follows is the paid full course. This is a review divider, not a real charge.</div>';
+  }
+  if (s.n === 1) {
+    html += '<h1 tabindex="-1">What\'s going on right now?</h1><p class="muted">Two doors. Pick the one that fits. This is scaffolding, not final copy.</p><div class="grid"><button class="door" type="button" id="doorKnow">I know what I feel</button><button class="door" type="button" id="doorOff">I just feel off</button></div>';
+  }
+  if (s.n === 2) {
+    html += '<h1 tabindex="-1">Felt-word grid</h1><p>Tap the feeling that is closest. Each word maps to one station.</p><div class="grid" id="wordGrid"></div>';
+  }
+  if (s.n === 3) {
+    html += '<h1 tabindex="-1">Discovery draw</h1><p>These cards are face down. Tap the one you are pulled toward.</p><span class="tag">Placeholder images</span><div class="grid" id="drawGrid"></div>';
+  }
+  if (s.n === 4) {
+    const said = state.pick || "PLACEHOLDER — no pick yet";
+    html += '<h1 tabindex="-1">Recognition</h1><div class="cardish"><p>You said <strong>' + said + '</strong>.</p><p>That\'s <strong>' + st.name + '</strong>.</p><p class="muted">Station ' + st.id + ' · ' + st.quarter + ' quarter. Challenge: ' + st.challenge + '.</p></div><div class="row"><button class="primary" type="button" id="toIllum">See the illumination</button></div>';
+  }
+  if (s.n === 5) {
+    html += '<h1 tabindex="-1">Illumination</h1><p class="muted">Free for all 12 stations. Copy below is not final.</p>';
+    html += field("Name", st.name);
+    html += field("Phrase", st.phrase);
+    html += field("Task", st.task);
+    html += field("Reward", st.reward);
+    html += field("Direction", st.direction);
+    html += '<div class="row"><button class="primary" type="button" id="toWheel">Open the wheel map</button><button type="button" id="toDeep">Go deeper</button></div>';
+  }
+  if (s.n === 6) {
+    html += '<h1 tabindex="-1">Wheel map</h1><p>You are here: <strong>' + st.name + '</strong>. Tap any station. Illumination stays free.</p><div class="wheel" id="wheel"><div class="wheel-center">You are here<br>Station ' + st.id + '</div></div>';
+  }
+  if (s.n === 7) {
+    html += '<h1 tabindex="-1">Go deeper</h1><p>For <strong>' + st.name + '</strong>, the full course still holds:</p>';
+    html += field("Held back", "A teaching video and a worksheet for this station. They live in the full course, not in this free illumination.");
+    html += '<div class="row"><button class="primary" type="button" id="toEmail">Continue</button></div>';
+  }
+  if (s.n === 8) {
+    html += '<h1 tabindex="-1">Email capture</h1><p>Optional. If you enter an email, this scaffolding would tag it with <strong>' + st.name + '</strong>. Nothing is sent or stored.</p>';
+    html += '<form id="emailForm"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" placeholder="name@example.com"><div class="row"><button class="primary" type="submit">Submit email</button><button type="button" id="skipEmail">Skip</button></div></form>';
+    if (state.emailNote) html += '<p class="notice">' + state.emailNote + '</p><div class="row"><button class="primary" type="button" id="toOffer">Continue to the offer</button></div>';
+  }
+  if (s.n === 9) {
+    html += '<h1 tabindex="-1">Unlock offer</h1><p>One bundle. The full course for all 12 stations.</p>';
+    html += field("Price", "$199 — placeholder price from the asset list, not a real offer.");
+    html += field("Includes", "PLACEHOLDER: video and worksheet for each station, including " + st.name + ".");
+    html += '<div class="row"><button class="primary" type="button" id="toCheckout">Continue to checkout</button></div>';
+  }
+  if (s.n === 10) {
+    html += '<h1 tabindex="-1">Purchase / checkout</h1><p class="notice">Demo — no payment is taken.</p>';
+    html += field("Order", "Wheel of Creativity full course · placeholder $199 · station context: " + st.name + ".");
+    html += '<div class="row"><button class="primary" type="button" id="toHome">Finish demo checkout</button></div>';
+  }
+  if (s.n === 11) {
+    html += '<h1 tabindex="-1">Welcome / course home</h1><p>Library of all 12 stations, marked unlocked for this review. Slots are empty on purpose.</p><div id="library"></div>';
+  }
+  main.innerHTML = html;
+
+  if (s.n === 1) {
+    document.getElementById("doorKnow").onclick = () => { state.door = "know"; go(2); };
+    document.getElementById("doorOff").onclick = () => { state.door = "off"; go(3); };
+  }
+  if (s.n === 2) {
+    const g = document.getElementById("wordGrid");
+    STATIONS.forEach(item => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.innerHTML = '<span class="tag">Placeholder</span><br>' + item.challenge;
+      b.onclick = () => chooseStation(item.id, item.challenge, "know");
+      g.appendChild(b);
+    });
+  }
+  if (s.n === 3) {
+    const g = document.getElementById("drawGrid");
+    STATIONS.forEach(item => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.innerHTML = '<span class="tag">Placeholder</span><br>Face-down card ' + item.id;
+      b.onclick = () => chooseStation(item.id, "Card " + item.id + " (" + item.challenge + ")", "off");
+      g.appendChild(b);
+    });
+  }
+  if (s.n === 4) document.getElementById("toIllum").onclick = () => go(5);
+  if (s.n === 5) {
+    document.getElementById("toWheel").onclick = () => go(6);
+    document.getElementById("toDeep").onclick = () => go(7);
+  }
+  if (s.n === 6) {
+    const wheel = document.getElementById("wheel");
+    STATIONS.forEach((item, i) => {
+      const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "station-btn" + (item.id === state.stationId ? " here" : "");
+      b.style.left = (50 + Math.cos(angle) * 38) + "%";
+      b.style.top = (50 + Math.sin(angle) * 38) + "%";
+      b.textContent = item.id + ". " + (item.name.indexOf("PLACEHOLDER") === 0 ? "Station " + item.id : item.name);
+      b.setAttribute("aria-label", "Station " + item.id + " " + item.name + (item.id === state.stationId ? ", you are here" : ""));
+      b.onclick = () => { state.stationId = item.id; state.pick = state.pick || item.challenge; go(5); };
+      wheel.appendChild(b);
+    });
+  }
+  if (s.n === 7) document.getElementById("toEmail").onclick = () => go(8);
+  if (s.n === 8) {
+    document.getElementById("emailForm").onsubmit = (e) => {
+      e.preventDefault();
+      const v = document.getElementById("email").value.trim();
+      state.emailNote = v
+        ? "Not stored. A real app would tag " + v + " with " + st.name + "."
+        : "No email entered. Nothing stored.";
+      render();
+    };
+    document.getElementById("skipEmail").onclick = () => { state.emailNote = "Skipped. Nothing stored. Tag would have been " + st.name + "."; go(9); };
+    const next = document.getElementById("toOffer");
+    if (next) next.onclick = () => go(9);
+  }
+  if (s.n === 9) document.getElementById("toCheckout").onclick = () => go(10);
+  if (s.n === 10) document.getElementById("toHome").onclick = () => go(11);
+  if (s.n === 11) {
+    const lib = document.getElementById("library");
+    STATIONS.forEach(item => {
+      const d = document.createElement("div");
+      d.className = "cardish";
+      d.style.marginBottom = "10px";
+      d.innerHTML = '<h2>Station ' + item.id + ' · ' + item.name + '</h2><p class="muted">' + item.quarter + ' · ' + item.challenge + ' · unlocked</p>'
+        + field("Video", "PLACEHOLDER video slot")
+        + field("Worksheet", "PLACEHOLDER worksheet slot");
+      lib.appendChild(d);
+    });
+  }
+}
+
+document.getElementById("backBtn").onclick = back;
+document.getElementById("restartBtn").onclick = restart;
+document.getElementById("themeBtn").onclick = () => {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
+  document.getElementById("themeBtn").textContent = dark ? "Switch to dark mode" : "Switch to light mode";
+};
+if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+  document.documentElement.setAttribute("data-theme", "dark");
+  document.getElementById("themeBtn").textContent = "Switch to light mode";
+}
+renderIndex();
+render();
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
