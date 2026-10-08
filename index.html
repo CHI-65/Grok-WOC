@@ -168,6 +168,33 @@
     border: 3px solid var(--ok); padding: 12px; border-radius: 12px; font-weight: 700;
   }
   footer.tools { margin-top: 22px; border-top: 2px solid var(--line); padding-top: 12px; }
+
+  .opt-list { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+  .spread { position: relative; height: 640px; margin: 12px 0 24px; }
+  .pcard, .wcard, .fcard {
+    border: 3px solid var(--ink); background: var(--card); padding: 8px;
+    box-shadow: var(--shadow); cursor: pointer;
+  }
+  .pcard {
+    position: absolute; width: 108px; height: 168px; border-radius: 10px;
+  }
+  .wcard, .fcard {
+    width: 120px; height: 120px; border-radius: 50%; padding: 6px;
+  }
+  .wcard { position: absolute; }
+  .wheel-grid { position: relative; height: 560px; margin: 12px 0 24px; }
+  .float-stage { position: relative; height: 640px; margin: 12px 0 24px; overflow: hidden; }
+  .fcard { position: absolute; }
+  .mark {
+    width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none;
+  }
+  .spinning .mark { animation: wspin 1s linear infinite; }
+  @keyframes wspin { to { transform: rotate(360deg); } }
+  @keyframes zoomIn {
+    from { transform: translate(-50%, -50%) scale(0.5); }
+    to { transform: translate(-50%, -50%) scale(1); }
+  }
+  .fcard { animation: zoomIn 2.4s ease-in-out infinite alternate; }
   .hidden { display: none !important; }
 </style>
 </head>
@@ -179,7 +206,7 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <p class="version" id="versionLabel">Version 1.5</p>
+    <p class="version" id="versionLabel">Version 1.6</p>
     <button type="button" id="refreshBtn">Refresh</button>
     <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
@@ -233,6 +260,8 @@ const state = {
   door: null,
   pick: null,
   stationId: 1,
+  design: null,
+  spinning: false,
   emailNote: ""
 };
 
@@ -253,8 +282,15 @@ function go(n, push) {
 }
 
 function back() {
+  if (state.screen === 3 && state.design) {
+    state.design = null;
+    state.spinning = false;
+    render();
+    return;
+  }
   if (!state.history.length) return;
   state.screen = state.history.pop();
+  state.design = null;
   render();
 }
 
@@ -265,6 +301,8 @@ function restart() {
   state.pick = null;
   state.stationId = 1;
   state.emailNote = "";
+  state.design = null;
+  state.spinning = false;
   render();
 }
 
@@ -307,8 +345,17 @@ function render() {
   if (s.n === 2) {
     html += '<h1 tabindex="-1">Felt-word grid</h1><p>Tap the feeling that is closest. Each word maps to one station.</p><div class="grid" id="wordGrid"></div>';
   }
-  if (s.n === 3) {
-    html += '<h1 tabindex="-1">Discovery draw</h1><p>These cards are face down. Tap the one you are pulled toward.</p><span class="tag">Placeholder images</span><div class="grid" id="drawGrid"></div>';
+  if (s.n === 3 && !state.design) {
+    html += '<h1 tabindex="-1">Choose a discovery design</h1><p>Three ways to draw a card. Each one leads to the same next screen. Back returns to the doors.</p><div class="opt-list"><button class="primary" type="button" id="opt1">Option 1 · Playing cards</button><button class="primary" type="button" id="opt2">Option 2 · Wheel cards</button><button class="primary" type="button" id="opt3">Option 3 · Catch a wheel</button></div>';
+  }
+  if (s.n === 3 && state.design === 1) {
+    html += '<h1 tabindex="-1">Playing cards</h1><p>Tap a card. The wheel spins for five seconds, then the next screen opens.</p><div class="spread" id="drawGrid"></div>';
+  }
+  if (s.n === 3 && state.design === 2) {
+    html += '<h1 tabindex="-1">Wheel cards</h1><p>Tap a wheel. It spins for five seconds, then the next screen opens.</p><div class="wheel-grid" id="drawGrid"></div>';
+  }
+  if (s.n === 3 && state.design === 3) {
+    html += '<h1 tabindex="-1">Catch a wheel</h1><p>Wheels grow and shrink. Tap one to catch it. It spins for five seconds, then the next screen opens.</p><div class="float-stage" id="drawGrid"></div>';
   }
   if (s.n === 4) {
     const said = state.pick || "PLACEHOLDER — no pick yet";
@@ -366,13 +413,50 @@ function render() {
       g.appendChild(b);
     });
   }
-  if (s.n === 3) {
+  if (s.n === 3 && !state.design) {
+    document.getElementById("opt1").onclick = () => { state.design = 1; render(); };
+    document.getElementById("opt2").onclick = () => { state.design = 2; render(); };
+    document.getElementById("opt3").onclick = () => { state.design = 3; render(); };
+  }
+  if (s.n === 3 && state.design) {
     const g = document.getElementById("drawGrid");
-    STATIONS.forEach(item => {
+    STATIONS.forEach((item, i) => {
       const b = document.createElement("button");
       b.type = "button";
-      b.innerHTML = '<span class="tag">Placeholder</span><br>Face-down card ' + item.id;
-      b.onclick = () => chooseStation(item.id, "Card " + item.id + " (" + item.challenge + ")", "off");
+      const img = '<img class="mark" alt="" src="images/wheel-mark.png">';
+      if (state.design === 1) {
+        b.className = "pcard";
+        const col = i % 4;
+        const row = Math.floor(i / 4);
+        b.style.left = (8 + col * 22) + "%";
+        b.style.top = (row * 150 + (col % 2) * 18) + "px";
+        b.style.transform = "rotate(" + ((col - 1.5) * 6) + "deg)";
+        b.innerHTML = img;
+        b.setAttribute("aria-label", "Playing card " + item.id + " " + item.challenge);
+      } else if (state.design === 2) {
+        b.className = "wcard";
+        const col = i % 3;
+        const row = Math.floor(i / 3);
+        b.style.left = (6 + col * 30) + "%";
+        b.style.top = (row * 130) + "px";
+        b.innerHTML = img;
+        b.setAttribute("aria-label", "Wheel card " + item.id + " " + item.challenge);
+      } else {
+        b.className = "fcard";
+        b.style.left = (8 + ((i * 37) % 70)) + "%";
+        b.style.top = (8 + ((i * 53) % 72)) + "%";
+        b.style.animationDelay = (-(i * 0.35)) + "s";
+        b.style.animationDuration = (1.8 + (i % 4) * 0.4) + "s";
+        b.innerHTML = img;
+        b.setAttribute("aria-label", "Catch wheel " + item.id + " " + item.challenge);
+      }
+      b.onclick = () => {
+        if (state.spinning) return;
+        state.spinning = true;
+        b.classList.add("spinning");
+        b.setAttribute("aria-label", "Spinning");
+        setTimeout(() => chooseStation(item.id, "Card " + item.id + " (" + item.challenge + ")", "off"), 5000);
+      };
       g.appendChild(b);
     });
   }
@@ -440,7 +524,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "1.5";
+const APP_VERSION = "1.6";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
