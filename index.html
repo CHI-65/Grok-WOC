@@ -188,6 +188,7 @@
   .mark {
     width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none;
   }
+  .mark { transform-origin: center center; }
   .spinning .mark { animation: wspin 1s linear infinite; }
   @keyframes wspin { to { transform: rotate(360deg); } }
   @keyframes zoomIn {
@@ -206,7 +207,7 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <p class="version" id="versionLabel">Version 1.6</p>
+    <p class="version" id="versionLabel">Version 1.7</p>
     <button type="button" id="refreshBtn">Refresh</button>
     <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
@@ -524,7 +525,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "1.6";
+const APP_VERSION = "1.7";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
