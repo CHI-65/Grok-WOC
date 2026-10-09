@@ -662,7 +662,7 @@ async function loadNewest() {
 
 async function checkVersion() {
   try {
-    const res = await fetch("version.json?ts=" + Date.now(), { cache: "no-store" });
+    const res = await fetch("../../version.json?ts=" + Date.now(), { cache: "no-store" });
     if (!res.ok) return;
     const data = await res.json();
     if (data.version && data.version !== APP_VERSION) {
