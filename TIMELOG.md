@@ -31,3 +31,22 @@ Started at the first recorded action of the next burst. Every later commit and p
 
 ## Total counted
 36 minutes, plus the unestimated 1.5 prompt. Session 2 is still open.
+
+
+## Prompt log
+
+Summaries, not verbatim. Versions 1.5 through 2.1 are summarized from the version commits. This thread is summarized from the prompts. The clock window starts at the 1.5 prompt. Versions 1.0–1.4 were earlier scaffolding and are not in this log.
+
+| When (UTC) | Version | Prompt summary |
+|---|---|---|
+| 2026-10-08 15:50 | 1.5 | Use the approved clean wheel mark, held at 10% strength. |
+| 2026-10-08 23:49 | 1.6 | Add three discovery-card designs behind a chooser. A follow-up fixed the version file so the banner could read 1.6. |
+| 2026-10-08 23:56 | 1.7 | Make the wheel mark perfectly round. |
+| 2026-10-09 00:00 | 1.8 | Round wheel everywhere, borderless wheel cards, floating catch wheels. |
+| 2026-10-09 00:05 | 1.9 | Force a true circle and make the floating wheels tappable. |
+| 2026-10-09 00:13 | 2.0 | Vortex spin inside a still rim, larger catch target. |
+| 2026-10-09 00:13 | 2.1 | Smooth the vortex grow and crossfade. |
+| 2026-10-09 00:17 | 2.2 | Faster spin. Zoom should cover the whole page, then fade into the next page while still growing. |
+| 2026-10-09 00:23 | 2.3 | Zoom size is right, but the circle turns into an oblong oval at the start. Keep it a circle. |
+| 2026-10-09 00:26 | — | Track time for client review. Stop after 10 minutes idle, resume on a related prompt, retroactive from the 1.5 prompt. |
+| 2026-10-09 00:28 | — | Also keep a summarized prompt log with version numbers. |
