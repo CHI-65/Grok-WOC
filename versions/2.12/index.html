@@ -48,7 +48,7 @@
   body {
     font-family: Georgia, "Iowan Old Style", Palatino, serif;
     background-color: var(--bg);
-    background-image: linear-gradient(rgba(246,241,232,0.42), rgba(246,241,232,0.42)), url("images/wheel-mark.png");
+    background-image: linear-gradient(rgba(246,241,232,0.9), rgba(246,241,232,0.9)), url("images/wheel-mark.png");
     background-size: contain;
     background-position: center;
     background-attachment: fixed;
@@ -59,7 +59,7 @@
     min-height: 100vh;
   }
   html[data-theme="dark"] body {
-    background-image: linear-gradient(rgba(22,19,15,0.45), rgba(22,19,15,0.45)), url("images/wheel-mark.png");
+    background-image: linear-gradient(rgba(22,19,15,0.9), rgba(22,19,15,0.9)), url("images/wheel-mark.png");
   }
   button, input, select {
     font: inherit;
@@ -68,18 +68,11 @@
   button {
     min-height: 56px;
     padding: 12px 16px;
-    border: 3px solid transparent;
+    border: 2px solid var(--line);
+    background: var(--card);
     border-radius: 12px;
-    background:
-      linear-gradient(rgba(255,250,243,0.5), rgba(255,250,243,0.5)) padding-box,
-      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
     cursor: pointer;
     text-align: left;
-  }
-  html[data-theme="dark"] button {
-    background:
-      linear-gradient(rgba(36,30,24,0.48), rgba(36,30,24,0.48)) padding-box,
-      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
   }
   button:hover { outline: 3px solid var(--focus); }
   button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible {
@@ -144,20 +137,14 @@
     border: 2px dashed var(--placeholder); border-radius: 12px;
     padding: 12px; margin: 8px 0; background: transparent;
   }
-  .cardish, .ph, .paywall, .update-banner, details {
-    background: rgba(255,250,243,0.58);
-  }
-  html[data-theme="dark"] .cardish, html[data-theme="dark"] .ph, html[data-theme="dark"] .paywall, html[data-theme="dark"] .update-banner {
-    background: rgba(36,30,24,0.5);
-  }
   .cardish {
-    border: 2px solid var(--line); border-radius: 14px;
-    padding: 12px; box-shadow: none;
+    background: var(--card); border: 2px solid var(--line); border-radius: 14px;
+    padding: 12px; box-shadow: var(--shadow);
   }
   label { display: block; font-weight: 700; margin: 8px 0 6px; }
   input[type="email"] {
     width: 100%; min-height: 56px; padding: 10px 12px;
-    border: 2px solid var(--line); border-radius: 12px; background: rgba(255,250,243,0.55);
+    border: 2px solid var(--line); border-radius: 12px; background: var(--card);
   }
   .paywall {
     margin: 18px 0; padding: 14px; border: 3px solid var(--pay); border-radius: 14px;
@@ -255,26 +242,6 @@
   body.page-in .wrap { opacity: 0; }
   body.page-in.show-page .wrap { animation: pageIn 3s linear forwards; }
   @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
-
-  .station-line { display: flex; align-items: center; gap: 10px; }
-  .mini-wheel {
-    width: 52px; height: 52px; min-height: 52px; padding: 2px; border-radius: 50%;
-    flex: none;
-  }
-  .mini-wheel img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
-  .map-page {
-    position: fixed; inset: 0; z-index: 60;
-    display: flex; align-items: center; justify-content: center;
-    padding: 8px 8px 108px;
-    background: rgba(246,241,232,0.35);
-  }
-  .map-stage { position: relative; width: min(100%, calc((100vh - 116px) * 1.285)); max-height: calc(100vh - 116px); }
-  .map-stage img.map { width: 100%; height: auto; display: block; }
-  .map-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .map-stage path { fill: transparent; stroke: transparent; cursor: pointer; }
-  .map-stage path.lit { fill: var(--lit); stroke: #1c1612; stroke-width: 1.5; }
-  .map-back { position: absolute; top: 10px; left: 10px; z-index: 2; }
-
   .hidden { display: none !important; }
 </style>
 </head>
@@ -295,7 +262,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.13</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.12</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -359,9 +326,7 @@ const state = {
   stationId: 1,
   design: null,
   spinning: false,
-  emailNote: "",
-  mapOpen: false,
-  mapLit: 0
+  emailNote: ""
 };
 
 const main = document.getElementById("main");
@@ -381,48 +346,6 @@ function go(n, push) {
 }
 
 
-
-
-function drawMap() {
-  const old = document.getElementById("mapPage");
-  if (old) old.remove();
-  if (!state.mapOpen) return;
-  const colors = { Vision: "#e2b000", Exploration: "#d4145a", Incubation: "#2b6fd6", Cultivation: "#2f9e38" };
-  const page = document.createElement("div");
-  page.id = "mapPage";
-  page.className = "map-page";
-  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><svg viewBox="0 0 900 700"></svg></div>';
-  const svg = page.querySelector("svg");
-  STATIONS.forEach((item, i) => {
-    const cx = 450, cy = 348, r0 = 58, r1 = 214;
-    const a0 = (75 + i * 30) * Math.PI / 180;
-    const a1 = a0 + 30 * Math.PI / 180;
-    const pt = (a, r) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
-    const [x0, y0] = pt(a0, r1);
-    const [x1, y1] = pt(a1, r1);
-    const [x2, y2] = pt(a1, r0);
-    const [x3, y3] = pt(a0, r0);
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", "M " + x0 + " " + y0 + " A " + r1 + " " + r1 + " 0 0 1 " + x1 + " " + y1 + " L " + x2 + " " + y2 + " A " + r0 + " " + r0 + " 0 0 0 " + x3 + " " + y3 + " Z");
-    path.style.setProperty("--lit", colors[item.quarter] || "#e2b000");
-    if (state.mapLit === item.id) path.classList.add("lit");
-    path.setAttribute("aria-label", item.name);
-    path.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      if (state.mapLit !== item.id) {
-        state.mapLit = item.id;
-        render();
-        return;
-      }
-      state.mapOpen = false;
-      state.mapLit = 0;
-      playVortex(() => chooseStation(item.id, item.name, "map"));
-    });
-    svg.appendChild(path);
-  });
-  document.body.appendChild(page);
-  document.getElementById("closeMap").onclick = () => { state.mapOpen = false; state.mapLit = 0; render(); };
-}
 
 function playVortex(done) {
   const layer = document.createElement("div");
@@ -564,7 +487,7 @@ function render() {
   }
   if (s.n === 4) {
     const said = state.pick || "PLACEHOLDER — no pick yet";
-    html += '<h1 tabindex="-1">Recognition</h1><div class="cardish"><p>You said <strong>' + said + '</strong>.</p><p class="station-line">That\'s <strong>' + st.name + '</strong> <button type="button" class="mini-wheel" id="openMap" aria-label="Open the printed wheel"><img alt="" src="images/printed-wheel.png"></button></p><p class="muted">Station ' + st.id + ' · ' + st.quarter + ' quarter. Challenge: ' + st.challenge + '.</p></div><div class="row"><button class="primary" type="button" id="toIllum">See the illumination</button></div>';
+    html += '<h1 tabindex="-1">Recognition</h1><div class="cardish"><p>You said <strong>' + said + '</strong>.</p><p>That\'s <strong>' + st.name + '</strong>.</p><p class="muted">Station ' + st.id + ' · ' + st.quarter + ' quarter. Challenge: ' + st.challenge + '.</p></div><div class="row"><button class="primary" type="button" id="toIllum">See the illumination</button></div>';
   }
   if (s.n === 5) {
     html += '<h1 tabindex="-1">Illumination</h1><p class="muted">Free for all 12 stations. Copy below is not final.</p>';
@@ -670,11 +593,7 @@ function render() {
     });
     if (state.design === 3) startFloat(g);
   }
-  if (s.n === 4) {
-    document.getElementById("toIllum").onclick = () => go(5);
-    document.getElementById("openMap").onclick = () => { state.mapOpen = true; state.mapLit = 0; render(); };
-  }
-  drawMap();
+  if (s.n === 4) document.getElementById("toIllum").onclick = () => go(5);
   if (s.n === 5) {
     document.getElementById("toWheel").onclick = () => go(6);
     document.getElementById("toDeep").onclick = () => go(7);
@@ -735,7 +654,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.13";
+const APP_VERSION = "2.12";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
