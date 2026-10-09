@@ -266,11 +266,12 @@
   }
   .ver-banner a, .ver-banner button { color: #ffd36a; font-weight: 700; font-size: 22px; background: transparent; border: 0; padding: 0; min-height: 0; text-align: left; }
   .ver-update.hidden { display: none; }
-  .ver-update { animation: verFlash 0.8s steps(2, start) infinite; }
-  @keyframes verFlash { to { visibility: hidden; } }
+  .ver-update { display: block; width: 100%; margin-top: 6px; color: #1c1612; background: #ffd36a; border-radius: 10px; padding: 10px 12px; text-align: center; animation: verFlash 1s linear infinite; }
+  @keyframes verFlash { 50% { opacity: 0.35; } }
+  .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.9</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.10</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -645,7 +646,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.9";
+const APP_VERSION = "2.10";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
@@ -676,7 +677,7 @@ document.getElementById("refreshBtn").onclick = loadNewest;
 document.getElementById("updateBtn").onclick = loadNewest;
 document.getElementById("verUpdate").onclick = loadNewest;
 checkVersion();
-setInterval(checkVersion, 60000);
+setInterval(checkVersion, 15000);
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

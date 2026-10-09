@@ -266,8 +266,9 @@
   }
   .ver-banner a, .ver-banner button { color: #ffd36a; font-weight: 700; font-size: 22px; background: transparent; border: 0; padding: 0; min-height: 0; text-align: left; }
   .ver-update.hidden { display: none; }
-  .ver-update { animation: verFlash 0.8s steps(2, start) infinite; }
-  @keyframes verFlash { to { visibility: hidden; } }
+  .ver-update { display: block; width: 100%; margin-top: 6px; color: #1c1612; background: #ffd36a; border-radius: 10px; padding: 10px 12px; text-align: center; animation: verFlash 1s linear infinite; }
+  @keyframes verFlash { 50% { opacity: 0.35; } }
+  .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
 <div class="ver-banner" role="status"><span id="verLabel">You are on version 2.8</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
@@ -664,12 +665,12 @@ async function loadNewest() {
 
 async function checkVersion() {
   try {
-    const res = await fetch("version.json?ts=" + Date.now(), { cache: "no-store" });
+    const res = await fetch("../../version.json?ts=" + Date.now(), { cache: "no-store" });
     if (!res.ok) return;
     const data = await res.json();
     if (data.version && data.version !== APP_VERSION) {
       const flash = document.getElementById("verUpdate");
-      flash.textContent = "New version " + data.version + " — tap to load";
+      flash.textContent = "New version " + data.version + " is available — tap to open it";
       flash.classList.remove("hidden");
     }
   } catch (err) {}
