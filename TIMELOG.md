@@ -119,3 +119,5 @@ Opened by the prompt to remove the line under Catch a wheel, raise the animation
 | 2026-10-09 05:24 | 2.49 | Remove the text under Catch a wheel. Raise the animation so it stays just below that title. Keep the wheels spaced apart, still moving and zooming. |
 
 | 2026-10-09 05:34 | 2.50 | The door page screenshot is the default layout: centered wheel behind the two choices. |
+
+| 2026-10-09 05:37 | 2.51 | Card result says you chose card. Station cards move as one box in adjust mode; text stays locked inside. |
