@@ -176,7 +176,7 @@
     box-shadow: var(--shadow); cursor: pointer;
   }
   .wcard, .fcard {
-    border: 0; background: transparent; padding: 0; box-shadow: none; cursor: pointer;
+    border: 0; background: rgba(0,0,0,0.02); padding: 0; box-shadow: none; cursor: pointer; touch-action: manipulation;
   }
   .pcard {
     position: absolute; width: 108px; height: 168px; border-radius: 10px;
@@ -189,7 +189,7 @@
   .float-stage { position: relative; height: 640px; margin: 12px 0 24px; overflow: hidden; }
   .fcard { position: absolute; width: 120px; height: 120px; }
   .mark {
-    width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none;
+    width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: auto;
     transform-origin: center center;
   }
   .spinning .mark { animation: wspin 1s linear infinite; }
@@ -210,7 +210,7 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <p class="version" id="versionLabel">Version 1.8</p>
+    <p class="version" id="versionLabel">Version 1.9</p>
     <button type="button" id="refreshBtn">Refresh</button>
     <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
@@ -297,7 +297,7 @@ function startFloat(stage) {
       let y = parseFloat(card.dataset.y);
       let vx = parseFloat(card.dataset.vx);
       let vy = parseFloat(card.dataset.vy);
-      x += vx; y += vy;
+      x += vx * 0.45; y += vy * 0.45;
       if (x < 0 || x > 78) { vx *= -1; x = Math.max(0, Math.min(78, x)); }
       if (y < 0 || y > 78) { vy *= -1; y = Math.max(0, Math.min(78, y)); }
       card.dataset.x = x; card.dataset.y = y; card.dataset.vx = vx; card.dataset.vy = vy;
@@ -480,13 +480,16 @@ function render() {
         b.querySelector(".mark").style.animationDelay = (-(i * 0.35)) + "s";
         b.setAttribute("aria-label", "Catch wheel " + item.id + " " + item.challenge);
       }
-      b.onclick = () => {
+      const spinIt = (e) => {
+        if (e) e.preventDefault();
         if (state.spinning) return;
         state.spinning = true;
         b.classList.add("spinning");
         b.setAttribute("aria-label", "Spinning");
         setTimeout(() => chooseStation(item.id, "Card " + item.id + " (" + item.challenge + ")", "off"), 5000);
       };
+      b.onclick = spinIt;
+      b.ontouchstart = spinIt;
       g.appendChild(b);
     });
     if (state.design === 3) startFloat(g);
@@ -555,7 +558,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "1.8";
+const APP_VERSION = "1.9";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
