@@ -366,7 +366,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 150px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.37</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.38</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -450,6 +450,7 @@ const index = document.getElementById("index");
 function stationById(id) { return STATIONS.find(s => s.id === id); }
 
 function go(n, push) {
+  leaveAdjust();
   if (push !== false && state.screen !== n) state.history.push(state.screen);
   state.screen = n;
   render();
@@ -911,10 +912,25 @@ function applyLayer(name) {
 }
 const origSet = setBackground;
 setBackground = function(name) { origSet(name); applyLayer(name); };
+function leaveAdjust() {
+  document.documentElement.setAttribute("data-adjust", "0");
+  document.documentElement.setAttribute("data-hide", "0");
+  const hide = document.getElementById("hideBtn");
+  if (hide) hide.textContent = "Hide text";
+}
 document.getElementById("pencilBtn").onclick = () => {
   const on = document.documentElement.getAttribute("data-adjust") === "1";
-  document.documentElement.setAttribute("data-adjust", on ? "0" : "1");
+  if (on) leaveAdjust();
+  else document.documentElement.setAttribute("data-adjust", "1");
 };
+document.addEventListener("click", (e) => {
+  if (document.documentElement.getAttribute("data-adjust") !== "1") return;
+  if (e.target.closest(".ver-banner, .settings")) return;
+  if (e.target.closest("button, summary, a")) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}, true);
 const guide = document.getElementById("centerGuide");
 const tag = document.getElementById("centerTag");
 let move = null;
@@ -1034,7 +1050,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.37";
+const APP_VERSION = "2.38";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
