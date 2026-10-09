@@ -73,7 +73,14 @@
     position: fixed; inset: 0; pointer-events: none; z-index: 0; display: none;
   }
   html[data-bg="scatter"] #scatter { display: block; }
-  #scatter img { position: absolute; opacity: 0.2; }
+  #scatter img { position: absolute; opacity: 0.2; touch-action: none; }
+  #bgLayer { position: fixed; left: 50%; top: 50%; width: 70vmin; transform: translate(-50%, -50%); opacity: 0.2; pointer-events: none; z-index: 0; display: none; touch-action: none; }
+  html[data-bg="mark"] #bgLayer, html[data-bg="fill"] #bgLayer { display: block; }
+  html[data-bg="mark"] body::before, html[data-bg="fill"] body::before { opacity: 0; }
+  html[data-adjust="1"] #scatter, html[data-adjust="1"] #bgLayer { pointer-events: auto; }
+  html[data-adjust="1"] #scatter img.sel { outline: 2px solid #e2b000; }
+  .design-bar { position: fixed; top: 8px; left: 50%; transform: translateX(-50%); z-index: 40; display: flex; gap: 8px; }
+  .design-bar button { min-height: 40px; padding: 8px 12px; }
   .wrap, .ver-banner, .map-page { position: relative; z-index: 1; }
   button, input, select {
     font: inherit;
@@ -343,7 +350,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.25</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.26</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -363,6 +370,8 @@
     <button type="button" class="menu-item" data-bg="fill" role="menuitem">Wheel colors</button>
   </div>
   <div id="scatter" aria-hidden="true"></div>
+  <img id="bgLayer" alt="" src="images/wheel-mark.png">
+  <div class="design-bar"><button type="button" id="adjustBtn">Adjust</button><button type="button" id="saveBtn">Save</button></div>
   <p><span id="journey" class="journey">Free · Illumination journey</span></p>
   <main id="main"></main>
   <footer class="tools">
@@ -836,32 +845,127 @@ function setBackground(name) {
 }
 settings.querySelectorAll("[data-bg]").forEach(btn => btn.onclick = () => setBackground(btn.dataset.bg));
 const scatter = document.getElementById("scatter");
-const placed = [];
-for (let n = 0; n < 10; n++) {
-  const size = 36 + Math.round(Math.random() * 56);
-  let left = 8, top = 8, ok = false;
-  for (let tryN = 0; tryN < 40 && !ok; tryN++) {
-    left = 4 + Math.random() * 78;
-    top = 4 + Math.random() * 78;
-    ok = placed.every(p => Math.hypot(left - p.left, top - p.top) > 18);
-  }
-  if (!ok) continue;
-  placed.push({ left, top });
-  const img = document.createElement("img");
-  img.src = "images/wheel-mark.png";
-  img.alt = "";
-  img.style.width = size + "px";
-  img.style.left = left + "%";
-  img.style.top = top + "%";
-  img.style.transform = "rotate(" + Math.round(Math.random() * 360) + "deg)";
-  scatter.appendChild(img);
+const bgLayer = document.getElementById("bgLayer");
+function saved(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch (e) { return fallback; }
 }
+const scatterSaved = saved("woc-layout-scatter", null);
+if (scatterSaved) {
+  scatterSaved.forEach(item => {
+    const img = document.createElement("img");
+    img.src = "images/wheel-mark.png";
+    img.alt = "";
+    img.style.width = item.size + "px";
+    img.style.left = item.left + "%";
+    img.style.top = item.top + "%";
+    img.style.transform = "rotate(" + item.rot + "deg)";
+    scatter.appendChild(img);
+  });
+} else {
+  const placed = [];
+  for (let n = 0; n < 10; n++) {
+    const size = 36 + Math.round(Math.random() * 56);
+    let left = 8, top = 8, ok = false;
+    for (let tryN = 0; tryN < 40 && !ok; tryN++) {
+      left = 4 + Math.random() * 78;
+      top = 4 + Math.random() * 78;
+      ok = placed.every(p => Math.hypot(left - p.left, top - p.top) > 18);
+    }
+    if (!ok) continue;
+    placed.push({ left, top });
+    const img = document.createElement("img");
+    img.src = "images/wheel-mark.png";
+    img.alt = "";
+    img.style.width = size + "px";
+    img.style.left = left + "%";
+    img.style.top = top + "%";
+    img.style.transform = "rotate(" + Math.round(Math.random() * 360) + "deg)";
+    scatter.appendChild(img);
+  }
+}
+function applyLayer(name) {
+  const layout = saved("woc-layout-" + name, null);
+  if (name === "fill") {
+    bgLayer.style.width = (layout ? layout.size : 340) + "vw";
+  } else {
+    bgLayer.style.width = (layout ? layout.size : 70) + "vmin";
+  }
+  bgLayer.style.left = (layout ? layout.left : 50) + "%";
+  bgLayer.style.top = (layout ? layout.top : 50) + "%";
+}
+const origSet = setBackground;
+setBackground = function(name) { origSet(name); applyLayer(name); };
+document.getElementById("adjustBtn").onclick = () => {
+  const on = document.documentElement.getAttribute("data-adjust") === "1";
+  document.documentElement.setAttribute("data-adjust", on ? "0" : "1");
+  document.getElementById("adjustBtn").textContent = on ? "Adjust" : "Adjusting";
+};
+document.getElementById("saveBtn").onclick = () => {
+  const name = document.documentElement.getAttribute("data-bg") || "mark";
+  if (name === "scatter") {
+    const items = [...scatter.querySelectorAll("img")].map(img => ({
+      left: parseFloat(img.style.left), top: parseFloat(img.style.top),
+      size: parseFloat(img.style.width), rot: parseFloat(img.style.transform.replace(/[^0-9.-]/g, "")) || 0
+    }));
+    localStorage.setItem("woc-layout-scatter", JSON.stringify(items));
+  } else {
+    localStorage.setItem("woc-layout-" + name, JSON.stringify({
+      left: parseFloat(bgLayer.style.left), top: parseFloat(bgLayer.style.top), size: parseFloat(bgLayer.style.width)
+    }));
+  }
+  document.documentElement.setAttribute("data-adjust", "0");
+  document.getElementById("adjustBtn").textContent = "Adjust";
+};
+let drag = null;
+function point(t) { return { x: t.clientX, y: t.clientY }; }
+scatter.addEventListener("pointerdown", (e) => {
+  if (document.documentElement.getAttribute("data-adjust") !== "1") return;
+  const img = e.target.closest("img");
+  if (!img) return;
+  scatter.querySelectorAll("img").forEach(el => el.classList.remove("sel"));
+  img.classList.add("sel");
+  drag = { img, x: e.clientX, y: e.clientY, left: parseFloat(img.style.left), top: parseFloat(img.style.top) };
+});
+window.addEventListener("pointermove", (e) => {
+  if (!drag) return;
+  drag.img.style.left = (drag.left + (e.clientX - drag.x) / window.innerWidth * 100) + "%";
+  drag.img.style.top = (drag.top + (e.clientY - drag.y) / window.innerHeight * 100) + "%";
+});
+window.addEventListener("pointerup", () => { drag = null; });
+scatter.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 2 && e.target.closest("img")) {
+    const img = e.target.closest("img");
+    drag = null;
+    img._pinch = { d: Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY), size: parseFloat(img.style.width) };
+  }
+}, { passive: true });
+scatter.addEventListener("touchmove", (e) => {
+  const img = document.querySelector("#scatter img.sel");
+  if (!img || !img._pinch || e.touches.length < 2) return;
+  const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  img.style.width = Math.max(24, img._pinch.size * d / img._pinch.d) + "px";
+}, { passive: true });
+bgLayer.addEventListener("pointerdown", (e) => {
+  if (document.documentElement.getAttribute("data-adjust") !== "1") return;
+  drag = { img: bgLayer, x: e.clientX, y: e.clientY, left: parseFloat(bgLayer.style.left), top: parseFloat(bgLayer.style.top) };
+});
+bgLayer.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 2) {
+    drag = null;
+    bgLayer._pinch = { d: Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY), size: parseFloat(bgLayer.style.width) };
+  }
+}, { passive: true });
+bgLayer.addEventListener("touchmove", (e) => {
+  if (!bgLayer._pinch || e.touches.length < 2) return;
+  const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  bgLayer.style.width = Math.max(20, bgLayer._pinch.size * d / bgLayer._pinch.d) + (bgLayer.style.width.endsWith("vw") ? "vw" : "vmin");
+}, { passive: true });
 setBackground(localStorage.getItem("woc-bg") || "mark");
 document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.25";
+const APP_VERSION = "2.26";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
