@@ -271,7 +271,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.11</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.11</span><button type="button" id="verUpdate" class="ver-update">New version 2.13 is available — tap to open it</button><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -682,7 +682,7 @@ async function checkVersion() {
 
 document.getElementById("refreshBtn").onclick = loadNewest;
 document.getElementById("updateBtn").onclick = loadNewest;
-document.getElementById("verUpdate").onclick = loadNewest;
+document.getElementById("verUpdate").onclick = () => { location.href = "../../index.html"; };
 checkVersion();
 setInterval(checkVersion, 10000);
 
