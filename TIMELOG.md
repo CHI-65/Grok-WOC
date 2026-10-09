@@ -50,7 +50,7 @@ Started at the first recorded action of the next burst. Every later commit and p
 - Status: running
 
 ## Total counted
-322 minutes (5 hours 22 minutes). Rebuilt at 2026-10-09 05:00 UTC from the Zoom call, the version 1.5 entry, and repo commit times since 2026-10-08 23:49 UTC. The earlier 173-minute and 273-minute totals are superseded by the commit-cluster rebuild below. The 10-minute credit rule is internal only and is not shown on the client time log.
+373 minutes (6 hours 13 minutes). Rebuilt at 2026-10-09 06:00 UTC from the Zoom call, the version 1.5 entry, and repo commit times since 2026-10-08 23:49 UTC. The earlier 173-minute, 273-minute, and 322-minute totals are superseded by the commit-cluster rebuild below. The 10-minute credit rule is internal only and is not shown on the client time log.
 
 ## Prompt log
 
@@ -106,8 +106,7 @@ Prompt notes above stay as written. This rebuild uses repo commit times since 20
 - Cluster C, closed: 01:51:16 to 02:19:27, plus 10 min = 38 min
 - Cluster D, open: 03:21:37 through 05:00:00 = 98 min
 
-Commit clusters: 52 + 64 + 38 + 98 = 252 min. Running total: 60 + 10 + 252 = 322 min (5 hours 22 minutes). Client log shows that total and a short session line, without this rule.
-
+Commit clusters: 52 + 64 + 38 + 98 = 252 min. Running total: 60 + 10 + 252 = 322 min (5 hours 22 minutes). Client log shows that total and a short session line, without this rule. Superseded by the 06:00 rebuild.
 
 ### 4 — catch a wheel layout
 Opened by the prompt to remove the line under Catch a wheel, raise the animation to just below that title, and keep the wheels spaced while they still move and zoom.
@@ -127,3 +126,21 @@ Opened by the prompt to remove the line under Catch a wheel, raise the animation
 | 2026-10-09 05:49 | 2.53 | Text grab is the right quarter of the text itself, not the larger box. |
 
 | 2026-10-09 05:50 | 2.54 | Layout is only the opening door page. The layout set there is restored when the app opens. |
+
+| 2026-10-09 05:56 | 2.55 | Show the saved door-page coordinates. |
+
+| 2026-10-09 06:00 | — | Rebuild the running total from the Zoom call, the version 1.5 entry, and repo commit times since 2026-10-08 23:49 UTC. |
+
+## Rebuild at 2026-10-09 06:00 UTC
+
+Prompt notes above stay as written. This rebuild uses 84 repo commits since 2026-10-08 23:49:57 UTC, not the prompt clock. A gap of more than 10 minutes between commits starts a new session. A closed cluster counts 10 minutes after its last commit. Whole minutes are the floor of that span. The newest commit, 05:56:34 (version 2.55), is within 10 minutes of 06:00, so that session stays open through 06:00. Cluster B is 63 minutes, not the 64 recorded at 05:00: 00:44:18 to 01:37:59 is 53 minutes 41 seconds, plus 10 minutes.
+
+- Zoom call: 60 min (2026-10-07 23:00 UTC)
+- Version 1.5: 10 min
+- Cluster A, closed: 23:49:57 to 00:32:21, plus 10 min = 52 min
+- Cluster B, closed: 00:44:18 to 01:37:59, plus 10 min = 63 min
+- Cluster C, closed: 01:51:16 to 02:19:27, plus 10 min = 38 min
+- Cluster D, closed: 03:21:37 to 05:08:46, plus 10 min = 117 min
+- Cluster E, open: 05:26:04 through 06:00:00 = 33 min
+
+Commit clusters: 52 + 63 + 38 + 117 + 33 = 303 min. Running total: 60 + 10 + 303 = 373 min (6 hours 13 minutes). Client log shows that total and a short session line, without this rule.
