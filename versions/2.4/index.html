@@ -246,7 +246,6 @@
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:0;left:0;right:0;z-index:200;background:#1c1612;color:#fff8f4;padding:10px 12px;font:18px Georgia,serif;display:flex;justify-content:space-between;gap:8px;align-items:center;"><span>Version 2.4 snapshot</span><a href="../../timelog.html" style="color:#ffd36a;font-weight:700;">Back to time log</a></div>
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
   <p id="updateText">New version available.</p>
@@ -649,7 +648,7 @@ setInterval(checkVersion, 60000);
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    /* snapshot: no service worker */ 0.catch(() => {});
+    navigator.serviceWorker.register("sw.js").catch(() => {});
   });
 }
 </script>
