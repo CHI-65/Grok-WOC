@@ -355,7 +355,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.29</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.30</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -645,7 +645,7 @@ function render() {
     html += '<div class="paywall"><strong>Paywall boundary.</strong> Free illumination journey ends here. What follows is the paid full course. This is a review divider, not a real charge.</div>';
   }
   if (s.n === 1) {
-    html += '<h1 tabindex="-1">What\'s going on right now?</h1><p class="muted">Two doors. Pick the one that fits. This is scaffolding, not final copy.</p><div class="grid"><button class="door" type="button" id="doorKnow">I know what I feel</button><button class="door" type="button" id="doorOff">I just feel off</button></div>';
+    html += '<h1 tabindex="-1">What\'s going on right now?</h1><div class="grid"><button class="door" type="button" id="doorKnow">I know what I feel</button><button class="door" type="button" id="doorOff">I just feel off</button></div>';
   }
   if (s.n === 2) {
     html += '<h1 tabindex="-1">Felt-word grid</h1><p>Tap the feeling that is closest. Each word maps to one station.</p><div class="grid" id="wordGrid"></div>';
@@ -999,7 +999,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.29";
+const APP_VERSION = "2.30";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
