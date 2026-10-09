@@ -64,6 +64,16 @@
     pointer-events: none;
     z-index: 0;
   }
+  html[data-bg="scatter"] body::before { opacity: 0; }
+  html[data-bg="fill"] body::before {
+    background-size: 340%;
+    opacity: 0.9;
+  }
+  #scatter {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; display: none;
+  }
+  html[data-bg="scatter"] #scatter { display: block; }
+  #scatter img { position: absolute; opacity: 0.2; }
   .wrap, .ver-banner, .map-page { position: relative; z-index: 1; }
   button, input, select {
     font: inherit;
@@ -102,6 +112,8 @@
     display: block; width: 100%; min-height: 44px; text-align: left;
     border: 0; border-radius: 8px; background: transparent; padding: 10px 12px;
   }
+  .settings .menu-item.on { font-weight: 700; }
+  .menu-label { margin: 8px 12px 2px; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
   html[data-theme="dark"] .settings { background: rgba(36,30,24,0.92); }
   html[data-theme="dark"] button.door, html[data-theme="dark"] button.icon-btn { background: transparent; }
   button:hover { outline: 3px solid var(--focus); }
@@ -137,8 +149,16 @@
   }
   .journey {
     display: inline-block; font-size: 16px; letter-spacing: 0.06em;
-    text-transform: uppercase; border: 2px solid var(--line);
-    padding: 4px 8px; border-radius: 999px;
+    text-transform: uppercase; padding: 8px 14px; border-radius: 999px;
+    border: 3px solid transparent;
+    background:
+      linear-gradient(rgba(255,250,243,0.5), rgba(255,250,243,0.5)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
+  }
+  html[data-theme="dark"] .journey {
+    background:
+      linear-gradient(rgba(36,30,24,0.48), rgba(36,30,24,0.48)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
   }
   .journey.paid { border-color: var(--pay); color: var(--pay); }
   h1 { font-size: 34px; line-height: 1.15; margin: 8px 0 12px; }
@@ -323,7 +343,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.22</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.23</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -335,7 +355,14 @@
     <button type="button" id="refreshBtn" class="icon-btn" aria-label="Refresh"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b000"/><stop offset="0.34" stop-color="#d4145a"/><stop offset="0.67" stop-color="#2b6fd6"/><stop offset="1" stop-color="#2f9e38"/></linearGradient></defs><path d="M19.5 8.2A7.2 7.2 0 1 0 19.5 16" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round"/><path d="M19.5 4.2v4.4h-4.4" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <button type="button" id="menuBtn" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
   </header>
-  <div id="settings" class="settings hidden" role="menu"><button type="button" class="menu-item" id="themeBtn" role="menuitem">Switch to dark mode</button></div>
+  <div id="settings" class="settings hidden" role="menu">
+    <button type="button" class="menu-item" id="themeBtn" role="menuitem">Switch to dark mode</button>
+    <p class="menu-label">Background</p>
+    <button type="button" class="menu-item" data-bg="mark" role="menuitem">Wheel watermark</button>
+    <button type="button" class="menu-item" data-bg="scatter" role="menuitem">Small wheels</button>
+    <button type="button" class="menu-item" data-bg="fill" role="menuitem">Wheel colors</button>
+  </div>
+  <div id="scatter" aria-hidden="true"></div>
   <p><span id="journey" class="journey">Free · Illumination journey</span></p>
   <main id="main"></main>
   <footer class="tools">
@@ -786,19 +813,46 @@ function render() {
 
 document.getElementById("backBtn").onclick = back;
 document.getElementById("restartBtn").onclick = restart;
-document.getElementById("menuBtn").onclick = () => {
-  document.getElementById("settings").classList.toggle("hidden");
+const settings = document.getElementById("settings");
+function closeMenu() { settings.classList.add("hidden"); }
+document.getElementById("menuBtn").onclick = (e) => {
+  e.stopPropagation();
+  settings.classList.toggle("hidden");
 };
+document.addEventListener("click", (e) => {
+  if (!settings.contains(e.target)) closeMenu();
+});
 document.getElementById("themeBtn").onclick = () => {
   const dark = document.documentElement.getAttribute("data-theme") === "dark";
   document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
   document.getElementById("themeBtn").textContent = dark ? "Switch to dark mode" : "Switch to light mode";
+  closeMenu();
 };
+function setBackground(name) {
+  document.documentElement.setAttribute("data-bg", name);
+  localStorage.setItem("woc-bg", name);
+  settings.querySelectorAll("[data-bg]").forEach(btn => btn.classList.toggle("on", btn.dataset.bg === name));
+  closeMenu();
+}
+settings.querySelectorAll("[data-bg]").forEach(btn => btn.onclick = () => setBackground(btn.dataset.bg));
+const scatter = document.getElementById("scatter");
+for (let i = 0; i < 18; i++) {
+  const img = document.createElement("img");
+  img.src = "images/wheel-mark.png";
+  img.alt = "";
+  const size = 48 + Math.round(Math.random() * 72);
+  img.style.width = size + "px";
+  img.style.left = Math.round(Math.random() * 86) + "%";
+  img.style.top = Math.round(Math.random() * 86) + "%";
+  img.style.transform = "rotate(" + Math.round(Math.random() * 360) + "deg)";
+  scatter.appendChild(img);
+}
+setBackground(localStorage.getItem("woc-bg") || "mark");
 document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.22";
+const APP_VERSION = "2.23";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
