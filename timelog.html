@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#8a3d2a">
+<title>Time log — Wheel of Creativity</title>
+<style>
+  :root { --bg:#f6f1e8; --ink:#1c1612; --muted:#4a4038; --card:#fffaf3; --line:#2a211b; --accent:#8a3d2a; --focus:#0b5cab; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Georgia, "Iowan Old Style", Palatino, serif; background:var(--bg); color:var(--ink); font-size:20px; line-height:1.45; }
+  .wrap { max-width:760px; margin:0 auto; padding:16px 16px 48px; }
+  a { color:var(--accent); }
+  h1 { font-size:34px; line-height:1.15; margin:8px 0 12px; }
+  h2 { font-size:26px; margin:22px 0 8px; }
+  p { margin:0 0 12px; }
+  .muted { color:var(--muted); }
+  .total { border:3px solid var(--line); background:var(--card); border-radius:14px; padding:14px; font-size:28px; font-weight:700; }
+  table { width:100%; border-collapse:collapse; background:var(--card); }
+  th, td { text-align:left; border-bottom:2px solid var(--line); padding:10px 8px; vertical-align:top; }
+  th { font-size:16px; letter-spacing:0.04em; text-transform:uppercase; }
+  a.ver { font-weight:700; font-size:22px; }
+  .back { display:inline-flex; align-items:center; min-height:56px; padding:12px 16px; border:2px solid var(--line); border-radius:12px; text-decoration:none; color:var(--ink); font-weight:700; background:var(--card); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p><a class="back" href="index.html">Back to the app</a></p>
+  <h1>Time log</h1>
+  <p class="muted">Client review. The clock stops after 10 minutes with no new prompt, and starts again on the next prompt about this work. A version number opens that saved app, so you can see the progress.</p>
+  <p class="total">1 hour 59 minutes counted</p>
+  <p class="muted">60 minutes Zoom call + 59 minutes in the open session. The version 1.5 prompt is recorded, but its start time was not saved, so that length is not guessed.</p>
+
+  <h2>Sessions</h2>
+  <p><strong>Zoom call.</strong> Yesterday, about 4:00–5:00 PM local. 60 minutes. Nothing followed within 10 minutes, so the clock stopped.</p>
+  <p><strong>Version 1.5 prompt.</strong> Closed 15:50 UTC on Oct 8. Length not estimated.</p>
+  <p><strong>Version 1.6 through now.</strong> Open since 23:49 UTC on Oct 8. Still running. 59 minutes so far. Every later prompt landed inside 10 minutes of the one before it.</p>
+
+  <h2>Versions</h2>
+  <table>
+    <thead><tr><th>Version</th><th>What changed</th></tr></thead>
+    <tbody>
+      <tr><td><a class="ver" href="versions/1.5/index.html">1.5</a></td><td>Approved clean wheel mark at 10%.</td></tr>
+      <tr><td><a class="ver" href="versions/1.6/index.html">1.6</a></td><td>Three discovery-card designs behind a chooser.</td></tr>
+      <tr><td><a class="ver" href="versions/1.7/index.html">1.7</a></td><td>Perfectly round wheel mark.</td></tr>
+      <tr><td><a class="ver" href="versions/1.8/index.html">1.8</a></td><td>Round wheel everywhere, borderless cards, floating catch wheels.</td></tr>
+      <tr><td><a class="ver" href="versions/1.9/index.html">1.9</a></td><td>True circle, floating wheels tappable.</td></tr>
+      <tr><td><a class="ver" href="versions/2.0/index.html">2.0</a></td><td>Vortex spin inside a still rim, larger catch target.</td></tr>
+      <tr><td><a class="ver" href="versions/2.1/index.html">2.1</a></td><td>Smoother vortex grow and crossfade.</td></tr>
+      <tr><td><a class="ver" href="versions/2.2/index.html">2.2</a></td><td>Faster spin. Zoom covers the page and keeps growing through the fade.</td></tr>
+      <tr><td><a class="ver" href="versions/2.3/index.html">2.3</a></td><td>Zoom stays a circle instead of turning into an oval.</td></tr>
+      <tr><td><a class="ver" href="versions/2.4/index.html">2.4</a></td><td>Zoom keeps growing the whole time the wheel is visible.</td></tr>
+      <tr><td><a class="ver" href="index.html">2.5</a></td><td>Current. Time log on the front page. Version numbers open the saved apps.</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">Opening a version does not replace the current app. Each one is a saved copy. Use Back to time log to return.</p>
+</div>
+</body>
+</html>

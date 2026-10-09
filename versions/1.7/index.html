@@ -87,12 +87,6 @@
   }
   .brand { font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; }
   .version { margin: 0; font-size: 22px; font-weight: 700; }
-  a.loglink {
-    display: inline-flex; align-items: center; min-height: 56px; padding: 12px 16px;
-    border: 2px solid var(--line); background: var(--card); border-radius: 12px;
-    color: var(--ink); text-decoration: none; font-weight: 700;
-  }
-  a.doorlink { font-size: 22px; }
   .update-banner {
     border: 3px solid var(--ok);
     background: var(--card);
@@ -177,12 +171,9 @@
 
   .opt-list { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
   .spread { position: relative; height: 640px; margin: 12px 0 24px; }
-  .pcard {
+  .pcard, .wcard, .fcard {
     border: 3px solid var(--ink); background: var(--card); padding: 8px;
     box-shadow: var(--shadow); cursor: pointer;
-  }
-  .wcard, .fcard {
-    border: 0; background: rgba(0,0,0,0.02); padding: 0; box-shadow: none; cursor: pointer; touch-action: manipulation;
   }
   .pcard {
     position: absolute; width: 108px; height: 168px; border-radius: 10px;
@@ -193,65 +184,23 @@
   .wcard { position: absolute; }
   .wheel-grid { position: relative; height: 560px; margin: 12px 0 24px; }
   .float-stage { position: relative; height: 640px; margin: 12px 0 24px; overflow: hidden; }
-  .fcard { position: absolute; width: 168px; height: 168px; z-index: 2; }
+  .fcard { position: absolute; }
   .mark {
-    width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: auto;
-    transform-origin: center center;
+    width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none;
   }
+  .mark { transform-origin: center center; }
   .spinning .mark { animation: wspin 1s linear infinite; }
   @keyframes wspin { to { transform: rotate(360deg); } }
   @keyframes zoomIn {
-    from { transform: scale(0.5); }
-    to { transform: scale(1); }
+    from { transform: translate(-50%, -50%) scale(0.5); }
+    to { transform: translate(-50%, -50%) scale(1); }
   }
-  .fcard .mark { animation: zoomIn 2.2s ease-in-out infinite alternate; }
-
-  .vortex {
-    position: fixed; inset: 0; z-index: 80;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-    background: transparent;
-    pointer-events: auto;
-  }
-  .vortex-wheel {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 142vmax;
-    height: 142vmax;
-    aspect-ratio: 1 / 1;
-    flex: none;
-    flex-shrink: 0;
-    min-width: 142vmax;
-    min-height: 142vmax;
-    margin: 0;
-    border-radius: 50%;
-    border: 12px solid #1a120c;
-    overflow: hidden;
-    background: #1a120c;
-    transform-origin: center center;
-    animation: growThrough 2.7s linear forwards;
-    will-change: transform;
-  }
-  .vortex-wheel img {
-    width: 118%; height: 118%; margin: -9%;
-    object-fit: cover; transform-origin: center;
-    animation: vortex 0.26s linear infinite;
-  }
-  @keyframes vortex { to { transform: rotate(360deg); } }
-  /* scale(1) is already larger than the page diagonal, so the circle
-     covers the whole page before the fade, then keeps growing through it. */
-  @keyframes growThrough {
-    0% { transform: translate(-50%, -50%) scale(0.1); }
-    58% { transform: translate(-50%, -50%) scale(1); }
-    100% { transform: translate(-50%, -50%) scale(1.85); }
-  }
-  .vortex.leave { animation: fadeOut 1.05s linear forwards; }
-  @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+  .fcard { animation: zoomIn 2.4s ease-in-out infinite alternate; }
   .hidden { display: none !important; }
 </style>
 </head>
 <body>
+<div style="position:fixed;bottom:0;left:0;right:0;z-index:200;background:#1c1612;color:#fff8f4;padding:10px 12px;font:18px Georgia,serif;display:flex;justify-content:space-between;gap:8px;align-items:center;"><span>Version 1.7 snapshot</span><a href="../../timelog.html" style="color:#ffd36a;font-weight:700;">Back to time log</a></div>
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
   <p id="updateText">New version available.</p>
@@ -259,8 +208,7 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <p class="version" id="versionLabel">Version 2.5</p>
-    <a class="loglink" href="timelog.html">Time log</a>
+    <p class="version" id="versionLabel">Version 1.7</p>
     <button type="button" id="refreshBtn">Refresh</button>
     <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
@@ -335,44 +283,6 @@ function go(n, push) {
   if (h) h.focus();
 }
 
-
-
-function playVortex(done) {
-  const layer = document.createElement("div");
-  layer.className = "vortex";
-  layer.setAttribute("aria-hidden", "true");
-  layer.innerHTML = '<div class="vortex-wheel"><img alt="" src="images/wheel-mark.png"></div>';
-  document.body.appendChild(layer);
-  // Circle covers the page at 58% of growThrough (about 1.55s). Reveal the
-  // next page underneath then, and keep the wheel growing while it fades.
-  setTimeout(() => {
-    layer.classList.add("leave");
-    done();
-  }, 1560);
-  setTimeout(() => layer.remove(), 2680);
-}
-function startFloat(stage) {
-  const cards = Array.from(stage.querySelectorAll(".fcard"));
-  if (state.floatTimer) cancelAnimationFrame(state.floatTimer);
-  function step() {
-    if (state.screen !== 3 || state.design !== 3) return;
-    cards.forEach(card => {
-      if (card.classList.contains("caught") || state.spinning) return;
-      let x = parseFloat(card.dataset.x);
-      let y = parseFloat(card.dataset.y);
-      let vx = parseFloat(card.dataset.vx);
-      let vy = parseFloat(card.dataset.vy);
-      x += vx * 0.45; y += vy * 0.45;
-      if (x < 0 || x > 78) { vx *= -1; x = Math.max(0, Math.min(78, x)); }
-      if (y < 0 || y > 78) { vy *= -1; y = Math.max(0, Math.min(78, y)); }
-      card.dataset.x = x; card.dataset.y = y; card.dataset.vx = vx; card.dataset.vy = vy;
-      card.style.left = x + "%";
-      card.style.top = y + "%";
-    });
-    state.floatTimer = requestAnimationFrame(step);
-  }
-  state.floatTimer = requestAnimationFrame(step);
-}
 function back() {
   if (state.screen === 3 && state.design) {
     state.design = null;
@@ -432,7 +342,7 @@ function render() {
     html += '<div class="paywall"><strong>Paywall boundary.</strong> Free illumination journey ends here. What follows is the paid full course. This is a review divider, not a real charge.</div>';
   }
   if (s.n === 1) {
-    html += '<h1 tabindex="-1">What\'s going on right now?</h1><p class="muted">Two doors. Pick the one that fits. This is scaffolding, not final copy.</p><div class="grid"><button class="door" type="button" id="doorKnow">I know what I feel</button><button class="door" type="button" id="doorOff">I just feel off</button></div><div class="row"><a class="loglink doorlink" href="timelog.html">Time log</a></div>';
+    html += '<h1 tabindex="-1">What\'s going on right now?</h1><p class="muted">Two doors. Pick the one that fits. This is scaffolding, not final copy.</p><div class="grid"><button class="door" type="button" id="doorKnow">I know what I feel</button><button class="door" type="button" id="doorOff">I just feel off</button></div>';
   }
   if (s.n === 2) {
     html += '<h1 tabindex="-1">Felt-word grid</h1><p>Tap the feeling that is closest. Each word maps to one station.</p><div class="grid" id="wordGrid"></div>';
@@ -535,27 +445,22 @@ function render() {
         b.setAttribute("aria-label", "Wheel card " + item.id + " " + item.challenge);
       } else {
         b.className = "fcard";
-        b.dataset.x = String(8 + ((i * 37) % 70));
-        b.dataset.y = String(8 + ((i * 53) % 62));
-        b.dataset.vx = String(((i % 5) - 2) * 0.08 || 0.12);
-        b.dataset.vy = String((((i + 2) % 5) - 2) * 0.07 || -0.1);
-        b.style.left = b.dataset.x + "%";
-        b.style.top = b.dataset.y + "%";
+        b.style.left = (8 + ((i * 37) % 70)) + "%";
+        b.style.top = (8 + ((i * 53) % 72)) + "%";
+        b.style.animationDelay = (-(i * 0.35)) + "s";
+        b.style.animationDuration = (1.8 + (i % 4) * 0.4) + "s";
         b.innerHTML = img;
-        b.querySelector(".mark").style.animationDelay = (-(i * 0.35)) + "s";
         b.setAttribute("aria-label", "Catch wheel " + item.id + " " + item.challenge);
       }
-      const spinIt = (e) => {
-        if (e) { e.preventDefault(); e.stopPropagation(); }
+      b.onclick = () => {
         if (state.spinning) return;
         state.spinning = true;
-        b.classList.add("caught");
-        playVortex(() => chooseStation(item.id, "Card " + item.id + " (" + item.challenge + ")", "off"));
+        b.classList.add("spinning");
+        b.setAttribute("aria-label", "Spinning");
+        setTimeout(() => chooseStation(item.id, "Card " + item.id + " (" + item.challenge + ")", "off"), 5000);
       };
-      b.addEventListener("pointerdown", spinIt);
       g.appendChild(b);
     });
-    if (state.design === 3) startFloat(g);
   }
   if (s.n === 4) document.getElementById("toIllum").onclick = () => go(5);
   if (s.n === 5) {
@@ -621,7 +526,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "2.5";
+const APP_VERSION = "1.7";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
@@ -655,7 +560,7 @@ setInterval(checkVersion, 60000);
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+    /* snapshot: no service worker */ 0.catch(() => {});
   });
 }
 </script>

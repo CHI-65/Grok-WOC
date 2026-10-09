@@ -35,11 +35,12 @@ Started at the first recorded action of the next burst. Every later commit and p
 - 00:30 prompt: add the 4–5 PM local call, plus activity after it under the 10-minute idle rule
 - 00:31 prompt: log that conversation as Zoom call
 - 00:43 prompt: zoom must keep growing the whole time it is visible, including through the fade (version 2.4)
-- Counted so far: 53 min (23:49:57 to 00:43)
+- 00:49 prompt: time log in the app, version numbers open saved versions (version 2.5)
+- Counted so far: 59 min (23:49:57 to 00:49)
 - Status: running
 
 ## Total counted
-113 minutes (60 min Zoom call + 53 min open session), plus the unestimated 1.5 prompt. Session 2 is still open.
+119 minutes (60 min Zoom call + 59 min open session), plus the unestimated 1.5 prompt. Session 2 is still open. Version numbers in the in-app log open saved copies.
 
 
 ## Prompt log
@@ -62,3 +63,4 @@ Summaries, not verbatim. Versions 1.5 through 2.1 are summarized from the versio
 | 2026-10-07 23:00 | — | Zoom call, about 4:00–5:00 PM local yesterday. Logged after the fact. |
 | 2026-10-09 00:31 | — | Log that conversation as Zoom call. |
 | 2026-10-09 00:43 | 2.4 | Zoom was stopping before the fade ended. It should keep zooming the whole time it is visible. |
+| 2026-10-09 00:49 | 2.5 | Put the time log in the app. Version numbers open that saved version. |

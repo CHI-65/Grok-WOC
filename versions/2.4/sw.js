@@ -1,4 +1,4 @@
-const CACHE = "woc-scaffolding-v18";
+const CACHE = "woc-scaffolding-v17";
 const FILES = [
   "./",
   "./index.html",
@@ -25,7 +25,6 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
   if (url.pathname.endsWith("version.json")) return;
-  if (url.pathname.includes("/versions/") || url.pathname.endsWith("timelog.html")) return;
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const fetched = fetch(event.request)

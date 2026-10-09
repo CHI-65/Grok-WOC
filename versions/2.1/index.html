@@ -87,12 +87,6 @@
   }
   .brand { font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; }
   .version { margin: 0; font-size: 22px; font-weight: 700; }
-  a.loglink {
-    display: inline-flex; align-items: center; min-height: 56px; padding: 12px 16px;
-    border: 2px solid var(--line); background: var(--card); border-radius: 12px;
-    color: var(--ink); text-decoration: none; font-weight: 700;
-  }
-  a.doorlink { font-size: 22px; }
   .update-banner {
     border: 3px solid var(--ok);
     background: var(--card);
@@ -207,51 +201,33 @@
   .fcard .mark { animation: zoomIn 2.2s ease-in-out infinite alternate; }
 
   .vortex {
-    position: fixed; inset: 0; z-index: 80;
+    position: fixed; inset: 0; z-index: 40;
     display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-    background: transparent;
-    pointer-events: auto;
+    background: rgba(246,241,232,0);
+    animation: fadeIn 0.8s ease forwards;
   }
+  html[data-theme="dark"] .vortex { background: rgba(22,19,15,0); }
   .vortex-wheel {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 142vmax;
-    height: 142vmax;
-    aspect-ratio: 1 / 1;
-    flex: none;
-    flex-shrink: 0;
-    min-width: 142vmax;
-    min-height: 142vmax;
-    margin: 0;
-    border-radius: 50%;
-    border: 12px solid #1a120c;
-    overflow: hidden;
-    background: #1a120c;
-    transform-origin: center center;
-    animation: growThrough 2.7s linear forwards;
-    will-change: transform;
+    width: min(50vw, 50vh); height: min(50vw, 50vh);
+    border-radius: 50%; border: 10px solid #1a120c;
+    overflow: hidden; background: #1a120c;
+    animation: growIn 2.4s cubic-bezier(0.22, 0.8, 0.2, 1) forwards;
   }
   .vortex-wheel img {
     width: 118%; height: 118%; margin: -9%;
     object-fit: cover; transform-origin: center;
-    animation: vortex 0.26s linear infinite;
+    animation: vortex 0.55s linear infinite;
   }
   @keyframes vortex { to { transform: rotate(360deg); } }
-  /* scale(1) is already larger than the page diagonal, so the circle
-     covers the whole page before the fade, then keeps growing through it. */
-  @keyframes growThrough {
-    0% { transform: translate(-50%, -50%) scale(0.1); }
-    58% { transform: translate(-50%, -50%) scale(1); }
-    100% { transform: translate(-50%, -50%) scale(1.85); }
-  }
-  .vortex.leave { animation: fadeOut 1.05s linear forwards; }
-  @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes growIn { from { transform: scale(0.28); } to { transform: scale(1); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .vortex.leave { animation: fadeOut 0.9s ease forwards; }
+  @keyframes fadeOut { to { opacity: 0; } }
   .hidden { display: none !important; }
 </style>
 </head>
 <body>
+<div style="position:fixed;bottom:0;left:0;right:0;z-index:200;background:#1c1612;color:#fff8f4;padding:10px 12px;font:18px Georgia,serif;display:flex;justify-content:space-between;gap:8px;align-items:center;"><span>Version 2.1 snapshot</span><a href="../../timelog.html" style="color:#ffd36a;font-weight:700;">Back to time log</a></div>
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
   <p id="updateText">New version available.</p>
@@ -259,8 +235,7 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <p class="version" id="versionLabel">Version 2.5</p>
-    <a class="loglink" href="timelog.html">Time log</a>
+    <p class="version" id="versionLabel">Version 2.1</p>
     <button type="button" id="refreshBtn">Refresh</button>
     <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
@@ -340,16 +315,10 @@ function go(n, push) {
 function playVortex(done) {
   const layer = document.createElement("div");
   layer.className = "vortex";
-  layer.setAttribute("aria-hidden", "true");
   layer.innerHTML = '<div class="vortex-wheel"><img alt="" src="images/wheel-mark.png"></div>';
   document.body.appendChild(layer);
-  // Circle covers the page at 58% of growThrough (about 1.55s). Reveal the
-  // next page underneath then, and keep the wheel growing while it fades.
-  setTimeout(() => {
-    layer.classList.add("leave");
-    done();
-  }, 1560);
-  setTimeout(() => layer.remove(), 2680);
+  setTimeout(() => layer.classList.add("leave"), 2400);
+  setTimeout(() => { layer.remove(); done(); }, 3300);
 }
 function startFloat(stage) {
   const cards = Array.from(stage.querySelectorAll(".fcard"));
@@ -432,7 +401,7 @@ function render() {
     html += '<div class="paywall"><strong>Paywall boundary.</strong> Free illumination journey ends here. What follows is the paid full course. This is a review divider, not a real charge.</div>';
   }
   if (s.n === 1) {
-    html += '<h1 tabindex="-1">What\'s going on right now?</h1><p class="muted">Two doors. Pick the one that fits. This is scaffolding, not final copy.</p><div class="grid"><button class="door" type="button" id="doorKnow">I know what I feel</button><button class="door" type="button" id="doorOff">I just feel off</button></div><div class="row"><a class="loglink doorlink" href="timelog.html">Time log</a></div>';
+    html += '<h1 tabindex="-1">What\'s going on right now?</h1><p class="muted">Two doors. Pick the one that fits. This is scaffolding, not final copy.</p><div class="grid"><button class="door" type="button" id="doorKnow">I know what I feel</button><button class="door" type="button" id="doorOff">I just feel off</button></div>';
   }
   if (s.n === 2) {
     html += '<h1 tabindex="-1">Felt-word grid</h1><p>Tap the feeling that is closest. Each word maps to one station.</p><div class="grid" id="wordGrid"></div>';
@@ -621,7 +590,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "2.5";
+const APP_VERSION = "2.1";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
@@ -655,7 +624,7 @@ setInterval(checkVersion, 60000);
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+    /* snapshot: no service worker */ 0.catch(() => {});
   });
 }
 </script>
