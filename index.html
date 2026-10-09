@@ -355,7 +355,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.31</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.32</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -363,7 +363,7 @@
   <button type="button" id="updateBtn">Load new version</button>
 </div>
 <header class="app">
-    <p class="brand">Wheel of Creativity · scaffolding</p>
+    <p class="brand">Wheel of Creativity</p>
     <button type="button" id="refreshBtn" class="icon-btn" aria-label="Refresh"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b000"/><stop offset="0.34" stop-color="#d4145a"/><stop offset="0.67" stop-color="#2b6fd6"/><stop offset="1" stop-color="#2f9e38"/></linearGradient></defs><path d="M19.5 8.2A7.2 7.2 0 1 0 19.5 16" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round"/><path d="M19.5 4.2v4.4h-4.4" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <button type="button" id="menuBtn" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
   </header>
@@ -995,7 +995,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.31";
+const APP_VERSION = "2.32";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
