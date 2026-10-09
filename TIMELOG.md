@@ -107,3 +107,13 @@ Prompt notes above stay as written. This rebuild uses repo commit times since 20
 - Cluster D, open: 03:21:37 through 05:00:00 = 98 min
 
 Commit clusters: 52 + 64 + 38 + 98 = 252 min. Running total: 60 + 10 + 252 = 322 min (5 hours 22 minutes). Client log shows that total and a short session line, without this rule.
+
+
+### 4 — catch a wheel layout
+Opened by the prompt to remove the line under Catch a wheel, raise the animation to just below that title, and keep the wheels spaced while they still move and zoom.
+- Open: 2026-10-09 05:24 UTC
+- 05:26 version 2.49 (`39aae63`)
+- Status: running
+
+## Prompt log addition
+| 2026-10-09 05:24 | 2.49 | Remove the text under Catch a wheel. Raise the animation so it stays just below that title. Keep the wheels spaced apart, still moving and zooming. |
