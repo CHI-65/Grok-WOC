@@ -1,1 +1,102 @@
-$(cat /tmp/timelog.html)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#8a3d2a">
+<title>Time log — Wheel of Creativity</title>
+<style>
+  :root { --bg:#f6f1e8; --ink:#1c1612; --muted:#4a4038; --card:#fffaf3; --line:#2a211b; --accent:#8a3d2a; --focus:#0b5cab; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Georgia, "Iowan Old Style", Palatino, serif; background:var(--bg); color:var(--ink); font-size:20px; line-height:1.45; }
+  .wrap { max-width:760px; margin:0 auto; padding:16px 16px 48px; }
+  a { color:var(--accent); }
+  h1 { font-size:34px; line-height:1.15; margin:8px 0 12px; }
+  h2 { font-size:26px; margin:22px 0 8px; }
+  p { margin:0 0 12px; }
+  .muted { color:var(--muted); }
+  .total { border:3px solid var(--line); background:var(--card); border-radius:14px; padding:14px; font-size:28px; font-weight:700; }
+  table { width:100%; border-collapse:collapse; background:var(--card); }
+  th, td { text-align:left; border-bottom:2px solid var(--line); padding:10px 8px; vertical-align:top; }
+  th { font-size:16px; letter-spacing:0.04em; text-transform:uppercase; }
+  a.ver { font-weight:700; font-size:22px; }
+  .back { display:inline-flex; align-items:center; min-height:56px; padding:12px 16px; border:2px solid var(--line); border-radius:12px; text-decoration:none; color:var(--ink); font-weight:700; background:var(--card); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p><a class="back" href="index.html">Back to the app</a></p>
+  <h1>Time log</h1>
+  <p class="muted">Time spent on this app. A version number opens that version, so you can see the progress.</p>
+  <p class="total">9 hours 27 minutes</p>
+  <p class="muted">60 minutes Zoom call, 10 minutes on version 1.5, 2 hours 33 minutes through the printed wheel, 1 hour 57 minutes on backgrounds and the home-screen icon, 48 minutes on the door-page layout, 11 minutes on station-wheel placement, and 2 hours 48 minutes on the time log.</p>
+
+  <h2>Sessions</h2>
+  <p><strong>Zoom call.</strong> Yesterday, about 4:00–5:00 PM local. 60 minutes.</p>
+  <p><strong>Version 1.5.</strong> Approved wheel mark. 10 minutes.</p>
+  <p><strong>Version 1.6 through the printed wheel.</strong> 2 hours 33 minutes.</p>
+  <p><strong>Backgrounds and home-screen icon.</strong> 1 hour 57 minutes.</p>
+  <p><strong>Door-page layout.</strong> 48 minutes.</p>
+  <p><strong>Station-wheel placement.</strong> 11 minutes.</p>
+  <p><strong>Time log.</strong> 2 hours 48 minutes.</p>
+
+  <h2>Versions</h2>
+  <table>
+    <thead><tr><th>Version</th><th>What changed</th></tr></thead>
+    <tbody>
+      <tr><td><a class="ver" href="versions/1.5/index.html">1.5</a></td><td>Approved clean wheel mark at 10%.</td></tr>
+      <tr><td><a class="ver" href="versions/1.6/index.html">1.6</a></td><td>Three discovery-card designs behind a chooser.</td></tr>
+      <tr><td><a class="ver" href="versions/1.7/index.html">1.7</a></td><td>Perfectly round wheel mark.</td></tr>
+      <tr><td><a class="ver" href="versions/1.8/index.html">1.8</a></td><td>Round wheel everywhere, borderless cards, floating catch wheels.</td></tr>
+      <tr><td><a class="ver" href="versions/1.9/index.html">1.9</a></td><td>True circle, floating wheels tappable.</td></tr>
+      <tr><td><a class="ver" href="versions/2.0/index.html">2.0</a></td><td>Vortex spin inside a still rim, larger catch target.</td></tr>
+      <tr><td><a class="ver" href="versions/2.1/index.html">2.1</a></td><td>Smoother vortex grow and crossfade.</td></tr>
+      <tr><td><a class="ver" href="versions/2.2/index.html">2.2</a></td><td>Faster spin. Zoom covers the page and keeps growing through the fade.</td></tr>
+      <tr><td><a class="ver" href="versions/2.3/index.html">2.3</a></td><td>Zoom stays a circle instead of turning into an oval.</td></tr>
+      <tr><td><a class="ver" href="versions/2.4/index.html">2.4</a></td><td>Zoom keeps growing the whole time the wheel is visible.</td></tr>
+      <tr><td><a class="ver" href="versions/2.5/index.html">2.5</a></td><td>Time log in the app. Version numbers open that version.</td></tr>
+      <tr><td><a class="ver" href="versions/2.6/index.html">2.6</a></td><td>Version and time log only in the bottom banner.</td></tr>
+      <tr><td><a class="ver" href="versions/2.7/index.html">2.7</a></td><td>New page starts invisible and fades in as the wheel fades out.</td></tr>
+      <tr><td><a class="ver" href="versions/2.8/index.html">2.8</a></td><td>Page fade lasts 3 seconds. A new version flashes in the bottom banner.</td></tr>
+      <tr><td><a class="ver" href="versions/2.11/index.html">2.11</a></td><td>New-version notice shows on its own.</td></tr>
+      <tr><td><a class="ver" href="versions/2.12/index.html">2.12</a></td><td>Wheel leaves a second sooner, keeps growing, and spins faster toward the end.</td></tr>
+      <tr><td><a class="ver" href="versions/2.13/index.html">2.13</a></td><td>Watermark stays visible. Logo-colored button borders. Printed wheel page.</td></tr>
+      <tr><td><a class="ver" href="versions/2.14/index.html">2.14</a></td><td>Wheel mark at 30%. Buttons over the wheel are clear.</td></tr>
+      <tr><td><a class="ver" href="versions/2.15/index.html">2.15</a></td><td>Printed wheel is only the round station wheel. A tap lights that station only.</td></tr>
+      <tr><td><a class="ver" href="versions/2.16/index.html">2.16</a></td><td>Version 2.13 buttons. Door buttons clear. Refresh is an arrow. Settings menu.</td></tr>
+      <tr><td><a class="ver" href="versions/2.17/index.html">2.17</a></td><td>Printed wheel is only the round station wheel, on its own page. Text is centered.</td></tr>
+      <tr><td><a class="ver" href="versions/2.18/index.html">2.18</a></td><td>A tap lights only that station band, in the pastel colors.</td></tr>
+      <tr><td><a class="ver" href="versions/2.19/index.html">2.19</a></td><td>The wheel opens in black and white. One tap lights that station only. A second tap opens it.</td></tr>
+      <tr><td><a class="ver" href="versions/2.20/index.html">2.20</a></td><td>The first tap lights a station without reloading the wheel. The small wheel is black and white.</td></tr>
+      <tr><td><a class="ver" href="versions/2.21/index.html">2.21</a></td><td>The small wheel has no color border.</td></tr>
+      <tr><td><a class="ver" href="versions/2.22/index.html">2.22</a></td><td>Refresh icon is an open arrow. Settings is a menu. Station cards no longer show the screen label.</td></tr>
+      <tr><td><a class="ver" href="versions/2.23/index.html">2.23</a></td><td>The menu closes after a choice. Background can be the watermark, small wheels, or the wheel colors.</td></tr>
+      <tr><td><a class="ver" href="versions/2.24/index.html">2.24</a></td><td>Every background is at 20%. The small wheels are spaced apart.</td></tr>
+      <tr><td><a class="ver" href="versions/2.25/index.html">2.25</a></td><td>The small wheels are different sizes and scattered, without overlapping.</td></tr>
+      <tr><td><a class="ver" href="versions/2.26/index.html">2.26</a></td><td>Temporary Adjust and Save controls for the three backgrounds.</td></tr>
+      <tr><td><a class="ver" href="versions/2.27/index.html">2.27</a></td><td>Adjust includes an opacity slider and a button that hides the screen text.</td></tr>
+      <tr><td><a class="ver" href="versions/2.28/index.html">2.28</a></td><td>A pencil in the banner turns adjust mode on and off.</td></tr>
+      <tr><td><a class="ver" href="versions/2.29/index.html">2.29</a></td><td>Adjust controls sit in the banner. A selected wheel uses the slider for size.</td></tr>
+      <tr><td><a class="ver" href="versions/2.30/index.html">2.30</a></td><td>The scaffolding note under the doors is gone.</td></tr>
+      <tr><td><a class="ver" href="versions/2.31/index.html">2.31</a></td><td>The journey line under the wheel is gone.</td></tr>
+      <tr><td><a class="ver" href="versions/2.32/index.html">2.32</a></td><td>Scaffolding is gone from the top of the page.</td></tr>
+      <tr><td><a class="ver" href="versions/2.33/index.html">2.33</a></td><td>The line under the wheel is gone. The title and jump link are centered. The doors are text only.</td></tr>
+      <tr><td><a class="ver" href="versions/2.34/index.html">2.34</a></td><td>The title stays on one centered line. Back and Start over are smaller and sit at the bottom.</td></tr>
+      <tr><td><a class="ver" href="versions/2.35/index.html">2.35</a></td><td>Wheel of Creativity is centered on the page.</td></tr>
+      <tr><td><a class="ver" href="versions/2.49/index.html">2.49</a></td><td>The line under Catch a wheel is gone. The wheels sit just below that title, stay spaced apart, and still move and zoom.</td></tr>
+      <tr><td><a class="ver" href="versions/2.50/index.html">2.50</a></td><td>The door page opens with the centered wheel behind the two choices.</td></tr>
+      <tr><td><a class="ver" href="versions/2.51/index.html">2.51</a></td><td>A drawn card says you chose card. In adjust mode a station card moves as one box.</td></tr>
+      <tr><td><a class="ver" href="versions/2.52/index.html">2.52</a></td><td>Door page opens on the centered wheel. Adjust grabs the watermark only on its left quarter, and text or boxes only on their right quarter.</td></tr>
+      <tr><td><a class="ver" href="versions/2.53/index.html">2.53</a></td><td>The text grab is the right quarter of the words themselves, not the wider box.</td></tr>
+      <tr><td><a class="ver" href="versions/2.54/index.html">2.54</a></td><td>Layout save and restore is only the opening door page. The layout you set there comes back when the app opens.</td></tr>
+      <tr><td><a class="ver" href="versions/2.55/index.html">2.55</a></td><td>Shows the saved door-page coordinates.</td></tr>
+      <tr><td><a class="ver" href="versions/2.56/index.html">2.56</a></td><td>Adjust mode moves station cards only, and keeps the door layout.</td></tr>
+      <tr><td><a class="ver" href="versions/2.57/index.html">2.57</a></td><td>The phone can copy or share the coordinates.</td></tr>
+      <tr><td><a class="ver" href="versions/2.58/index.html">2.58</a></td><td>Station cards use their own small wheels.</td></tr>
+      <tr><td><a class="ver" href="versions/2.59/index.html">2.59</a></td><td>Current. Every station wheel can be moved, including the bottom one.</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">A version number opens that version of the app itself. A banner at the bottom names the version, returns to this log, and can open the current version. The current app stays on 2.5.</p>
+</div>
+</body>
+</html>
