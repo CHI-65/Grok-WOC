@@ -50,8 +50,7 @@ Started at the first recorded action of the next burst. Every later commit and p
 - Status: running
 
 ## Total counted
-173 minutes (60 min Zoom call + 10 min credit for the 1.5 prompt + 103 min open session). Session 2 is still open. The 10-minute credit rule is internal only and is not shown on the client time log.
-
+322 minutes (5 hours 22 minutes). Rebuilt at 2026-10-09 05:00 UTC from the Zoom call, the version 1.5 entry, and repo commit times since 2026-10-08 23:49 UTC. The earlier 173-minute and 273-minute totals are superseded by the commit-cluster rebuild below. The 10-minute credit rule is internal only and is not shown on the client time log.
 
 ## Prompt log
 
@@ -96,3 +95,15 @@ Session 2 close corrected: last action before the gap was 02:19, plus the idle s
 
 Running total at 04:05 UTC: 60 Zoom + 10 on 1.5 + 159 + 44 = 273 min (4 hours 33 minutes).
 
+## Rebuild at 2026-10-09 05:00 UTC
+
+Prompt notes above stay as written. This rebuild uses repo commit times since 2026-10-08 23:49:57 UTC, not the prompt clock. A gap of more than 10 minutes between commits starts a new session. A closed cluster counts 10 minutes after its last commit. The newest commit, 04:58:41, is within 10 minutes of 05:00, so that session stays open through 05:00.
+
+- Zoom call: 60 min (2026-10-07 23:00 UTC)
+- Version 1.5: 10 min
+- Cluster A, closed: 23:49:57 to 00:32:21, plus 10 min = 52 min
+- Cluster B, closed: 00:44:18 to 01:37:59, plus 10 min = 64 min
+- Cluster C, closed: 01:51:16 to 02:19:27, plus 10 min = 38 min
+- Cluster D, open: 03:21:37 through 05:00:00 = 98 min
+
+Commit clusters: 52 + 64 + 38 + 98 = 252 min. Running total: 60 + 10 + 252 = 322 min (5 hours 22 minutes). Client log shows that total and a short session line, without this rule.
