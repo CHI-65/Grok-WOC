@@ -187,7 +187,7 @@
   .wcard { position: absolute; }
   .wheel-grid { position: relative; height: 560px; margin: 12px 0 24px; }
   .float-stage { position: relative; height: 640px; margin: 12px 0 24px; overflow: hidden; }
-  .fcard { position: absolute; width: 120px; height: 120px; }
+  .fcard { position: absolute; width: 168px; height: 168px; z-index: 2; }
   .mark {
     width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: auto;
     transform-origin: center center;
@@ -199,6 +199,30 @@
     to { transform: scale(1); }
   }
   .fcard .mark { animation: zoomIn 2.2s ease-in-out infinite alternate; }
+
+  .vortex {
+    position: fixed; inset: 0; z-index: 40;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(246,241,232,0.2);
+    animation: fadeIn 0.25s ease;
+  }
+  html[data-theme="dark"] .vortex { background: rgba(22,19,15,0.25); }
+  .vortex-wheel {
+    width: min(50vw, 50vh); height: min(50vw, 50vh);
+    border-radius: 50%; border: 10px solid #1a120c;
+    overflow: hidden; background: #1a120c;
+    animation: growIn 1.1s ease forwards;
+  }
+  .vortex-wheel img {
+    width: 118%; height: 118%; margin: -9%;
+    object-fit: cover; transform-origin: center;
+    animation: vortex 0.45s linear infinite;
+  }
+  @keyframes vortex { to { transform: rotate(360deg); } }
+  @keyframes growIn { from { transform: scale(0.35); } to { transform: scale(1); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .vortex.leave { animation: fadeOut 0.45s ease forwards; }
+  @keyframes fadeOut { to { opacity: 0; } }
   .hidden { display: none !important; }
 </style>
 </head>
@@ -210,7 +234,7 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <p class="version" id="versionLabel">Version 1.9</p>
+    <p class="version" id="versionLabel">Version 2.0</p>
     <button type="button" id="refreshBtn">Refresh</button>
     <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
@@ -286,13 +310,22 @@ function go(n, push) {
 }
 
 
+
+function playVortex(done) {
+  const layer = document.createElement("div");
+  layer.className = "vortex";
+  layer.innerHTML = '<div class="vortex-wheel"><img alt="" src="images/wheel-mark.png"></div>';
+  document.body.appendChild(layer);
+  setTimeout(() => layer.classList.add("leave"), 1600);
+  setTimeout(() => { layer.remove(); done(); }, 2050);
+}
 function startFloat(stage) {
   const cards = Array.from(stage.querySelectorAll(".fcard"));
   if (state.floatTimer) cancelAnimationFrame(state.floatTimer);
   function step() {
     if (state.screen !== 3 || state.design !== 3) return;
     cards.forEach(card => {
-      if (card.classList.contains("spinning")) return;
+      if (card.classList.contains("caught") || state.spinning) return;
       let x = parseFloat(card.dataset.x);
       let y = parseFloat(card.dataset.y);
       let vx = parseFloat(card.dataset.vx);
@@ -481,15 +514,13 @@ function render() {
         b.setAttribute("aria-label", "Catch wheel " + item.id + " " + item.challenge);
       }
       const spinIt = (e) => {
-        if (e) e.preventDefault();
+        if (e) { e.preventDefault(); e.stopPropagation(); }
         if (state.spinning) return;
         state.spinning = true;
-        b.classList.add("spinning");
-        b.setAttribute("aria-label", "Spinning");
-        setTimeout(() => chooseStation(item.id, "Card " + item.id + " (" + item.challenge + ")", "off"), 5000);
+        b.classList.add("caught");
+        playVortex(() => chooseStation(item.id, "Card " + item.id + " (" + item.challenge + ")", "off"));
       };
-      b.onclick = spinIt;
-      b.ontouchstart = spinIt;
+      b.addEventListener("pointerdown", spinIt);
       g.appendChild(b);
     });
     if (state.design === 3) startFloat(g);
@@ -558,7 +589,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "1.9";
+const APP_VERSION = "2.0";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
