@@ -46,6 +46,7 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
+    user-select: none; -webkit-user-select: none;
     text-align: center;
     font-family: Georgia, "Iowan Old Style", Palatino, serif;
     background-color: var(--bg);
@@ -80,6 +81,8 @@
   html[data-adjust="1"] #scatter, html[data-adjust="1"] #bgLayer { pointer-events: auto; }
   html[data-adjust="1"] #scatter img.sel { outline: 2px solid #e2b000; }
   .adjust-controls { display: none; align-items: center; gap: 8px; }
+  #layoutMenu { position: fixed; right: 12px; bottom: 64px; z-index: 70; background: #fffaf3; color: #1c1612; border-radius: 10px; padding: 8px; min-width: 200px; }
+  #layoutMenu button { display: block; width: 100%; text-align: left; min-height: 40px; background: transparent; color: #1c1612; }
   html[data-adjust="1"] .adjust-controls { display: flex; }
   .adjust-controls button, .adjust-controls label { min-height: 36px; }
   #pencilBtn { min-height: 0; width: 36px; height: 36px; padding: 4px; border: 0; background: transparent; }
@@ -369,9 +372,9 @@
   html[data-adjust="1"] .ver-banner { min-height: 0; padding: 6px 10px; gap: 8px; justify-content: center; font-size: 16px; }
   html[data-adjust="1"] .adjust-controls { flex-wrap: wrap; justify-content: center; }
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
-  html[data-adjust="1"] footer.tools { bottom: 52px; }
+  html[data-adjust="1"] footer.tools { bottom: 128px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.40</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.41</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -792,6 +795,7 @@ function render() {
     document.getElementById("openMap").onclick = () => { state.mapOpen = true; state.mapLit = 0; render(); };
   }
   drawMap();
+  applyItems(saved("woc-items", null));
   if (s.n === 5) {
     document.getElementById("toWheel").onclick = () => go(6);
     document.getElementById("toDeep").onclick = () => go(7);
@@ -964,7 +968,7 @@ document.addEventListener("pointermove", (e) => {
   guide.classList.toggle("on", centered);
   tag.classList.toggle("on", centered);
 });
-document.addEventListener("pointerup", () => { move = null; guide.classList.remove("on"); tag.classList.remove("on"); });
+document.addEventListener("pointerup", () => { if (move) localStorage.setItem("woc-items", JSON.stringify(captureItems())); move = null; guide.classList.remove("on"); tag.classList.remove("on"); });
 function applyOpacity(value) {
   const o = value / 100;
   document.querySelectorAll("#scatter img").forEach(img => img.style.opacity = o);
@@ -991,7 +995,53 @@ document.getElementById("hideBtn").onclick = () => {
   document.documentElement.setAttribute("data-hide", on ? "0" : "1");
   document.getElementById("hideBtn").textContent = on ? "Hide text" : "Show text";
 };
-document.getElementById("saveBtn").onclick = () => {
+function layoutKey(el, i) { return (el.id || el.textContent || "item").trim().slice(0, 40) + "-" + i; }
+function captureItems() {
+  return [...document.querySelectorAll(".wrap h1, .wrap p, .wrap button, footer.tools button, footer.tools summary")].map((el, i) => ({
+    key: layoutKey(el, i), left: el.style.left || "", top: el.style.top || ""
+  }));
+}
+function applyItems(items) {
+  if (!items) return;
+  [...document.querySelectorAll(".wrap h1, .wrap p, .wrap button, footer.tools button, footer.tools summary")].forEach((el, i) => {
+    const hit = items.find(x => x.key === layoutKey(el, i));
+    if (!hit) return;
+    el.style.position = "relative";
+    el.style.left = hit.left;
+    el.style.top = hit.top;
+  });
+}
+function presets() { return saved("woc-presets", []); }
+function writePresets(list) { localStorage.setItem("woc-presets", JSON.stringify(list)); }
+document.getElementById("diskBtn").onclick = (e) => {
+  e.stopPropagation();
+  let menu = document.getElementById("layoutMenu");
+  if (menu) { menu.remove(); return; }
+  menu = document.createElement("div");
+  menu.id = "layoutMenu";
+  menu.innerHTML = '<button type="button" id="savePreset">Save this layout</button>';
+  presets().forEach((item, i) => {
+    menu.innerHTML += '<button type="button" data-load="' + i + '">' + item.name + '</button>';
+  });
+  document.body.appendChild(menu);
+  menu.querySelector("#savePreset").onclick = () => {
+    const name = prompt("Name this layout");
+    if (!name) return;
+    const list = presets();
+    list.push({ name, items: captureItems(), bg: document.documentElement.getAttribute("data-bg") });
+    writePresets(list);
+    localStorage.setItem("woc-items", JSON.stringify(captureItems()));
+    menu.remove();
+  };
+  menu.querySelectorAll("[data-load]").forEach(btn => btn.onclick = () => {
+    const item = presets()[btn.dataset.load];
+    applyItems(item.items);
+    localStorage.setItem("woc-items", JSON.stringify(item.items));
+    if (item.bg) setBackground(item.bg);
+    menu.remove();
+  });
+};
+document.getElementById("saveBtn") && (document.getElementById("saveBtn").onclick = () => {
   const name = document.documentElement.getAttribute("data-bg") || "mark";
   if (name === "scatter") {
     const items = [...scatter.querySelectorAll("img")].map(img => ({
@@ -1021,6 +1071,11 @@ scatter.addEventListener("pointerdown", (e) => {
 });
 window.addEventListener("pointermove", (e) => {
   if (!drag) return;
+  if (drag.img === bgLayer) {
+    drag.img.style.left = "50%";
+    drag.img.style.top = (drag.top + (e.clientY - drag.y) / window.innerHeight * 100) + "%";
+    return;
+  }
   drag.img.style.left = (drag.left + (e.clientX - drag.x) / window.innerWidth * 100) + "%";
   drag.img.style.top = (drag.top + (e.clientY - drag.y) / window.innerHeight * 100) + "%";
 });
@@ -1040,8 +1095,13 @@ scatter.addEventListener("touchmove", (e) => {
 }, { passive: true });
 bgLayer.addEventListener("pointerdown", (e) => {
   if (document.documentElement.getAttribute("data-adjust") !== "1") return;
-  drag = { img: bgLayer, x: e.clientX, y: e.clientY, left: parseFloat(bgLayer.style.left), top: parseFloat(bgLayer.style.top) };
+  scatter.querySelectorAll("img").forEach(el => el.classList.remove("sel"));
+  bgLayer.classList.add("sel");
+  showSize(bgLayer);
+  drag = { img: bgLayer, x: e.clientX, y: e.clientY, left: 50, top: parseFloat(bgLayer.style.top) };
 });
+bgLayer.style.left = "50%";
+bgLayer.style.transform = "translateX(-50%)";
 bgLayer.addEventListener("touchstart", (e) => {
   if (e.touches.length === 2) {
     drag = null;
@@ -1058,7 +1118,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.40";
+const APP_VERSION = "2.41";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
