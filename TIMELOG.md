@@ -44,11 +44,12 @@ Started at the first recorded action of the next burst. Every later commit and p
 - 01:07 prompt: version number and time log only in the bottom banner
 - 01:12 prompt: the new page fade was not visible. Hold it invisible, then fade it in with the wheel (version 2.7)
 - 01:16 prompt: extend the page fade to 3 seconds, and flash a new-version notice in the bottom banner (version 2.8)
-- Counted so far: 86 min (23:49:57 to 01:16)
+- 01:22 prompt: fade the wheel out 2 seconds earlier, and always open in light mode (version 2.9)
+- Counted so far: 92 min (23:49:57 to 01:22)
 - Status: running
 
 ## Total counted
-156 minutes (60 min Zoom call + 10 min credit for the 1.5 prompt + 86 min open session). Session 2 is still open. The 10-minute credit rule is internal only and is not shown on the client time log.
+162 minutes (60 min Zoom call + 10 min credit for the 1.5 prompt + 92 min open session). Session 2 is still open. The 10-minute credit rule is internal only and is not shown on the client time log.
 
 
 ## Prompt log
@@ -81,3 +82,4 @@ Summaries, not verbatim. Versions 1.5 through 2.1 are summarized from the versio
 | 2026-10-09 01:07 | 2.6 | Version number and time log only in the bottom banner. |
 | 2026-10-09 01:12 | 2.7 | New page fade was not visible. Start it invisible and fade it in as the wheel fades out. |
 | 2026-10-09 01:16 | 2.8 | Extend the page fade to 3 seconds. Flash a new-version notice in the bottom banner. |
+| 2026-10-09 01:22 | 2.9 | Fade the wheel out 2 seconds earlier. Always open in light mode. |

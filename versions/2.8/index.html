@@ -230,7 +230,7 @@
     overflow: hidden;
     background: #1a120c;
     transform-origin: center center;
-    animation: growThrough 2.6s linear forwards;
+    animation: growThrough 4.6s linear forwards;
     will-change: transform;
   }
   .vortex-wheel img {
@@ -246,7 +246,7 @@
     34% { transform: translate(-50%, -50%) scale(1); }
     100% { transform: translate(-50%, -50%) scale(1.85); }
   }
-  .vortex.leave { animation: fadeOut 1s linear forwards; }
+  .vortex.leave { animation: fadeOut 3s linear forwards; }
   @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
   body.page-in .wrap { opacity: 0; }
   body.page-in.show-page .wrap { animation: pageIn 3s linear forwards; }
@@ -270,7 +270,7 @@
   @keyframes verFlash { to { visibility: hidden; } }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.9</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.8</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -372,8 +372,8 @@ function playVortex(done) {
       requestAnimationFrame(() => document.body.classList.add("show-page"));
     });
   }, 1560);
-  setTimeout(() => layer.remove(), 2700);
   setTimeout(() => {
+    layer.remove();
     document.body.classList.remove("page-in");
     document.body.classList.remove("show-page");
   }, 4700);
@@ -641,11 +641,14 @@ document.getElementById("themeBtn").onclick = () => {
   document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
   document.getElementById("themeBtn").textContent = dark ? "Switch to dark mode" : "Switch to light mode";
 };
-document.documentElement.setAttribute("data-theme", "light");
+if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+  document.documentElement.setAttribute("data-theme", "dark");
+  document.getElementById("themeBtn").textContent = "Switch to light mode";
+}
 renderIndex();
 render();
 
-const APP_VERSION = "2.9";
+const APP_VERSION = "2.8";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
