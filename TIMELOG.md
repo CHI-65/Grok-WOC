@@ -38,11 +38,12 @@ Started at the first recorded action of the next burst. Every later commit and p
 - 00:52 prompt: a lone prompt after idle gets 10 minutes credit, including version 1.5
 - 00:55 prompt: version links should open the actual app, not a snapshot
 - 00:56 prompt: larger bottom banner naming the version, with a way back to the log
-- Counted so far: 66 min (23:49:57 to 00:56)
+- 00:57 prompt: button on the banner to return to the current version
+- Counted so far: 67 min (23:49:57 to 00:57)
 - Status: running
 
 ## Total counted
-136 minutes (60 min Zoom call + 10 min credit for the 1.5 prompt + 66 min open session). Session 2 is still open. Version numbers open the actual app from that version.
+137 minutes (60 min Zoom call + 10 min credit for the 1.5 prompt + 67 min open session). Session 2 is still open. Version numbers open the actual app from that version.
 
 
 ## Prompt log
@@ -69,3 +70,4 @@ Summaries, not verbatim. Versions 1.5 through 2.1 are summarized from the versio
 | 2026-10-09 00:52 | — | A prompt with nothing after it gets 10 minutes credit. Applied to version 1.5. |
 | 2026-10-09 00:55 | — | Version links should open the actual app from that version, not a snapshot. |
 | 2026-10-09 00:56 | — | Larger bottom banner naming the version, with a link back to the time log. |
+| 2026-10-09 00:57 | — | Button on the version banner to go back to the current app. |
