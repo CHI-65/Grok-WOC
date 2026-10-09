@@ -208,8 +208,17 @@
     pointer-events: auto;
   }
   .vortex-wheel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
     width: 142vmax;
     height: 142vmax;
+    aspect-ratio: 1 / 1;
+    flex: none;
+    flex-shrink: 0;
+    min-width: 142vmax;
+    min-height: 142vmax;
+    margin: 0;
     border-radius: 50%;
     border: 12px solid #1a120c;
     overflow: hidden;
@@ -227,9 +236,9 @@
   /* scale(1) is already larger than the page diagonal, so the circle
      covers the whole page before the fade, then keeps growing through it. */
   @keyframes growThrough {
-    0% { transform: scale(0.1); }
-    58% { transform: scale(1); }
-    100% { transform: scale(1.55); }
+    0% { transform: translate(-50%, -50%) scale(0.1); }
+    58% { transform: translate(-50%, -50%) scale(1); }
+    100% { transform: translate(-50%, -50%) scale(1.55); }
   }
   .vortex.leave { animation: fadeOut 1.05s linear forwards; }
   @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
@@ -244,7 +253,7 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <p class="version" id="versionLabel">Version 2.2</p>
+    <p class="version" id="versionLabel">Version 2.3</p>
     <button type="button" id="refreshBtn">Refresh</button>
     <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
@@ -605,7 +614,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "2.2";
+const APP_VERSION = "2.3";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
