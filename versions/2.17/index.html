@@ -286,12 +286,11 @@
     background: var(--bg);
   }
   body.map-open .wrap { visibility: hidden; }
-  .map-stage { position: relative; width: min(100%, calc(100vh - 124px)); max-height: calc(100vh - 124px); }
-  .map-stage img.color { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .map-stage { position: relative; width: min(100%, calc((100vh - 124px) * 0.89)); max-height: calc(100vh - 124px); }
   .map-stage img.map { width: 100%; height: auto; display: block; }
   .map-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .map-stage path { fill: transparent; stroke: transparent; cursor: pointer; }
-  .map-stage path.lit { fill: transparent; }
+  .map-stage path.lit { fill: var(--lit); stroke: #1c1612; stroke-width: 1.5; }
   .map-back { position: absolute; top: 10px; left: 10px; z-index: 2; }
 
   .hidden { display: none !important; }
@@ -314,7 +313,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.18</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.17</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -412,31 +411,21 @@ function drawMap() {
   const page = document.createElement("div");
   page.id = "mapPage";
   page.className = "map-page";
-  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><img class="map color" alt="" src="images/printed-wheel-color.png"><svg viewBox="0 0 1253 1253"></svg></div>';
+  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><svg viewBox="0 0 333 373"></svg></div>';
   const svg = page.querySelector("svg");
-  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-  svg.appendChild(defs);
   STATIONS.forEach((item, i) => {
-    const cx = 626, cy = 626, r0 = 468, r1 = 590;
-    const a1 = (90 - i * 30) * Math.PI / 180;
-    const a0 = a1 - 30 * Math.PI / 180;
+    const cx = 166, cy = 166, r0 = 36, r1 = 156;
+    const a0 = (75 + i * 30) * Math.PI / 180;
+    const a1 = a0 + 30 * Math.PI / 180;
     const pt = (a, r) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
     const [x0, y0] = pt(a0, r1);
     const [x1, y1] = pt(a1, r1);
     const [x2, y2] = pt(a1, r0);
     const [x3, y3] = pt(a0, r0);
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    const d = "M " + x0 + " " + y0 + " A " + r1 + " " + r1 + " 0 0 1 " + x1 + " " + y1 + " L " + x2 + " " + y2 + " A " + r0 + " " + r0 + " 0 0 0 " + x3 + " " + y3 + " Z";
-    path.setAttribute("d", d);
-    if (state.mapLit === item.id) {
-      const clip = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
-      clip.id = "stationClip";
-      const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      clipPath.setAttribute("d", d);
-      clip.appendChild(clipPath);
-      defs.appendChild(clip);
-      page.querySelector("img.color").style.clipPath = "url(#stationClip)";
-    }
+    path.setAttribute("d", "M " + x0 + " " + y0 + " A " + r1 + " " + r1 + " 0 0 1 " + x1 + " " + y1 + " L " + x2 + " " + y2 + " A " + r0 + " " + r0 + " 0 0 0 " + x3 + " " + y3 + " Z");
+    path.style.setProperty("--lit", colors[item.quarter] || "#e2b000");
+    if (state.mapLit === item.id) path.classList.add("lit");
     path.setAttribute("aria-label", item.name);
     path.addEventListener("pointerdown", (e) => {
       e.preventDefault();
@@ -769,7 +758,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.18";
+const APP_VERSION = "2.17";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
