@@ -287,7 +287,7 @@
   }
   body.map-open .wrap { visibility: hidden; }
   .map-stage { position: relative; width: min(100%, calc(100vh - 124px)); max-height: calc(100vh - 124px); }
-  .map-stage img.color { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .map-stage img.color { display: none; }
   .map-stage img.map { width: 100%; height: auto; display: block; }
   .map-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .map-stage path { fill: transparent; stroke: transparent; cursor: pointer; }
@@ -314,7 +314,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.18</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.19</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -412,7 +412,7 @@ function drawMap() {
   const page = document.createElement("div");
   page.id = "mapPage";
   page.className = "map-page";
-  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><img class="map color" alt="" src="images/printed-wheel-color.png"><svg viewBox="0 0 1253 1253"></svg></div>';
+  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><svg viewBox="0 0 1253 1253"></svg></div>';
   const svg = page.querySelector("svg");
   const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
   svg.appendChild(defs);
@@ -431,11 +431,17 @@ function drawMap() {
     if (state.mapLit === item.id) {
       const clip = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
       clip.id = "stationClip";
+      clip.setAttribute("clipPathUnits", "userSpaceOnUse");
       const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
       clipPath.setAttribute("d", d);
       clip.appendChild(clipPath);
       defs.appendChild(clip);
-      page.querySelector("img.color").style.clipPath = "url(#stationClip)";
+      const lit = document.createElementNS("http://www.w3.org/2000/svg", "image");
+      lit.setAttribute("href", "images/printed-wheel-color.png");
+      lit.setAttribute("width", "1253");
+      lit.setAttribute("height", "1253");
+      lit.setAttribute("clip-path", "url(#stationClip)");
+      svg.appendChild(lit);
     }
     path.setAttribute("aria-label", item.name);
     path.addEventListener("pointerdown", (e) => {
@@ -769,7 +775,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.18";
+const APP_VERSION = "2.19";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
