@@ -136,10 +136,14 @@
   a { color: var(--accent); }
   .wrap { max-width: 760px; margin: 0 auto; padding: 16px 16px 40px; }
   header.app {
-    display: grid; grid-template-columns: 48px 1fr 48px; gap: 10px; align-items: center;
-    margin-bottom: 12px;
+    position: relative; display: flex; justify-content: space-between; align-items: center;
+    min-height: 48px; margin-bottom: 12px;
   }
-  .brand { font-size: 16px; letter-spacing: 0.02em; text-transform: uppercase; margin: 0; text-align: center; white-space: nowrap; }
+  .brand {
+    position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+    font-size: 16px; letter-spacing: 0.02em; text-transform: uppercase; margin: 0;
+    text-align: center; white-space: nowrap; pointer-events: none;
+  }
   .version { margin: 0; font-size: 22px; font-weight: 700; }
   a.loglink {
     display: inline-flex; align-items: center; min-height: 56px; padding: 12px 16px;
@@ -357,7 +361,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 150px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.34</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.35</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -997,7 +1001,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.34";
+const APP_VERSION = "2.35";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
