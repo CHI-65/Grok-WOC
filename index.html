@@ -81,9 +81,22 @@
   }
   html[data-theme="dark"] button {
     background:
-      linear-gradient(rgba(255,250,243,0.5), rgba(255,250,243,0.5)) padding-box,
+      linear-gradient(rgba(36,30,24,0.48), rgba(36,30,24,0.48)) padding-box,
       conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
   }
+  button.door, button.icon-btn {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+  }
+  button.icon-btn { min-height: 0; padding: 4px; width: 48px; height: 48px; }
+  button.icon-btn svg { width: 32px; height: 32px; display: block; }
+  .settings {
+    position: absolute; right: 12px; top: 72px; z-index: 5;
+    background: rgba(255,250,243,0.92); border-radius: 12px; padding: 10px;
+  }
+  html[data-theme="dark"] .settings { background: rgba(36,30,24,0.92); }
+  html[data-theme="dark"] button.door, html[data-theme="dark"] button.icon-btn { background: transparent; }
   button:hover { outline: 3px solid var(--focus); }
   button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible {
     outline: 3px solid var(--focus);
