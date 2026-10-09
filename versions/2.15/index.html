@@ -74,14 +74,14 @@
     border: 3px solid transparent;
     border-radius: 12px;
     background:
-      linear-gradient(rgba(255,250,243,0.5), rgba(255,250,243,0.5)) padding-box,
+      linear-gradient(transparent, transparent) padding-box,
       conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
     cursor: pointer;
     text-align: left;
   }
   html[data-theme="dark"] button {
     background:
-      linear-gradient(rgba(255,250,243,0.5), rgba(255,250,243,0.5)) padding-box,
+      linear-gradient(transparent, transparent) padding-box,
       conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
   }
   button:hover { outline: 3px solid var(--focus); }
@@ -298,7 +298,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.16</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.15</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -307,10 +307,9 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <button type="button" id="refreshBtn" class="icon-btn" aria-label="Refresh"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b000"/><stop offset="0.34" stop-color="#d4145a"/><stop offset="0.67" stop-color="#2b6fd6"/><stop offset="1" stop-color="#2f9e38"/></linearGradient></defs><path d="M20 12a8 8 0 1 1-2.3-5.7" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round"/><path d="M20 4.5V10h-5.5" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button type="button" id="menuBtn" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+    <button type="button" id="refreshBtn">Refresh</button>
+    <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
-  <div id="settings" class="settings hidden"><button type="button" id="themeBtn">Switch to dark mode</button></div>
   <p id="screenMeta" class="screen-label">Screen 1 of 11 · Two-Door Entry</p>
   <p><span id="journey" class="journey">Free · Illumination journey</span></p>
   <main id="main"></main>
@@ -730,9 +729,6 @@ function render() {
 
 document.getElementById("backBtn").onclick = back;
 document.getElementById("restartBtn").onclick = restart;
-document.getElementById("menuBtn").onclick = () => {
-  document.getElementById("settings").classList.toggle("hidden");
-};
 document.getElementById("themeBtn").onclick = () => {
   const dark = document.documentElement.getAttribute("data-theme") === "dark";
   document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
@@ -742,7 +738,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.16";
+const APP_VERSION = "2.15";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
