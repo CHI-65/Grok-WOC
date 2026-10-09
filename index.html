@@ -203,25 +203,25 @@
   .vortex {
     position: fixed; inset: 0; z-index: 40;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(246,241,232,0.2);
-    animation: fadeIn 0.25s ease;
+    background: rgba(246,241,232,0);
+    animation: fadeIn 0.8s ease forwards;
   }
-  html[data-theme="dark"] .vortex { background: rgba(22,19,15,0.25); }
+  html[data-theme="dark"] .vortex { background: rgba(22,19,15,0); }
   .vortex-wheel {
     width: min(50vw, 50vh); height: min(50vw, 50vh);
     border-radius: 50%; border: 10px solid #1a120c;
     overflow: hidden; background: #1a120c;
-    animation: growIn 1.1s ease forwards;
+    animation: growIn 2.4s cubic-bezier(0.22, 0.8, 0.2, 1) forwards;
   }
   .vortex-wheel img {
     width: 118%; height: 118%; margin: -9%;
     object-fit: cover; transform-origin: center;
-    animation: vortex 0.45s linear infinite;
+    animation: vortex 0.55s linear infinite;
   }
   @keyframes vortex { to { transform: rotate(360deg); } }
-  @keyframes growIn { from { transform: scale(0.35); } to { transform: scale(1); } }
+  @keyframes growIn { from { transform: scale(0.28); } to { transform: scale(1); } }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .vortex.leave { animation: fadeOut 0.45s ease forwards; }
+  .vortex.leave { animation: fadeOut 0.9s ease forwards; }
   @keyframes fadeOut { to { opacity: 0; } }
   .hidden { display: none !important; }
 </style>
@@ -234,7 +234,7 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <p class="version" id="versionLabel">Version 2.0</p>
+    <p class="version" id="versionLabel">Version 2.1</p>
     <button type="button" id="refreshBtn">Refresh</button>
     <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
@@ -316,8 +316,8 @@ function playVortex(done) {
   layer.className = "vortex";
   layer.innerHTML = '<div class="vortex-wheel"><img alt="" src="images/wheel-mark.png"></div>';
   document.body.appendChild(layer);
-  setTimeout(() => layer.classList.add("leave"), 1600);
-  setTimeout(() => { layer.remove(); done(); }, 2050);
+  setTimeout(() => layer.classList.add("leave"), 2400);
+  setTimeout(() => { layer.remove(); done(); }, 3300);
 }
 function startFloat(stage) {
   const cards = Array.from(stage.querySelectorAll(".fcard"));
@@ -589,7 +589,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "2.0";
+const APP_VERSION = "2.1";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
