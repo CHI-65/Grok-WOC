@@ -271,7 +271,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.10</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.11</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -646,7 +646,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.10";
+const APP_VERSION = "2.11";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
@@ -667,8 +667,15 @@ async function checkVersion() {
     const data = await res.json();
     if (data.version && data.version !== APP_VERSION) {
       const flash = document.getElementById("verUpdate");
-      flash.textContent = "New version " + data.version + " — tap to load";
-      flash.classList.remove("hidden");
+      if (flash) {
+        flash.textContent = "New version " + data.version + " is available — tap to load";
+        flash.classList.remove("hidden");
+      }
+      const banner = document.getElementById("updateBanner");
+      if (banner) {
+        document.getElementById("updateText").textContent = "New version " + data.version + " is available.";
+        banner.classList.remove("hidden");
+      }
     }
   } catch (err) {}
 }
@@ -677,7 +684,7 @@ document.getElementById("refreshBtn").onclick = loadNewest;
 document.getElementById("updateBtn").onclick = loadNewest;
 document.getElementById("verUpdate").onclick = loadNewest;
 checkVersion();
-setInterval(checkVersion, 15000);
+setInterval(checkVersion, 10000);
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

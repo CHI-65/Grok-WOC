@@ -1,4 +1,4 @@
-const CACHE = "woc-scaffolding-v23";
+const CACHE = "woc-scaffolding-v24";
 const FILES = [
   "./",
   "./index.html",
@@ -26,6 +26,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (url.pathname.endsWith("version.json")) return;
   if (url.pathname.includes("/versions/") || url.pathname.endsWith("timelog.html")) return;
+  const freshFirst = url.pathname.endsWith(".html") || url.pathname.endsWith("/") || url.pathname.endsWith("sw.js");
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const fetched = fetch(event.request)
@@ -35,7 +36,7 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() => cached);
-      return cached || fetched;
+      return freshFirst ? fetched : (cached || fetched);
     })
   );
 });
