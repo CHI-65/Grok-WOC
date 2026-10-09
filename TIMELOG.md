@@ -8,6 +8,11 @@ Times are UTC. Retroactive from the prompt that produced version 1.5.
 
 ## Sessions
 
+### Zoom call
+Logged as Zoom call. Yesterday, about 4:00–5:00 PM local (America/Phoenix, MST). That is 2026-10-07 23:00 UTC through 2026-10-08 00:00 UTC.
+- Counted: 60 min
+- Idle rule: nothing in this thread or the repo landed within 10 minutes after 5:00 PM, so the clock stopped. Later work is separate sessions.
+
 ### 1 — prompt to version 1.5
 - Close: 2026-10-08 15:50:09 (commit `84c2836`, approved wheel mark at 10%)
 - Open: the prompt itself is not in the repo, so this session is recorded but not given a guessed length
@@ -26,11 +31,14 @@ Started at the first recorded action of the next burst. Every later commit and p
 - 00:17 prompt: faster spin, zoom to full page while fading (version 2.2 at 00:20:06)
 - 00:23 prompt: zoom was an oval (version 2.3 at 00:23:38)
 - 00:26 prompt: start this time log
-- Counted so far: 36 min (23:49:57 to 00:26)
+- 00:28 prompt: summarized prompt log with version numbers
+- 00:30 prompt: add the 4–5 PM local call, plus activity after it under the 10-minute idle rule
+- 00:31 prompt: log that conversation as Zoom call
+- Counted so far: 41 min (23:49:57 to 00:31)
 - Status: running
 
 ## Total counted
-36 minutes, plus the unestimated 1.5 prompt. Session 2 is still open.
+101 minutes (60 min Zoom call + 41 min open session), plus the unestimated 1.5 prompt. Session 2 is still open.
 
 
 ## Prompt log
@@ -50,3 +58,5 @@ Summaries, not verbatim. Versions 1.5 through 2.1 are summarized from the versio
 | 2026-10-09 00:23 | 2.3 | Zoom size is right, but the circle turns into an oblong oval at the start. Keep it a circle. |
 | 2026-10-09 00:26 | — | Track time for client review. Stop after 10 minutes idle, resume on a related prompt, retroactive from the 1.5 prompt. |
 | 2026-10-09 00:28 | — | Also keep a summarized prompt log with version numbers. |
+| 2026-10-07 23:00 | — | Zoom call, about 4:00–5:00 PM local yesterday. Logged after the fact. |
+| 2026-10-09 00:31 | — | Log that conversation as Zoom call. |
