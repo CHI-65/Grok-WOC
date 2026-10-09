@@ -125,3 +125,5 @@ Opened by the prompt to remove the line under Catch a wheel, raise the animation
 | 2026-10-09 05:45 | 2.52 | Default door layout is the centered wheel behind the choices. The whole watermark moves, but only from a grab on its left quarter. Text and boxes move only from their right quarter. |
 
 | 2026-10-09 05:49 | 2.53 | Text grab is the right quarter of the text itself, not the larger box. |
+
+| 2026-10-09 05:50 | 2.54 | Layout is only the opening door page. The layout set there is restored when the app opens. |
