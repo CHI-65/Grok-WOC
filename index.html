@@ -81,6 +81,8 @@
   html[data-adjust="1"] #scatter img.sel { outline: 2px solid #e2b000; }
   .design-bar { position: fixed; top: 8px; left: 50%; transform: translateX(-50%); z-index: 40; display: flex; gap: 8px; }
   .design-bar button { min-height: 40px; padding: 8px 12px; }
+  .design-bar input { width: 110px; }
+  html[data-hide="1"] header.app, html[data-hide="1"] #journey, html[data-hide="1"] main, html[data-hide="1"] footer.tools { visibility: hidden; }
   .wrap, .ver-banner, .map-page { position: relative; z-index: 1; }
   button, input, select {
     font: inherit;
@@ -350,7 +352,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.26</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.27</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -371,7 +373,7 @@
   </div>
   <div id="scatter" aria-hidden="true"></div>
   <img id="bgLayer" alt="" src="images/wheel-mark.png">
-  <div class="design-bar"><button type="button" id="adjustBtn">Adjust</button><button type="button" id="saveBtn">Save</button></div>
+  <div class="design-bar"><button type="button" id="adjustBtn">Adjust</button><label>Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></div>
   <p><span id="journey" class="journey">Free · Illumination journey</span></p>
   <main id="main"></main>
   <footer class="tools">
@@ -885,6 +887,9 @@ if (scatterSaved) {
 }
 function applyLayer(name) {
   const layout = saved("woc-layout-" + name, null);
+  const opacity = name === "scatter" && layout && layout[0] ? layout[0].opacity : (layout && layout.opacity) || 20;
+  document.getElementById("opacitySlider").value = opacity;
+  applyOpacity(opacity);
   if (name === "fill") {
     bgLayer.style.width = (layout ? layout.size : 340) + "vw";
   } else {
@@ -900,17 +905,31 @@ document.getElementById("adjustBtn").onclick = () => {
   document.documentElement.setAttribute("data-adjust", on ? "0" : "1");
   document.getElementById("adjustBtn").textContent = on ? "Adjust" : "Adjusting";
 };
+function applyOpacity(value) {
+  const o = value / 100;
+  document.querySelectorAll("#scatter img").forEach(img => img.style.opacity = o);
+  bgLayer.style.opacity = o;
+  document.body.style.setProperty("--bg-opacity", o);
+}
+document.getElementById("opacitySlider").oninput = (e) => applyOpacity(e.target.value);
+document.getElementById("hideBtn").onclick = () => {
+  const on = document.documentElement.getAttribute("data-hide") === "1";
+  document.documentElement.setAttribute("data-hide", on ? "0" : "1");
+  document.getElementById("hideBtn").textContent = on ? "Hide text" : "Show text";
+};
 document.getElementById("saveBtn").onclick = () => {
   const name = document.documentElement.getAttribute("data-bg") || "mark";
   if (name === "scatter") {
     const items = [...scatter.querySelectorAll("img")].map(img => ({
       left: parseFloat(img.style.left), top: parseFloat(img.style.top),
-      size: parseFloat(img.style.width), rot: parseFloat(img.style.transform.replace(/[^0-9.-]/g, "")) || 0
+      size: parseFloat(img.style.width), rot: parseFloat(img.style.transform.replace(/[^0-9.-]/g, "")) || 0,
+      opacity: document.getElementById("opacitySlider").value
     }));
     localStorage.setItem("woc-layout-scatter", JSON.stringify(items));
   } else {
     localStorage.setItem("woc-layout-" + name, JSON.stringify({
-      left: parseFloat(bgLayer.style.left), top: parseFloat(bgLayer.style.top), size: parseFloat(bgLayer.style.width)
+      left: parseFloat(bgLayer.style.left), top: parseFloat(bgLayer.style.top), size: parseFloat(bgLayer.style.width),
+      opacity: document.getElementById("opacitySlider").value
     }));
   }
   document.documentElement.setAttribute("data-adjust", "0");
@@ -965,7 +984,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.26";
+const APP_VERSION = "2.27";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
