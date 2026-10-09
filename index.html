@@ -224,7 +224,7 @@
     overflow: hidden;
     background: #1a120c;
     transform-origin: center center;
-    animation: growThrough 2.7s cubic-bezier(0.18, 0.62, 0.28, 1) forwards;
+    animation: growThrough 2.7s linear forwards;
     will-change: transform;
   }
   .vortex-wheel img {
@@ -238,7 +238,7 @@
   @keyframes growThrough {
     0% { transform: translate(-50%, -50%) scale(0.1); }
     58% { transform: translate(-50%, -50%) scale(1); }
-    100% { transform: translate(-50%, -50%) scale(1.55); }
+    100% { transform: translate(-50%, -50%) scale(1.85); }
   }
   .vortex.leave { animation: fadeOut 1.05s linear forwards; }
   @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
@@ -253,7 +253,7 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <p class="version" id="versionLabel">Version 2.3</p>
+    <p class="version" id="versionLabel">Version 2.4</p>
     <button type="button" id="refreshBtn">Refresh</button>
     <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
@@ -614,7 +614,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "2.3";
+const APP_VERSION = "2.4";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
