@@ -230,12 +230,21 @@
     overflow: hidden;
     background: #1a120c;
     transform-origin: center center;
-    transform: translate(-50%, -50%) scale(0.16);
+    animation: growThrough 2.6s linear forwards;
     will-change: transform;
   }
   .vortex-wheel img {
     width: 118%; height: 118%; margin: -9%;
     object-fit: cover; transform-origin: center;
+    animation: vortex 0.26s linear infinite;
+  }
+  @keyframes vortex { to { transform: rotate(360deg); } }
+  /* scale(1) is already larger than the page diagonal, so the circle
+     covers the whole page before the fade, then keeps growing through it. */
+  @keyframes growThrough {
+    0% { transform: translate(-50%, -50%) scale(0.1); }
+    34% { transform: translate(-50%, -50%) scale(1); }
+    100% { transform: translate(-50%, -50%) scale(1.85); }
   }
   .vortex.leave { animation: fadeOut 1s linear forwards; }
   @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
@@ -262,7 +271,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.12</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.11</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -353,25 +362,8 @@ function playVortex(done) {
   layer.setAttribute("aria-hidden", "true");
   layer.innerHTML = '<div class="vortex-wheel"><img alt="" src="images/wheel-mark.png"></div>';
   document.body.appendChild(layer);
-  const wheel = layer.querySelector(".vortex-wheel");
-  const img = layer.querySelector("img");
-  const started = performance.now();
-  const life = 1700;
-  let angle = 0;
-  let last = started;
-  function frame(now) {
-    if (!layer.isConnected) return;
-    const t = Math.min(1, (now - started) / life);
-    const dt = Math.min(0.05, (now - last) / 1000);
-    last = now;
-    const scale = 0.16 + t * 0.62;
-    wheel.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
-    const speed = 40 + t * t * 700;
-    angle = (angle + speed * dt) % 360;
-    img.style.transform = "rotate(" + angle + "deg)";
-    if (t < 1) requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
+  // Circle covers the page at 58% of growThrough (about 1.55s). Reveal the
+  // next page underneath then, and keep the wheel growing while it fades.
   setTimeout(() => {
     document.body.classList.add("page-in");
     document.body.classList.remove("show-page");
@@ -380,12 +372,12 @@ function playVortex(done) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => document.body.classList.add("show-page"));
     });
-  }, 700);
-  setTimeout(() => layer.remove(), 1700);
+  }, 1560);
+  setTimeout(() => layer.remove(), 2700);
   setTimeout(() => {
     document.body.classList.remove("page-in");
     document.body.classList.remove("show-page");
-  }, 3700);
+  }, 4700);
 }
 function startFloat(stage) {
   const cards = Array.from(stage.querySelectorAll(".fcard"));
@@ -654,7 +646,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.12";
+const APP_VERSION = "2.11";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
