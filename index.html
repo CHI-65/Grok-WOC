@@ -314,7 +314,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.19</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.20</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -412,7 +412,7 @@ function drawMap() {
   const page = document.createElement("div");
   page.id = "mapPage";
   page.className = "map-page";
-  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><svg viewBox="0 0 1253 1253"></svg></div>';
+  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel-bw.png"><svg viewBox="0 0 1253 1253"></svg></div>';
   const svg = page.querySelector("svg");
   const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
   svg.appendChild(defs);
@@ -448,7 +448,24 @@ function drawMap() {
       e.preventDefault();
       if (state.mapLit !== item.id) {
         state.mapLit = item.id;
-        render();
+        const oldLit = svg.querySelector("image.lit");
+        if (oldLit) oldLit.remove();
+        let clip = svg.querySelector("#stationClip");
+        if (!clip) {
+          clip = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+          clip.id = "stationClip";
+          clip.setAttribute("clipPathUnits", "userSpaceOnUse");
+          clip.appendChild(document.createElementNS("http://www.w3.org/2000/svg", "path"));
+          defs.appendChild(clip);
+        }
+        clip.querySelector("path").setAttribute("d", d);
+        const lit = document.createElementNS("http://www.w3.org/2000/svg", "image");
+        lit.setAttribute("class", "lit");
+        lit.setAttribute("href", "images/printed-wheel-color.png");
+        lit.setAttribute("width", "1253");
+        lit.setAttribute("height", "1253");
+        lit.setAttribute("clip-path", "url(#stationClip)");
+        svg.appendChild(lit);
         return;
       }
       state.mapOpen = false;
@@ -601,7 +618,7 @@ function render() {
   }
   if (s.n === 4) {
     const said = state.pick || "PLACEHOLDER — no pick yet";
-    html += '<h1 tabindex="-1">Recognition</h1><div class="cardish"><p>You said <strong>' + said + '</strong>.</p><p class="station-line">That\'s <strong>' + st.name + '</strong> <button type="button" class="mini-wheel" id="openMap" aria-label="Open the printed wheel"><img alt="" src="images/printed-wheel.png"></button></p><p class="muted">Station ' + st.id + ' · ' + st.quarter + ' quarter. Challenge: ' + st.challenge + '.</p></div><div class="row"><button class="primary" type="button" id="toIllum">See the illumination</button></div>';
+    html += '<h1 tabindex="-1">Recognition</h1><div class="cardish"><p>You said <strong>' + said + '</strong>.</p><p class="station-line">That\'s <strong>' + st.name + '</strong> <button type="button" class="mini-wheel" id="openMap" aria-label="Open the printed wheel"><img alt="" src="images/printed-wheel-bw.png"></button></p><p class="muted">Station ' + st.id + ' · ' + st.quarter + ' quarter. Challenge: ' + st.challenge + '.</p></div><div class="row"><button class="primary" type="button" id="toIllum">See the illumination</button></div>';
   }
   if (s.n === 5) {
     html += '<h1 tabindex="-1">Illumination</h1><p class="muted">Free for all 12 stations. Copy below is not final.</p>';
@@ -775,7 +792,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.19";
+const APP_VERSION = "2.20";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
