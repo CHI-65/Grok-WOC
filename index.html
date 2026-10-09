@@ -79,8 +79,9 @@
   html[data-bg="mark"] body::before, html[data-bg="fill"] body::before { opacity: 0; }
   html[data-adjust="1"] #scatter, html[data-adjust="1"] #bgLayer { pointer-events: auto; }
   html[data-adjust="1"] #scatter img.sel { outline: 2px solid #e2b000; }
-  .design-bar { position: fixed; top: 8px; left: 50%; transform: translateX(-50%); z-index: 40; display: none; gap: 8px; }
-  html[data-adjust="1"] .design-bar { display: flex; }
+  .adjust-controls { display: none; align-items: center; gap: 8px; }
+  html[data-adjust="1"] .adjust-controls { display: flex; }
+  .adjust-controls button, .adjust-controls label { min-height: 36px; }
   #pencilBtn { min-height: 0; width: 36px; height: 36px; padding: 4px; border: 0; background: transparent; }
   .design-bar button { min-height: 40px; padding: 8px 12px; }
   .design-bar input { width: 110px; }
@@ -354,7 +355,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.28</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.29</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -375,7 +376,6 @@
   </div>
   <div id="scatter" aria-hidden="true"></div>
   <img id="bgLayer" alt="" src="images/wheel-mark.png">
-  <div class="design-bar"><label>Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></div>
   <p><span id="journey" class="journey">Free · Illumination journey</span></p>
   <main id="main"></main>
   <footer class="tools">
@@ -912,7 +912,21 @@ function applyOpacity(value) {
   bgLayer.style.opacity = o;
   document.body.style.setProperty("--bg-opacity", o);
 }
-document.getElementById("opacitySlider").oninput = (e) => applyOpacity(e.target.value);
+const slider = document.getElementById("opacitySlider");
+const sliderLabel = document.getElementById("sliderLabel");
+function selectedWheel() { return document.querySelector("#scatter img.sel"); }
+slider.oninput = (e) => {
+  const img = selectedWheel();
+  if (img) img.style.width = (24 + e.target.value * 1.4) + "px";
+  else applyOpacity(e.target.value);
+};
+function showSize(img) {
+  sliderLabel.firstChild.textContent = "Size ";
+  slider.value = Math.round((parseFloat(img.style.width) - 24) / 1.4);
+}
+function showOpacity() {
+  sliderLabel.firstChild.textContent = "Opacity ";
+}
 document.getElementById("hideBtn").onclick = () => {
   const on = document.documentElement.getAttribute("data-hide") === "1";
   document.documentElement.setAttribute("data-hide", on ? "0" : "1");
@@ -943,6 +957,7 @@ scatter.addEventListener("pointerdown", (e) => {
   if (!img) return;
   scatter.querySelectorAll("img").forEach(el => el.classList.remove("sel"));
   img.classList.add("sel");
+  showSize(img);
   drag = { img, x: e.clientX, y: e.clientY, left: parseFloat(img.style.left), top: parseFloat(img.style.top) };
 });
 window.addEventListener("pointermove", (e) => {
@@ -984,7 +999,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.28";
+const APP_VERSION = "2.29";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
