@@ -42,11 +42,12 @@ Started at the first recorded action of the next burst. Every later commit and p
 - 00:58 prompt: hide the 10-minute credit rule from the client-facing log. Rule still applies in this file.
 - 01:06 prompt: new page should fade in as the wheel fades out (version 2.6)
 - 01:07 prompt: version number and time log only in the bottom banner
-- Counted so far: 77 min (23:49:57 to 01:07)
+- 01:12 prompt: the new page fade was not visible. Hold it invisible, then fade it in with the wheel (version 2.7)
+- Counted so far: 82 min (23:49:57 to 01:12)
 - Status: running
 
 ## Total counted
-147 minutes (60 min Zoom call + 10 min credit for the 1.5 prompt + 77 min open session). Session 2 is still open. The 10-minute credit rule is internal only and is not shown on the client time log.
+152 minutes (60 min Zoom call + 10 min credit for the 1.5 prompt + 82 min open session). Session 2 is still open. The 10-minute credit rule is internal only and is not shown on the client time log.
 
 
 ## Prompt log
@@ -77,3 +78,4 @@ Summaries, not verbatim. Versions 1.5 through 2.1 are summarized from the versio
 | 2026-10-09 00:58 | — | Do not show the 10-minute credit rule on the client time log. |
 | 2026-10-09 01:06 | 2.6 | New page should fade in as the wheel fades out. |
 | 2026-10-09 01:07 | 2.6 | Version number and time log only in the bottom banner. |
+| 2026-10-09 01:12 | 2.7 | New page fade was not visible. Start it invisible and fade it in as the wheel fades out. |

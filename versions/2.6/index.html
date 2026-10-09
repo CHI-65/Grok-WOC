@@ -230,7 +230,7 @@
     overflow: hidden;
     background: #1a120c;
     transform-origin: center center;
-    animation: growThrough 3.1s linear forwards;
+    animation: growThrough 2.7s linear forwards;
     will-change: transform;
   }
   .vortex-wheel img {
@@ -246,10 +246,9 @@
     58% { transform: translate(-50%, -50%) scale(1); }
     100% { transform: translate(-50%, -50%) scale(1.85); }
   }
-  .vortex.leave { animation: fadeOut 1.4s linear forwards; }
+  .vortex.leave { animation: fadeOut 1.05s linear forwards; }
   @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-  body.page-in .wrap { opacity: 0; }
-  body.page-in.show-page .wrap { animation: pageIn 1.4s linear forwards; }
+  body.page-in .wrap { animation: pageIn 1.05s linear forwards; }
   @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
   .hidden { display: none !important; }
 </style>
@@ -267,7 +266,7 @@
   .ver-banner a { color: #ffd36a; font-weight: 700; font-size: 22px; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span>You are on version 2.7</span><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span>You are on version 2.6</span><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -362,18 +361,13 @@ function playVortex(done) {
   // next page underneath then, and keep the wheel growing while it fades.
   setTimeout(() => {
     document.body.classList.add("page-in");
-    document.body.classList.remove("show-page");
     layer.classList.add("leave");
     done();
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => document.body.classList.add("show-page"));
-    });
   }, 1560);
   setTimeout(() => {
     layer.remove();
     document.body.classList.remove("page-in");
-    document.body.classList.remove("show-page");
-  }, 3100);
+  }, 2680);
 }
 function startFloat(stage) {
   const cards = Array.from(stage.querySelectorAll(".fcard"));
@@ -645,7 +639,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "2.7";
+const APP_VERSION = "2.6";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
