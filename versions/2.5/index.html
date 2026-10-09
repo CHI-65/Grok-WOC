@@ -248,8 +248,6 @@
   }
   .vortex.leave { animation: fadeOut 1.05s linear forwards; }
   @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-  body.page-in .wrap { animation: pageIn 1.05s linear forwards; }
-  @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
   .hidden { display: none !important; }
 </style>
 </head>
@@ -266,7 +264,7 @@
   .ver-banner a { color: #ffd36a; font-weight: 700; font-size: 22px; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span>You are on version 2.6</span><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span>You are on version 2.5</span><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -275,6 +273,8 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
+    <p class="version" id="versionLabel">Version 2.5</p>
+    <a class="loglink" href="../../timelog.html">Time log</a>
     <button type="button" id="refreshBtn">Refresh</button>
     <button type="button" id="themeBtn">Switch to dark mode</button>
   </header>
@@ -360,14 +360,10 @@ function playVortex(done) {
   // Circle covers the page at 58% of growThrough (about 1.55s). Reveal the
   // next page underneath then, and keep the wheel growing while it fades.
   setTimeout(() => {
-    document.body.classList.add("page-in");
     layer.classList.add("leave");
     done();
   }, 1560);
-  setTimeout(() => {
-    layer.remove();
-    document.body.classList.remove("page-in");
-  }, 2680);
+  setTimeout(() => layer.remove(), 2680);
 }
 function startFloat(stage) {
   const cards = Array.from(stage.querySelectorAll(".fcard"));
@@ -450,7 +446,7 @@ function render() {
     html += '<div class="paywall"><strong>Paywall boundary.</strong> Free illumination journey ends here. What follows is the paid full course. This is a review divider, not a real charge.</div>';
   }
   if (s.n === 1) {
-    html += '<h1 tabindex="-1">What\'s going on right now?</h1><p class="muted">Two doors. Pick the one that fits. This is scaffolding, not final copy.</p><div class="grid"><button class="door" type="button" id="doorKnow">I know what I feel</button><button class="door" type="button" id="doorOff">I just feel off</button></div>';
+    html += '<h1 tabindex="-1">What\'s going on right now?</h1><p class="muted">Two doors. Pick the one that fits. This is scaffolding, not final copy.</p><div class="grid"><button class="door" type="button" id="doorKnow">I know what I feel</button><button class="door" type="button" id="doorOff">I just feel off</button></div><div class="row"><a class="loglink doorlink" href="../../timelog.html">Time log</a></div>';
   }
   if (s.n === 2) {
     html += '<h1 tabindex="-1">Felt-word grid</h1><p>Tap the feeling that is closest. Each word maps to one station.</p><div class="grid" id="wordGrid"></div>';
@@ -639,7 +635,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "2.6";
+const APP_VERSION = "2.5";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {

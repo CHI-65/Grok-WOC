@@ -40,11 +40,13 @@ Started at the first recorded action of the next burst. Every later commit and p
 - 00:56 prompt: larger bottom banner naming the version, with a way back to the log
 - 00:57 prompt: button on the banner to return to the current version
 - 00:58 prompt: hide the 10-minute credit rule from the client-facing log. Rule still applies in this file.
-- Counted so far: 68 min (23:49:57 to 00:58)
+- 01:06 prompt: new page should fade in as the wheel fades out (version 2.6)
+- 01:07 prompt: version number and time log only in the bottom banner
+- Counted so far: 77 min (23:49:57 to 01:07)
 - Status: running
 
 ## Total counted
-138 minutes (60 min Zoom call + 10 min credit for the 1.5 prompt + 68 min open session). Session 2 is still open. The 10-minute credit rule is internal only and is not shown on the client time log.
+147 minutes (60 min Zoom call + 10 min credit for the 1.5 prompt + 77 min open session). Session 2 is still open. The 10-minute credit rule is internal only and is not shown on the client time log.
 
 
 ## Prompt log
@@ -73,3 +75,5 @@ Summaries, not verbatim. Versions 1.5 through 2.1 are summarized from the versio
 | 2026-10-09 00:56 | — | Larger bottom banner naming the version, with a link back to the time log. |
 | 2026-10-09 00:57 | — | Button on the version banner to go back to the current app. |
 | 2026-10-09 00:58 | — | Do not show the 10-minute credit rule on the client time log. |
+| 2026-10-09 01:06 | 2.6 | New page should fade in as the wheel fades out. |
+| 2026-10-09 01:07 | 2.6 | Version number and time log only in the bottom banner. |
