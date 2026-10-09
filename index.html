@@ -93,8 +93,14 @@
   button.icon-btn { min-height: 0; padding: 4px; width: 48px; height: 48px; }
   button.icon-btn svg { width: 32px; height: 32px; display: block; }
   .settings {
-    position: absolute; right: 12px; top: 72px; z-index: 5;
-    background: rgba(255,250,243,0.92); border-radius: 12px; padding: 10px;
+    position: absolute; right: 12px; top: 64px; z-index: 6;
+    background: rgba(255,250,243,0.96); border: 1px solid var(--line);
+    border-radius: 10px; padding: 6px; min-width: 220px;
+    box-shadow: var(--shadow);
+  }
+  .settings .menu-item {
+    display: block; width: 100%; min-height: 44px; text-align: left;
+    border: 0; border-radius: 8px; background: transparent; padding: 10px 12px;
   }
   html[data-theme="dark"] .settings { background: rgba(36,30,24,0.92); }
   html[data-theme="dark"] button.door, html[data-theme="dark"] button.icon-btn { background: transparent; }
@@ -140,6 +146,9 @@
   p { margin: 0 0 12px; }
   .muted { color: var(--muted); }
   .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+  footer.tools .row { justify-content: space-between; gap: 22%; flex-wrap: nowrap; }
+  footer.tools .row button { flex: 1 1 0; min-width: 0; }
+  #toIllum { background: transparent; border-color: transparent; display: block; margin: 8px auto; }
   .primary {
     background: var(--accent); color: var(--accent-ink); border-color: var(--accent);
     font-weight: 700;
@@ -314,7 +323,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.21</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.22</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -323,11 +332,10 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity · scaffolding</p>
-    <button type="button" id="refreshBtn" class="icon-btn" aria-label="Refresh"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b000"/><stop offset="0.34" stop-color="#d4145a"/><stop offset="0.67" stop-color="#2b6fd6"/><stop offset="1" stop-color="#2f9e38"/></linearGradient></defs><path d="M20 12a8 8 0 1 1-2.3-5.7" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round"/><path d="M20 4.5V10h-5.5" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" id="refreshBtn" class="icon-btn" aria-label="Refresh"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b000"/><stop offset="0.34" stop-color="#d4145a"/><stop offset="0.67" stop-color="#2b6fd6"/><stop offset="1" stop-color="#2f9e38"/></linearGradient></defs><path d="M19.5 8.2A7.2 7.2 0 1 0 19.5 16" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round"/><path d="M19.5 4.2v4.4h-4.4" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <button type="button" id="menuBtn" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
   </header>
-  <div id="settings" class="settings hidden"><button type="button" id="themeBtn">Switch to dark mode</button></div>
-  <p id="screenMeta" class="screen-label">Screen 1 of 11 · Two-Door Entry</p>
+  <div id="settings" class="settings hidden" role="menu"><button type="button" class="menu-item" id="themeBtn" role="menuitem">Switch to dark mode</button></div>
   <p><span id="journey" class="journey">Free · Illumination journey</span></p>
   <main id="main"></main>
   <footer class="tools">
@@ -385,7 +393,6 @@ const state = {
 };
 
 const main = document.getElementById("main");
-const screenMeta = document.getElementById("screenMeta");
 const journey = document.getElementById("journey");
 const index = document.getElementById("index");
 
@@ -590,7 +597,6 @@ function field(label, text) {
 function render() {
   const s = SCREENS[state.screen - 1];
   const st = stationById(state.stationId);
-  screenMeta.textContent = "Screen " + s.n + " of 11 · " + s.name;
   journey.textContent = s.paid ? "Paid · Full course" : "Free · Illumination journey";
   journey.className = s.paid ? "journey paid" : "journey";
   document.getElementById("backBtn").disabled = state.history.length === 0;
@@ -618,7 +624,7 @@ function render() {
   }
   if (s.n === 4) {
     const said = state.pick || "PLACEHOLDER — no pick yet";
-    html += '<h1 tabindex="-1">Recognition</h1><div class="cardish"><p>You said <strong>' + said + '</strong>.</p><p class="station-line">That\'s <strong>' + st.name + '</strong> <button type="button" class="mini-wheel" id="openMap" aria-label="Open the printed wheel"><img alt="" src="images/printed-wheel-bw.png?v=2.21"></button></p><p class="muted">Station ' + st.id + ' · ' + st.quarter + ' quarter. Challenge: ' + st.challenge + '.</p></div><div class="row"><button class="primary" type="button" id="toIllum">See the illumination</button></div>';
+    html += '<h1 tabindex="-1">Recognition</h1><div class="cardish"><p>You said <strong>' + said + '</strong>.</p><p class="station-line">That\'s <strong>' + st.name + '</strong> <button type="button" class="mini-wheel" id="openMap" aria-label="Open the printed wheel"><img alt="" src="images/printed-wheel-bw.png?v=2.21"></button></p><p class="muted">Station ' + st.id + ' · ' + st.quarter + ' quarter. Challenge: ' + st.challenge + '.</p></div><div class="row" style="justify-content:center"><button type="button" id="toIllum">See the illumination</button></div>';
   }
   if (s.n === 5) {
     html += '<h1 tabindex="-1">Illumination</h1><p class="muted">Free for all 12 stations. Copy below is not final.</p>';
@@ -792,7 +798,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.21";
+const APP_VERSION = "2.22";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
