@@ -230,7 +230,7 @@
     overflow: hidden;
     background: #1a120c;
     transform-origin: center center;
-    animation: growThrough 4.6s linear forwards;
+    animation: growThrough 3.1s linear forwards;
     will-change: transform;
   }
   .vortex-wheel img {
@@ -243,13 +243,13 @@
      covers the whole page before the fade, then keeps growing through it. */
   @keyframes growThrough {
     0% { transform: translate(-50%, -50%) scale(0.1); }
-    34% { transform: translate(-50%, -50%) scale(1); }
+    58% { transform: translate(-50%, -50%) scale(1); }
     100% { transform: translate(-50%, -50%) scale(1.85); }
   }
-  .vortex.leave { animation: fadeOut 3s linear forwards; }
+  .vortex.leave { animation: fadeOut 1.4s linear forwards; }
   @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
   body.page-in .wrap { opacity: 0; }
-  body.page-in.show-page .wrap { animation: pageIn 3s linear forwards; }
+  body.page-in.show-page .wrap { animation: pageIn 1.4s linear forwards; }
   @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
   .hidden { display: none !important; }
 </style>
@@ -264,13 +264,10 @@
     font: 700 26px/1.2 Georgia, "Iowan Old Style", Palatino, serif;
     box-shadow: 0 -6px 18px rgba(0,0,0,0.28);
   }
-  .ver-banner a, .ver-banner button { color: #ffd36a; font-weight: 700; font-size: 22px; background: transparent; border: 0; padding: 0; min-height: 0; text-align: left; }
-  .ver-update.hidden { display: none; }
-  .ver-update { animation: verFlash 0.8s steps(2, start) infinite; }
-  @keyframes verFlash { to { visibility: hidden; } }
+  .ver-banner a { color: #ffd36a; font-weight: 700; font-size: 22px; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.8</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span>You are on version 2.7</span><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -376,7 +373,7 @@ function playVortex(done) {
     layer.remove();
     document.body.classList.remove("page-in");
     document.body.classList.remove("show-page");
-  }, 4700);
+  }, 3100);
 }
 function startFloat(stage) {
   const cards = Array.from(stage.querySelectorAll(".fcard"));
@@ -648,7 +645,7 @@ if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").match
 renderIndex();
 render();
 
-const APP_VERSION = "2.8";
+const APP_VERSION = "2.7";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
@@ -668,16 +665,15 @@ async function checkVersion() {
     if (!res.ok) return;
     const data = await res.json();
     if (data.version && data.version !== APP_VERSION) {
-      const flash = document.getElementById("verUpdate");
-      flash.textContent = "New version " + data.version + " — tap to load";
-      flash.classList.remove("hidden");
+      const banner = document.getElementById("updateBanner");
+      document.getElementById("updateText").textContent = "New version available. You have " + APP_VERSION + ". Newest is " + data.version + ".";
+      banner.classList.remove("hidden");
     }
   } catch (err) {}
 }
 
 document.getElementById("refreshBtn").onclick = loadNewest;
 document.getElementById("updateBtn").onclick = loadNewest;
-document.getElementById("verUpdate").onclick = loadNewest;
 checkVersion();
 setInterval(checkVersion, 60000);
 
