@@ -227,6 +227,20 @@
 </style>
 </head>
 <body>
+<style>
+  .ver-banner {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 300;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    min-height: 84px; padding: 16px 20px;
+    background: #1c1612; color: #fff8f4;
+    font: 700 26px/1.2 Georgia, "Iowan Old Style", Palatino, serif;
+    box-shadow: 0 -6px 18px rgba(0,0,0,0.28);
+  }
+  .ver-banner a { color: #ffd36a; font-weight: 700; font-size: 22px; }
+  body { padding-bottom: 100px; }
+</style>
+<div class="ver-banner" role="status"><span>You are on version 2.0</span><a href="../../timelog.html">Time log</a></div>
+
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
   <p id="updateText">New version available.</p>
