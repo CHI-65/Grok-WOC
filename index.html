@@ -110,7 +110,14 @@
       linear-gradient(rgba(36,30,24,0.48), rgba(36,30,24,0.48)) padding-box,
       conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
   }
-  button.door, button.icon-btn {
+  button.door, button.door:hover, button.door:focus, button.door:focus-visible {
+    background: transparent;
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+  }
+  button.icon-btn {
     background: none;
     border: 0;
     box-shadow: none;
@@ -258,7 +265,7 @@
   html[data-adjust="1"] #centerGuide.on { display: block; }
   #centerTag { position: fixed; left: 50%; top: 12px; transform: translateX(-50%); background: #e2b000; color: #1c1612; font-size: 14px; padding: 2px 8px; border-radius: 8px; display: none; z-index: 51; }
   html[data-adjust="1"] #centerTag.on { display: block; }
-  html[data-adjust="1"] .wrap h1, html[data-adjust="1"] .wrap p, html[data-adjust="1"] .wrap button, html[data-adjust="1"] footer.tools button, html[data-adjust="1"] footer.tools summary { outline: 1px dashed rgba(226,176,0,0.7); touch-action: none; }
+  html[data-adjust="1"] .wrap h1, html[data-adjust="1"] .wrap p, html[data-adjust="1"] .wrap button:not(.door), html[data-adjust="1"] footer.tools button, html[data-adjust="1"] footer.tools summary { outline: 1px dashed rgba(226,176,0,0.7); touch-action: none; }
 
   .opt-list { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
   .spread { position: relative; height: 640px; margin: 12px 0 24px; }
@@ -374,7 +381,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.47</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.48</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -1106,7 +1113,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.47";
+const APP_VERSION = "2.48";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
