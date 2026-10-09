@@ -50,7 +50,7 @@ Started at the first recorded action of the next burst. Every later commit and p
 - Status: running
 
 ## Total counted
-373 minutes (6 hours 13 minutes). Rebuilt at 2026-10-09 06:00 UTC from the Zoom call, the version 1.5 entry, and repo commit times since 2026-10-08 23:49 UTC. The earlier 173-minute, 273-minute, and 322-minute totals are superseded by the commit-cluster rebuild below. The 10-minute credit rule is internal only and is not shown on the client time log.
+399 minutes (6 hours 39 minutes). Rebuilt at 2026-10-09 07:00 UTC from the Zoom call, the version 1.5 entry, and repo commit times since 2026-10-08 23:49 UTC. The earlier 173-minute, 273-minute, 322-minute, and 373-minute totals are superseded by the commit-cluster rebuild below. The 10-minute credit rule is internal only and is not shown on the client time log.
 
 ## Prompt log
 
@@ -143,4 +143,21 @@ Prompt notes above stay as written. This rebuild uses 84 repo commits since 2026
 - Cluster D, closed: 03:21:37 to 05:08:46, plus 10 min = 117 min
 - Cluster E, open: 05:26:04 through 06:00:00 = 33 min
 
-Commit clusters: 52 + 63 + 38 + 117 + 33 = 303 min. Running total: 60 + 10 + 303 = 373 min (6 hours 13 minutes). Client log shows that total and a short session line, without this rule.
+Commit clusters: 52 + 63 + 38 + 117 + 33 = 303 min. Running total: 60 + 10 + 303 = 373 min (6 hours 13 minutes). Client log shows that total and a short session line, without this rule. Superseded by the 07:00 rebuild.
+
+| 2026-10-09 07:00 | — | Rebuild the running total from the Zoom call, the version 1.5 entry, and repo commit times since 2026-10-08 23:49 UTC. |
+
+## Rebuild at 2026-10-09 07:00 UTC
+
+Prompt notes above stay as written. This rebuild uses 90 repo commits since 2026-10-08 23:49:57 UTC, not the prompt clock. A gap of more than 10 minutes between commits starts a new session. A closed cluster counts 10 minutes after its last commit. Whole minutes are the floor of that span. The newest commit, 06:19:10 (version 2.59), is 40 minutes before 07:00, so that session is closed. Cluster E, open through 06:00 at 33 minutes, continued to 06:04:58 and is now closed at 48 minutes.
+
+- Zoom call: 60 min (2026-10-07 23:00 UTC)
+- Version 1.5: 10 min
+- Cluster A, closed: 23:49:57 to 00:32:21, plus 10 min = 52 min
+- Cluster B, closed: 00:44:18 to 01:37:59, plus 10 min = 63 min
+- Cluster C, closed: 01:51:16 to 02:19:27, plus 10 min = 38 min
+- Cluster D, closed: 03:21:37 to 05:08:46, plus 10 min = 117 min
+- Cluster E, closed: 05:26:04 to 06:04:58, plus 10 min = 48 min
+- Cluster F, closed: 06:18:06 to 06:19:10, plus 10 min = 11 min
+
+Commit clusters: 52 + 63 + 38 + 117 + 48 + 11 = 329 min. Running total: 60 + 10 + 329 = 399 min (6 hours 39 minutes). Client log shows that total and a short session line, without this rule.
