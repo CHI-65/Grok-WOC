@@ -136,14 +136,13 @@
   a { color: var(--accent); }
   .wrap { max-width: 760px; margin: 0 auto; padding: 16px 16px 40px; }
   header.app {
-    position: relative; display: flex; justify-content: space-between; align-items: center;
-    min-height: 48px; margin-bottom: 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 12px;
   }
   .brand {
-    position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
     font-size: 16px; letter-spacing: 0.02em; text-transform: uppercase; margin: 0;
-    text-align: center; white-space: nowrap; pointer-events: none;
+    text-align: center; white-space: nowrap;
   }
+  .head-tools { display: flex; justify-content: center; gap: 18px; }
   .version { margin: 0; font-size: 22px; font-weight: 700; }
   a.loglink {
     display: inline-flex; align-items: center; min-height: 56px; padding: 12px 16px;
@@ -251,6 +250,12 @@
   }
   footer.tools { position: fixed; left: 0; right: 0; bottom: 72px; margin: 0; padding: 0 16px; text-align: center; z-index: 4; }
   footer.tools .row button { min-height: 42px; padding: 9px 12px; font-size: 75%; }
+  footer.tools details { margin: 0 0 8px; }
+  #centerGuide { position: fixed; top: 0; bottom: 0; left: 50%; width: 1px; background: #e2b000; z-index: 50; display: none; pointer-events: none; }
+  html[data-adjust="1"] #centerGuide.on { display: block; }
+  #centerTag { position: fixed; left: 50%; top: 12px; transform: translateX(-50%); background: #e2b000; color: #1c1612; font-size: 14px; padding: 2px 8px; border-radius: 8px; display: none; z-index: 51; }
+  html[data-adjust="1"] #centerTag.on { display: block; }
+  html[data-adjust="1"] .wrap h1, html[data-adjust="1"] .wrap p, html[data-adjust="1"] .wrap button, html[data-adjust="1"] footer.tools button, html[data-adjust="1"] footer.tools summary { outline: 1px dashed rgba(226,176,0,0.7); touch-action: none; }
 
   .opt-list { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
   .spread { position: relative; height: 640px; margin: 12px 0 24px; }
@@ -361,7 +366,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 150px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.35</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.37</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="saveBtn">Save</button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -370,8 +375,8 @@
 </div>
 <header class="app">
     <p class="brand">Wheel of Creativity</p>
-    <button type="button" id="refreshBtn" class="icon-btn" aria-label="Refresh"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b000"/><stop offset="0.34" stop-color="#d4145a"/><stop offset="0.67" stop-color="#2b6fd6"/><stop offset="1" stop-color="#2f9e38"/></linearGradient></defs><path d="M19.5 8.2A7.2 7.2 0 1 0 19.5 16" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round"/><path d="M19.5 4.2v4.4h-4.4" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button type="button" id="menuBtn" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+    <div class="head-tools"><button type="button" id="refreshBtn" class="icon-btn" aria-label="Refresh"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b000"/><stop offset="0.34" stop-color="#d4145a"/><stop offset="0.67" stop-color="#2b6fd6"/><stop offset="1" stop-color="#2f9e38"/></linearGradient></defs><path d="M19.5 8.2A7.2 7.2 0 1 0 19.5 16" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round"/><path d="M19.5 4.2v4.4h-4.4" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" id="menuBtn" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
   </header>
   <div id="settings" class="settings hidden" role="menu">
     <button type="button" class="menu-item" id="themeBtn" role="menuitem">Switch to dark mode</button>
@@ -384,15 +389,17 @@
   <img id="bgLayer" alt="" src="images/wheel-mark.png">
   <main id="main"></main>
   <footer class="tools">
-    <div class="row">
-      <button type="button" id="backBtn">Back</button>
-      <button type="button" id="restartBtn">Start over</button>
-    </div>
     <details>
       <summary>Jump to screen</summary>
       <div class="index" id="index"></div>
     </details>
+    <div class="row">
+      <button type="button" id="backBtn">Back</button>
+      <button type="button" id="restartBtn">Start over</button>
+    </div>
   </footer>
+  <div id="centerGuide"></div>
+  <div id="centerTag">Centered</div>
 </div>
 <script>
 const STATIONS = [
@@ -908,6 +915,32 @@ document.getElementById("pencilBtn").onclick = () => {
   const on = document.documentElement.getAttribute("data-adjust") === "1";
   document.documentElement.setAttribute("data-adjust", on ? "0" : "1");
 };
+const guide = document.getElementById("centerGuide");
+const tag = document.getElementById("centerTag");
+let move = null;
+function canMove(el) {
+  return document.documentElement.getAttribute("data-adjust") === "1" && el && el.closest && (el.closest("h1, p, button, summary"));
+}
+document.addEventListener("pointerdown", (e) => {
+  const el = canMove(e.target);
+  if (!el || e.target.closest(".ver-banner, .settings")) return;
+  const r = el.getBoundingClientRect();
+  move = { el, x: e.clientX, y: e.clientY, left: r.left, top: r.top };
+  el.style.position = "relative";
+  el.setPointerCapture && el.setPointerCapture(e.pointerId);
+});
+document.addEventListener("pointermove", (e) => {
+  if (!move) return;
+  const dx = e.clientX - move.x, dy = e.clientY - move.y;
+  move.el.style.left = dx + "px";
+  move.el.style.top = dy + "px";
+  const r = move.el.getBoundingClientRect();
+  const mid = r.left + r.width / 2;
+  const centered = Math.abs(mid - window.innerWidth / 2) < 8;
+  guide.classList.toggle("on", centered);
+  tag.classList.toggle("on", centered);
+});
+document.addEventListener("pointerup", () => { move = null; guide.classList.remove("on"); tag.classList.remove("on"); });
 function applyOpacity(value) {
   const o = value / 100;
   document.querySelectorAll("#scatter img").forEach(img => img.style.opacity = o);
@@ -1001,7 +1034,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.35";
+const APP_VERSION = "2.37";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
