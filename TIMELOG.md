@@ -85,3 +85,14 @@ Summaries, not verbatim. Versions 1.5 through 2.1 are summarized from the versio
 | 2026-10-09 01:16 | 2.8 | Extend the page fade to 3 seconds. Flash a new-version notice in the bottom banner. |
 | 2026-10-09 01:22 | 2.9 | Fade the wheel out 2 seconds earlier. Always open in light mode. |
 | 2026-10-09 01:33 | 2.12 | Wheel leaves a second sooner, growth stays slow so it does not stall, spin starts slow and speeds up. |
+
+### 3 — printed wheel through version 2.17
+The clock had stopped 10 minutes after 02:19 UTC. Next prompt landed at 03:21 UTC, so this is a new session.
+- Open: 2026-10-09 03:21 UTC
+- Still open at 04:05 UTC (this time-log prompt)
+- Counted so far: 44 min
+
+Session 2 close corrected: last action before the gap was 02:19, plus the idle stop, so session 2 is 23:49 to 02:29 = 159 min, not 128.
+
+Running total at 04:05 UTC: 60 Zoom + 10 on 1.5 + 159 + 44 = 273 min (4 hours 33 minutes).
+
