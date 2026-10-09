@@ -48,22 +48,19 @@
   body {
     font-family: Georgia, "Iowan Old Style", Palatino, serif;
     background-color: var(--bg);
-    background-image: none;
+    background-image: linear-gradient(rgba(246,241,232,0.42), rgba(246,241,232,0.42)), url("images/wheel-mark.png");
+    background-size: contain;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     color: var(--ink);
     font-size: 20px;
     line-height: 1.45;
     min-height: 100vh;
   }
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: url("images/wheel-mark.png") center / contain no-repeat;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 0;
+  html[data-theme="dark"] body {
+    background-image: linear-gradient(rgba(22,19,15,0.45), rgba(22,19,15,0.45)), url("images/wheel-mark.png");
   }
-  .wrap, .ver-banner, .map-page { position: relative; z-index: 1; }
   button, input, select {
     font: inherit;
     color: inherit;
@@ -74,14 +71,14 @@
     border: 3px solid transparent;
     border-radius: 12px;
     background:
-      linear-gradient(transparent, transparent) padding-box,
+      linear-gradient(rgba(255,250,243,0.5), rgba(255,250,243,0.5)) padding-box,
       conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
     cursor: pointer;
     text-align: left;
   }
   html[data-theme="dark"] button {
     background:
-      linear-gradient(transparent, transparent) padding-box,
+      linear-gradient(rgba(36,30,24,0.48), rgba(36,30,24,0.48)) padding-box,
       conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
   }
   button:hover { outline: 3px solid var(--focus); }
@@ -298,7 +295,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.14</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.13</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><span><a href="../../index.html">Current version</a> · <a href="../../timelog.html">Time log</a></span></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -738,7 +735,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.14";
+const APP_VERSION = "2.13";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
