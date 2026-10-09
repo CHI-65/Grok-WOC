@@ -275,8 +275,8 @@
 
   .station-line { display: flex; align-items: center; gap: 10px; }
   .mini-wheel {
-    width: 52px; height: 52px; min-height: 52px; padding: 2px; border-radius: 50%;
-    flex: none;
+    width: 52px; height: 52px; min-height: 52px; min-width: 52px; padding: 0;
+    border: 0; border-radius: 50%; background: none; flex: none;
   }
   .mini-wheel img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
   .map-page {
@@ -314,7 +314,7 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 100px; }
 </style>
-<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.20</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
+<div class="ver-banner" role="status"><span id="verLabel">You are on version 2.21</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -618,7 +618,7 @@ function render() {
   }
   if (s.n === 4) {
     const said = state.pick || "PLACEHOLDER — no pick yet";
-    html += '<h1 tabindex="-1">Recognition</h1><div class="cardish"><p>You said <strong>' + said + '</strong>.</p><p class="station-line">That\'s <strong>' + st.name + '</strong> <button type="button" class="mini-wheel" id="openMap" aria-label="Open the printed wheel"><img alt="" src="images/printed-wheel-bw.png"></button></p><p class="muted">Station ' + st.id + ' · ' + st.quarter + ' quarter. Challenge: ' + st.challenge + '.</p></div><div class="row"><button class="primary" type="button" id="toIllum">See the illumination</button></div>';
+    html += '<h1 tabindex="-1">Recognition</h1><div class="cardish"><p>You said <strong>' + said + '</strong>.</p><p class="station-line">That\'s <strong>' + st.name + '</strong> <button type="button" class="mini-wheel" id="openMap" aria-label="Open the printed wheel"><img alt="" src="images/printed-wheel-bw.png?v=2.21"></button></p><p class="muted">Station ' + st.id + ' · ' + st.quarter + ' quarter. Challenge: ' + st.challenge + '.</p></div><div class="row"><button class="primary" type="button" id="toIllum">See the illumination</button></div>';
   }
   if (s.n === 5) {
     html += '<h1 tabindex="-1">Illumination</h1><p class="muted">Free for all 12 stations. Copy below is not final.</p>';
@@ -792,7 +792,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.20";
+const APP_VERSION = "2.21";
 
 async function loadNewest() {
   if ("serviceWorker" in navigator) {
