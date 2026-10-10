@@ -1,1 +1,1 @@
-$(cat /tmp/woc/TIMELOG_new.md)
+$(cat /tmp/old_timelog.md)
