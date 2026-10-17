@@ -216,11 +216,21 @@
   }
   #doorWords {
     grid-template-columns: 1fr 1fr;
-    max-height: 252px;
+    max-height: 246px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    touch-action: pan-y;
     padding-right: 2px;
+  }
+  .locked-title { position: sticky; top: 0; z-index: 2; background: var(--bg); margin: 0 0 8px; padding: 4px 0; }
+  #cardScroll {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    max-height: calc(100dvh - 250px);
+    padding-bottom: 12px;
   }
   #doorWords .door { min-height: 72px; font-size: 18px; }
   .door { min-height: 96px; font-size: 22px; font-weight: 700; }
@@ -413,7 +423,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><span class="banner-handle" id="bannerHandle" aria-label="Hide version bar"></span><span id="verLabel">You are on version 2.62</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><span class="banner-handle" id="bannerHandle" aria-label="Hide version bar"></span><span id="verLabel">You are on version 2.63</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -433,10 +443,6 @@
   <img id="bgLayer" alt="" src="images/wheel-mark.png"><div id="wmGrab" aria-hidden="true"></div>
   <main id="main"></main>
   <footer class="tools">
-    <details>
-      <summary>Jump to screen</summary>
-      <div class="index" id="index"></div>
-    </details>
     <div class="row">
       <button type="button" id="backBtn">Back</button>
       <button type="button" id="restartBtn">Start over</button>
@@ -713,6 +719,7 @@ function chooseStation(id, label, via) {
 }
 
 function renderIndex() {
+  if (!index) return;
   index.innerHTML = "";
   SCREENS.forEach(s => {
     const b = document.createElement("button");
@@ -747,7 +754,7 @@ function render() {
   }
   if (s.n === 4) {
     const feels = (st.feels || []).map(f => "<li>" + f + "</li>").join("");
-    html += '<h1 tabindex="-1">You\'ve chosen the ' + st.adjective + ' card.</h1><div class="cardish"><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div class="row" style="justify-content:center"><button type="button" id="toWheel">See where you are</button></div>';
+    html += '<h1 class="locked-title" tabindex="-1">You\'ve chosen the ' + st.noun + ' card.</h1><div id="cardScroll"><div class="cardish"><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div class="row" style="justify-content:center"><button type="button" id="toWheel">See where you are</button></div></div>';
   }
   if (s.n === 5) {
     html += '<h1 tabindex="-1">' + st.name + '</h1>';
@@ -1006,7 +1013,9 @@ function leaveAdjust() {
   if (hide) hide.textContent = "Hide text";
 }
 document.addEventListener("touchmove", (e) => {
-  if (document.documentElement.getAttribute("data-adjust") !== "1") e.preventDefault();
+  if (document.documentElement.getAttribute("data-adjust") === "1") return;
+  if (e.target.closest("#doorWords, #cardScroll")) return;
+  e.preventDefault();
 }, { passive: false });
 document.getElementById("pencilBtn").onclick = () => {
   const on = document.documentElement.getAttribute("data-adjust") === "1";
@@ -1392,7 +1401,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.62";
+const APP_VERSION = "2.63";
 (function () {
   const bar = document.querySelector(".ver-banner");
   const handle = document.getElementById("bannerHandle");
