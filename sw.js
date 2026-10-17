@@ -1,4 +1,4 @@
-const CACHE = "woc-scaffolding-v72";
+const CACHE = "woc-scaffolding-v73";
 const FILES = [
   "./",
   "./index.html",
