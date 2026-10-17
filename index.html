@@ -409,11 +409,15 @@
     touch-action: none;
   }
   .banner-handle {
-    position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
-    width: 54px; height: 6px; border-radius: 6px; background: #ffd36a;
+    position: absolute; top: 2px; left: 50%; transform: translateX(-50%);
+    width: 64px; height: 22px; border-radius: 11px; background: #ffd36a; color: #1c1612;
+    display: flex; align-items: center; justify-content: center; padding: 0;
+    min-height: 0; z-index: 2;
   }
-  html[data-banner="hide"] .ver-banner { transform: translateY(calc(100% - 22px)); }
-  html[data-banner="hide"] footer.tools { bottom: 28px; }
+  .banner-handle svg { width: 18px; height: 18px; display: block; }
+  html[data-banner="hide"] .ver-banner { transform: translateY(calc(100% - 26px)); }
+  html[data-banner="hide"] footer.tools { bottom: 32px; }
+  html[data-banner="hide"] .banner-handle svg { transform: rotate(180deg); }
   .ver-banner a, .ver-banner button { color: #ffd36a; font-weight: 700; font-size: 22px; background: transparent; border: 0; padding: 0; min-height: 0; text-align: center; }
   .ver-update.hidden { display: none; }
   .ver-update { display: block; width: 100%; margin-top: 6px; color: #1c1612; background: #ffd36a; border-radius: 10px; padding: 10px 12px; text-align: center; animation: verFlash 1s linear infinite; }
@@ -426,7 +430,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><span class="banner-handle" id="bannerHandle" aria-label="Hide version bar"></span><span id="verLabel">You are on version 2.64</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.65</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -1404,22 +1408,20 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.64";
+const APP_VERSION = "2.65";
 (function () {
-  const bar = document.querySelector(".ver-banner");
   const handle = document.getElementById("bannerHandle");
-  if (!bar || !handle) return;
-  let startY = 0;
-  const down = (e) => { startY = e.clientY; };
-  const up = (e) => {
-    const dy = e.clientY - startY;
-    if (dy > 24) document.documentElement.setAttribute("data-banner", "hide");
-    else if (dy < -24) document.documentElement.removeAttribute("data-banner");
-  };
-  handle.addEventListener("pointerdown", down);
-  handle.addEventListener("pointerup", up);
-  bar.addEventListener("pointerdown", (e) => { if (e.target === bar || e.target === handle) down(e); });
-  bar.addEventListener("pointerup", (e) => { if (document.documentElement.getAttribute("data-banner") === "hide") up(e); });
+  if (!handle) return;
+  handle.addEventListener("click", () => {
+    const hidden = document.documentElement.getAttribute("data-banner") === "hide";
+    if (hidden) {
+      document.documentElement.removeAttribute("data-banner");
+      handle.setAttribute("aria-label", "Hide version bar");
+    } else {
+      document.documentElement.setAttribute("data-banner", "hide");
+      handle.setAttribute("aria-label", "Show version bar");
+    }
+  });
 })();
 
 async function loadNewest() {
