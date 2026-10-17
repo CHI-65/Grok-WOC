@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#8a3d2a">
+<meta name="description" content="Wheel of Creativity scaffolding. Illumination journey and full-course review.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Wheel">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Wheel of Creativity — Scaffolding</title>
+<style>
+  :root {
+    --bg: #f6f1e8;
+    --ink: #1c1612;
+    --muted: #4a4038;
+    --card: #fffaf3;
+    --line: #2a211b;
+    --accent: #8a3d2a;
+    --accent-ink: #fff8f4;
+    --focus: #0b5cab;
+    --placeholder: #6b4e1e;
+    --pay: #5c2a4a;
+    --ok: #1e5c3a;
+    --shadow: 0 1px 0 rgba(28,22,18,0.06);
+    color-scheme: light;
+  }
+  html[data-theme="dark"] {
+    --bg: #16130f;
+    --ink: #f6efe6;
+    --muted: #d4c7b8;
+    --card: #241e18;
+    --line: #f0e6da;
+    --accent: #e07a62;
+    --accent-ink: #1c1210;
+    --focus: #ffd36a;
+    --placeholder: #e6c27a;
+    --pay: #f0b4d4;
+    --ok: #8fd9ae;
+    --shadow: none;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; overscroll-behavior: none; }
+  body {
+    user-select: none; -webkit-user-select: none;
+    text-align: center;
+    font-family: Georgia, "Iowan Old Style", Palatino, serif;
+    background-color: var(--bg);
+    background-image: none;
+    color: var(--ink);
+    font-size: 20px;
+    line-height: 1.45;
+    min-height: 100vh;
+  }
+  /* iPad / large portrait: max size that fits, same aspect as iPhone, no crop */
+  @media (min-width: 500px) and (orientation: portrait) {
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 393px;
+      height: 852px;
+      transform: scale(min(calc(100vw / 393px), calc(100dvh / 852px)));
+      transform-origin: center center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -196.5px;
+      margin-top: -426px;
+    }
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: url("images/wheel-mark.png") center / contain no-repeat;
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 0;
+  }
+  html[data-bg="scatter"] body::before { opacity: 0; }
+  html[data-bg="fill"] body::before {
+    background-size: 340%;
+    opacity: 0.2;
+  }
+  #scatter, #stationWheels {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; display: none;
+  }
+  html[data-bg="scatter"] #scatter { display: block; }
+  html[data-page="station"] #stationWheels { display: block; }
+  html[data-page="station"] #bgLayer, html[data-page="station"] #wmGrab { display: none !important; }
+  #stationWheels img { position: absolute; opacity: 0.2; touch-action: none; }
+  html[data-adjust="1"][data-page="station"] #stationWheels { pointer-events: none; z-index: 8; }
+  html[data-adjust="1"][data-page="station"] #stationWheels img { pointer-events: auto; }
+  html[data-adjust="1"][data-page="station"] footer.tools { pointer-events: none; }
+  html[data-adjust="1"][data-page="station"] #stationWheels img.sel { outline: 2px solid #e2b000; }
+  #scatter img { position: absolute; opacity: 0.2; touch-action: none; }
+  #bgLayer { position: fixed; left: 50%; top: 42%; width: 88vmin; transform: translate(-50%, -50%); opacity: 0.2; pointer-events: none; z-index: 0; display: none; touch-action: none; }
+  html[data-bg="mark"] #bgLayer, html[data-bg="fill"] #bgLayer { display: block; }
+  html[data-bg="mark"] body::before, html[data-bg="fill"] body::before { opacity: 0; }
+  html[data-page="recognition"] #bgLayer,
+  html[data-page="recognition"] body::before { display: none !important; opacity: 0 !important; }
+  html[data-page="recognition"] { background: var(--bg); }
+  html[data-adjust="1"] #scatter { pointer-events: auto; }
+  html[data-adjust="1"] #bgLayer { pointer-events: none; }
+  #wmGrab { display: none; position: fixed; z-index: 3; touch-action: none; background: transparent; }
+  html[data-adjust="1"] #wmGrab { display: block; }
+  html[data-adjust="1"] .wrap h1, html[data-adjust="1"] .wrap p, html[data-adjust="1"] .wrap button, html[data-adjust="1"] .wrap .cardish, html[data-adjust="1"] footer.tools button, html[data-adjust="1"] footer.tools summary { pointer-events: none; }
+  .grab-right { display: none; }
+  html[data-adjust="1"] .grab-right { display: block; position: absolute; pointer-events: auto; touch-action: none; }
+  html[data-adjust="1"] #scatter img.sel, html[data-adjust="1"] #bgLayer.sel { outline: 2px solid #e2b000; }
+  .adjust-controls { display: none; align-items: center; gap: 8px; }
+  #layoutMenu { position: fixed; right: 12px; bottom: 64px; z-index: 70; background: #fffaf3; color: #1c1612; border-radius: 10px; padding: 8px; min-width: 200px; }
+  #layoutMenu button { display: block; width: 100%; text-align: left; min-height: 40px; background: transparent; color: #1c1612; }
+  html[data-adjust="1"] .adjust-controls { display: flex; }
+  .adjust-controls button, .adjust-controls label { min-height: 36px; }
+  #pencilBtn { min-height: 0; width: 36px; height: 36px; padding: 4px; border: 0; background: transparent; }
+  .design-bar button { min-height: 40px; padding: 8px 12px; }
+  .design-bar input { width: 110px; }
+  html[data-hide="1"] header.app, html[data-hide="1"] #journey, html[data-hide="1"] main, html[data-hide="1"] footer.tools { visibility: hidden; }
+  .wrap, .ver-banner, .map-page { position: relative; z-index: 1; }
+  button, input, select {
+    font: inherit;
+    color: inherit;
+  }
+  button {
+    min-height: 56px;
+    padding: 12px 16px;
+    border: 3px solid transparent;
+    border-radius: 12px;
+    background:
+      linear-gradient(rgba(255,250,243,0.5), rgba(255,250,243,0.5)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
+    cursor: pointer;
+    text-align: center;
+  }
+  html[data-theme="dark"] button {
+    background:
+      linear-gradient(rgba(36,30,24,0.48), rgba(36,30,24,0.48)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
+  }
+  button.door, button.door:hover, button.door:focus, button.door:focus-visible {
+    background: transparent;
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+  }
+  button.icon-btn {
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+  button.icon-btn { min-height: 0; padding: 4px; width: 48px; height: 48px; }
+  button.icon-btn svg { width: 32px; height: 32px; display: block; }
+  .settings {
+    position: absolute; right: 12px; top: 64px; z-index: 6;
+    background: rgba(255,250,243,0.96); border: 1px solid var(--line);
+    border-radius: 10px; padding: 6px; min-width: 220px;
+    box-shadow: var(--shadow);
+  }
+  .settings .menu-item {
+    display: block; width: 100%; min-height: 44px; text-align: left;
+    border: 0; border-radius: 8px; background: transparent; padding: 10px 12px;
+  }
+  .settings .menu-item.on { font-weight: 700; }
+  .menu-label { margin: 8px 12px 2px; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+  html[data-theme="dark"] .settings { background: rgba(36,30,24,0.92); }
+  html[data-theme="dark"] button.door, html[data-theme="dark"] button.icon-btn { background: transparent; }
+  button:hover { outline: 3px solid var(--focus); }
+  button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+  a { color: var(--accent); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 16px 16px 40px; }
+    header.app {
+    display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .brand {
+    font-size: 16px; letter-spacing: 0.02em; text-transform: uppercase; margin: 0;
+    text-align: center; white-space: nowrap;
+  }
+  .head-tools { display: flex; justify-content: center; gap: 18px; }
+  .version { margin: 0; font-size: 22px; font-weight: 700; }
+  a.loglink {
+    display: inline-flex; align-items: center; min-height: 56px; padding: 12px 16px;
+    border: 2px solid var(--line); background: var(--card); border-radius: 12px;
+    color: var(--ink); text-decoration: none; font-weight: 700;
+  }
+  a.doorlink { font-size: 22px; }
+  .update-banner {
+    border: 3px solid var(--ok);
+    background: var(--card);
+    border-radius: 12px;
+    padding: 12px;
+    margin: 0 0 12px;
+  }
+  .update-banner p { font-size: 22px; font-weight: 700; margin: 0 0 8px; }
+
+  .screen-label {
+    font-size: 22px; font-weight: 700; margin: 8px 0 4px;
+  }
+  .journey {
+    display: inline-block; font-size: 16px; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 8px 14px; border-radius: 999px;
+    border: 3px solid transparent;
+    background:
+      linear-gradient(rgba(255,250,243,0.5), rgba(255,250,243,0.5)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
+  }
+  html[data-theme="dark"] .journey {
+    background:
+      linear-gradient(rgba(36,30,24,0.48), rgba(36,30,24,0.48)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
+  }
+  .journey.paid { border-color: var(--pay); color: var(--pay); }
+  h1 { font-size: 34px; line-height: 1.15; margin: 8px 0 12px; }
+  h2 { font-size: 26px; margin: 0 0 8px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--muted); }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+  footer.tools .row { justify-content: space-between; gap: 22%; flex-wrap: nowrap; }
+  footer.tools .row button { flex: 1 1 0; min-width: 0; }
+  #toIllum { background: transparent; border-color: transparent; display: block; margin: 8px auto; }
+  .primary {
+    background: var(--accent); color: var(--accent-ink); border-color: var(--accent);
+    font-weight: 700;
+  }
+  .grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  #doorWords {
+    grid-template-columns: 1fr 1fr;
+    max-height: 246px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    padding-right: 2px;
+  }
+  html[data-page="station"] .wrap { height: 100dvh; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 168px; }
+  html[data-page="recognition"] .wrap { height: 100dvh; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 118px; }
+  html[data-page="station"] main,
+  html[data-page="recognition"] main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .locked-title { flex: none; background: var(--bg); margin: 0 0 8px; padding: 4px 0; }
+  #cardScroll {
+    flex: 1; min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    padding: 4px 16px 12px;
+  }
+  .rec-card {
+    max-width: 92%;
+    margin: 8px auto;
+    border-width: 12px;
+    border-style: solid;
+    box-sizing: border-box;
+    position: relative;
+    overflow: visible;
+    flex: none;
+    height: auto;
+    background: #fff;
+    color: #1c1612;
+  }
+  .card-wheels {
+    position: absolute;
+    inset: 12px;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .card-wheels img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    max-width: none;
+    transform: translate(-50%, -50%);
+    opacity: 0.11;
+    pointer-events: none;
+  }
+  .cta-follow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.6em;
+    padding: 8px 0 12px;
+    flex: none;
+  }
+  html[data-page="illum"] .cta-follow { margin-top: 0; }
+  #recCard {
+    transform-origin: center center;
+    touch-action: pan-y;
+  }
+  html[data-page="illum"] .wrap { height: 100dvh; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 88px; overflow: hidden; }
+  html[data-page="illum"] main { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+  .illum-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    touch-action: none;
+    padding: 4px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .illum-stage {
+    position: relative;
+    max-width: 40em;
+    margin: 0 auto;
+    padding: 0 8px;
+  }
+  html[data-page="illum"] .illum-stage h1 { margin: 0 0 10px; }
+  html[data-page="illum"] .illum-stage p { margin: 0; }
+  .illum-wheel {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: min(100%, 40em);
+    max-width: 88vmin;
+    transform: translate(-50%, -50%);
+    opacity: 0.11;
+    pointer-events: none;
+    z-index: 0;
+  }
+  html[data-page="illum"] #bgLayer,
+  html[data-page="illum"] body::before { display: none !important; opacity: 0 !important; }
+  .illum-stage > *:not(.illum-wheel) { position: relative; z-index: 1; }
+  .rec-card > *:not(.card-wheels) {
+    position: relative;
+    z-index: 1;
+  }
+  #cardScroll .row { margin-top: 22px; }
+  #doorWords .door { min-height: 72px; font-size: 18px; }
+  .door { min-height: 96px; font-size: 22px; font-weight: 700; }
+  .tag {
+    display: inline-block; font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+    border: 2px dashed var(--placeholder); color: var(--placeholder);
+    padding: 2px 6px; border-radius: 6px; margin-bottom: 6px;
+  }
+  .ph {
+    border: 2px dashed var(--placeholder); border-radius: 12px;
+    padding: 12px; margin: 8px 0; background: transparent;
+  }
+  .cardish, .ph, .paywall, .update-banner, details { text-align: center; }
+  details summary { text-align: center; }
+    background: rgba(255,250,243,0.58);
+  }
+  html[data-theme="dark"] .cardish, html[data-theme="dark"] .ph, html[data-theme="dark"] .paywall, html[data-theme="dark"] .update-banner {
+    background: rgba(36,30,24,0.5);
+  }
+  .cardish {
+    border: 2px solid var(--line); border-radius: 14px;
+    padding: 12px; box-shadow: none;
+  }
+  .cardish ul { text-align: left; margin: 8px auto; padding-left: 1.2em; max-width: 28em; }
+  .cardish li { text-align: left; margin: 4px 0; }
+  label { display: block; font-weight: 700; margin: 8px 0 6px; }
+  input[type="email"] {
+    width: 100%; min-height: 56px; padding: 10px 12px;
+    border: 2px solid var(--line); border-radius: 12px; background: rgba(255,250,243,0.55);
+  }
+  .paywall {
+    margin: 18px 0; padding: 14px; border: 3px solid var(--pay); border-radius: 14px;
+    background: var(--card);
+  }
+  .paywall strong { color: var(--pay); }
+  details { margin: 10px 0 16px; }
+  summary {
+    min-height: 56px; display: flex; align-items: center;
+    cursor: pointer; font-weight: 700;
+  }
+  .index { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .wheel {
+    position: relative; width: min(100%, 520px); aspect-ratio: 1;
+    margin: 12px auto 20px;
+  }
+  .wheel-center {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 42%; text-align: center; font-size: 18px; font-weight: 700;
+  }
+  .station-btn {
+    position: absolute; width: 108px; min-height: 56px; font-size: 15px;
+    transform: translate(-50%, -50%); padding: 6px 8px; text-align: center;
+  }
+  .station-btn.here { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .notice {
+    border: 3px solid var(--ok); padding: 12px; border-radius: 12px; font-weight: 700;
+  }
+  footer.tools { position: fixed; left: 0; right: 0; bottom: 72px; margin: 0; padding: 0 16px; text-align: center; z-index: 4; }
+  footer.tools .row button { min-height: 42px; padding: 9px 12px; font-size: 75%; }
+  footer.tools details { margin: 0 0 8px; }
+  #centerGuide { position: fixed; top: 0; bottom: 0; left: 50%; width: 1px; background: #e2b000; z-index: 50; display: none; pointer-events: none; }
+  html[data-adjust="1"] #centerGuide.on { display: block; }
+  #centerTag { position: fixed; left: 50%; top: 12px; transform: translateX(-50%); background: #e2b000; color: #1c1612; font-size: 14px; padding: 2px 8px; border-radius: 8px; display: none; z-index: 51; }
+  html[data-adjust="1"] #centerTag.on { display: block; }
+  html[data-adjust="1"] .wrap h1, html[data-adjust="1"] .wrap p, html[data-adjust="1"] .wrap button:not(.door), html[data-adjust="1"] footer.tools button, html[data-adjust="1"] footer.tools summary { outline: 1px dashed rgba(226,176,0,0.7); touch-action: none; }
+  html[data-adjust="1"] .cardish { outline: 1px dashed rgba(226,176,0,0.7); touch-action: none; }
+  html[data-adjust="1"] .cardish * { outline: none; touch-action: none; }
+
+  .opt-list { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+  .spread { position: relative; height: 640px; margin: 12px 0 24px; }
+  .pcard {
+    border: 3px solid var(--ink); background: var(--card); padding: 8px;
+    box-shadow: var(--shadow); cursor: pointer;
+  }
+  .wcard, .fcard {
+    border: 0; background: rgba(0,0,0,0.02); padding: 0; box-shadow: none; cursor: pointer; touch-action: manipulation;
+  }
+  .pcard {
+    position: absolute; width: 108px; height: 168px; border-radius: 10px;
+  }
+  .wcard, .fcard {
+    width: 120px; height: 120px; border-radius: 50%; padding: 6px;
+  }
+  .wcard { position: absolute; }
+  .wheel-grid { position: relative; height: 560px; margin: 12px 0 24px; }
+  .float-stage { position: relative; height: calc(100dvh - 248px); min-height: 420px; margin: 0 0 16px; overflow: hidden; }
+  .fcard { position: absolute; width: 168px; height: 168px; z-index: 2; }
+  .mark {
+    width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: auto;
+    transform-origin: center center;
+  }
+  .spinning .mark { animation: wspin 1s linear infinite; }
+  @keyframes wspin { to { transform: rotate(360deg); } }
+  @keyframes zoomIn {
+    from { transform: scale(0.5); }
+    to { transform: scale(1); }
+  }
+  .fcard .mark { animation: zoomIn 2.2s ease-in-out infinite alternate; }
+
+  .vortex {
+    position: fixed; inset: 0; z-index: 80;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    background: transparent;
+    pointer-events: auto;
+  }
+  .vortex-wheel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 142vmax;
+    height: 142vmax;
+    aspect-ratio: 1 / 1;
+    flex: none;
+    flex-shrink: 0;
+    min-width: 142vmax;
+    min-height: 142vmax;
+    margin: 0;
+    border-radius: 50%;
+    border: 12px solid #1a120c;
+    overflow: hidden;
+    background: #1a120c;
+    transform-origin: center center;
+    transform: translate(-50%, -50%) scale(0.16);
+    will-change: transform;
+  }
+  .vortex-wheel img {
+    width: 118%; height: 118%; margin: -9%;
+    object-fit: cover; transform-origin: center;
+  }
+  .vortex.leave { animation: fadeOut 1s linear forwards; }
+  @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+  body.page-in .wrap { opacity: 0; }
+  body.page-in.show-page .wrap { animation: pageIn 3s linear forwards; }
+  @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .station-line { display: flex; align-items: center; gap: 10px; }
+  .mini-wheel {
+    width: 52px; height: 52px; min-height: 52px; min-width: 52px; padding: 0;
+    border: 0; border-radius: 50%; background: none; flex: none;
+  }
+  .mini-wheel img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+  .map-page {
+    position: fixed; inset: 0; z-index: 80;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 12px 12px 150px;
+    background: var(--bg);
+    overflow: hidden;
+    touch-action: none;
+    gap: 12px;
+  }
+  body.map-open .wrap header,
+  body.map-open .wrap main { visibility: hidden; }
+  body.map-open footer.tools { visibility: visible; z-index: 90; }
+  .map-stage { position: relative; width: min(100%, calc(100vh - 180px)); max-height: calc(100vh - 180px); transform-origin: center center; }
+  .map-stage img.color { display: none; }
+  .map-stage img.map { width: 100%; height: auto; display: block; }
+  .map-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .map-stage path { fill: transparent; stroke: transparent; cursor: pointer; }
+  .map-stage path.lit { fill: transparent; }
+  .map-stage path.station-glow {
+    pointer-events: none;
+    animation: wedgeGlow 4s ease-in-out infinite;
+  }
+  @keyframes wedgeGlow {
+    0% { fill: rgba(47, 158, 56, 0.31); }
+    25% { fill: rgba(226, 176, 0, 0.31); }
+    50% { fill: rgba(43, 111, 214, 0.31); }
+    75% { fill: rgba(212, 20, 90, 0.31); }
+    100% { fill: rgba(47, 158, 56, 0.31); }
+  }
+  #mapIllum, .tap-text, #doorOff, #toDeep {
+    font-weight: 700;
+    font-size: 22px;
+    cursor: pointer;
+    background: none !important;
+    border: 0 !important;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none !important;
+    color: inherit;
+    text-align: center;
+    padding: 10px 16px;
+    min-height: 0;
+    display: inline-block;
+    margin: 0;
+    -webkit-appearance: none;
+    animation: ctaGlow 4s ease-in-out infinite;
+  }
+  #toDeep, #toDeep:hover, #toDeep:focus, #toDeep:focus-visible {
+    background: transparent !important;
+    border: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  #mapIllum, #mapIllum:hover, #mapIllum:focus, #mapIllum:focus-visible {
+    border: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+  @keyframes ctaGlow {
+    0% {
+      text-shadow:
+        0 0 10px rgba(47, 158, 56, 0.95),
+        0 0 22px rgba(47, 158, 56, 0.65),
+        0 0 40px rgba(47, 158, 56, 0.35);
+    }
+    25% {
+      text-shadow:
+        0 0 10px rgba(226, 176, 0, 0.95),
+        0 0 22px rgba(226, 176, 0, 0.65),
+        0 0 40px rgba(226, 176, 0, 0.35);
+    }
+    50% {
+      text-shadow:
+        0 0 10px rgba(43, 111, 214, 0.95),
+        0 0 22px rgba(43, 111, 214, 0.65),
+        0 0 40px rgba(43, 111, 214, 0.35);
+    }
+    75% {
+      text-shadow:
+        0 0 10px rgba(212, 20, 90, 0.95),
+        0 0 22px rgba(212, 20, 90, 0.65),
+        0 0 40px rgba(212, 20, 90, 0.35);
+    }
+    100% {
+      text-shadow:
+        0 0 10px rgba(47, 158, 56, 0.95),
+        0 0 22px rgba(47, 158, 56, 0.65),
+        0 0 40px rgba(47, 158, 56, 0.35);
+    }
+  }
+  .tap-text:hover, .tap-text:focus,
+  #doorOff:hover, #doorOff:focus, #toDeep:hover, #toDeep:focus {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+  .map-action, .cta-gap {
+    position: fixed;
+    left: 50%;
+    bottom: 148px;
+    transform: translateX(-50%);
+    z-index: 95;
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<style>
+  .ver-banner {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 300;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    min-height: 84px; padding: 22px 20px 16px;
+    background: #1c1612; color: #fff8f4;
+    font: 700 26px/1.2 Georgia, "Iowan Old Style", Palatino, serif;
+    box-shadow: 0 -6px 18px rgba(0,0,0,0.28);
+    transition: transform 0.2s ease;
+    touch-action: none;
+  }
+  .banner-handle {
+    position: absolute; top: 2px; left: 50%; transform: translateX(-50%);
+    width: 64px; height: 22px; border-radius: 11px; background: #ffd36a; color: #1c1612;
+    display: flex; align-items: center; justify-content: center; padding: 0;
+    min-height: 0; z-index: 2;
+  }
+  .banner-handle svg { width: 18px; height: 18px; display: block; }
+  html[data-banner="hide"] .ver-banner { transform: translateY(calc(100% - 26px)); }
+  html[data-banner="hide"] footer.tools { bottom: 32px; }
+  html[data-banner="hide"] .banner-handle svg { transform: rotate(180deg); }
+  .ver-banner a, .ver-banner button { color: #ffd36a; font-weight: 700; font-size: 22px; background: transparent; border: 0; padding: 0; min-height: 0; text-align: center; }
+  .ver-update.hidden { display: none; }
+  .ver-update { display: block; width: 100%; margin-top: 6px; color: #1c1612; background: #ffd36a; border-radius: 10px; padding: 10px 12px; text-align: center; animation: verFlash 1s linear infinite; }
+  @keyframes verFlash { 50% { opacity: 0.35; } }
+  .ver-banner { flex-wrap: wrap; }
+  body { padding-bottom: 150px; }
+  html[data-adjust="1"] #verLabel, html[data-adjust="1"] .ver-banner a, html[data-adjust="1"] #verUpdate { display: none; }
+  html[data-adjust="1"] .ver-banner { min-height: 0; padding: 6px 10px; gap: 8px; justify-content: center; font-size: 16px; }
+  html[data-adjust="1"] .adjust-controls { flex-wrap: wrap; justify-content: center; }
+  html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
+  
+</style>
+<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.97</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+
+<div class="wrap">
+  <div id="updateBanner" class="update-banner hidden" role="status">
+  <p id="updateText">New version available.</p>
+  <button type="button" id="updateBtn">Load new version</button>
+</div>
+<header class="app">
+    <p class="brand">Wheel of Creativity</p>
+    <div class="head-tools"><button type="button" id="refreshBtn" class="icon-btn" aria-label="Refresh"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b000"/><stop offset="0.34" stop-color="#d4145a"/><stop offset="0.67" stop-color="#2b6fd6"/><stop offset="1" stop-color="#2f9e38"/></linearGradient></defs><path d="M19.5 8.2A7.2 7.2 0 1 0 19.5 16" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round"/><path d="M19.5 4.2v4.4h-4.4" fill="none" stroke="url(#arrowGrad)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" id="menuBtn" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
+  </header>
+  <div id="settings" class="settings hidden" role="menu">
+    <button type="button" class="menu-item" id="themeBtn" role="menuitem">Switch to dark mode</button>
+  </div>
+  <div id="scatter" aria-hidden="true"></div>
+  <div id="stationWheels" aria-hidden="true"></div>
+  <img id="bgLayer" alt="" src="images/wheel-mark.png"><div id="wmGrab" aria-hidden="true"></div>
+  <main id="main"></main>
+  <footer class="tools">
+    <div class="row">
+      <button type="button" id="backBtn">Back</button>
+      <button type="button" id="restartBtn">Start over</button>
+    </div>
+  </footer>
+  <div id="centerGuide"></div>
+  <div id="centerTag">Centered</div>
+</div>
+<script>
+const STATIONS = [
+  { id: 1, quarter: "Vision", name: "Hunger", adjective: "Uncertain", noun: "Uncertainty", challenge: "Uncertainty", feels: ["like something's missing", "restless", "restless or dissatisfied, not sure why"], phrase: "Something's Missing.", experience: "Restlessness", task: "Tell the truth", reward: "Awareness", direction: "Awareness" },
+  { id: 2, quarter: "Vision", name: "Appetite", adjective: "Vague", noun: "Vagueness", challenge: "Vagueness", feels: ["like I know what I want", "that's what I want", "wanting it, even if I can't explain why"], phrase: "You're all I want.", experience: "Desire", task: "Pay attention", reward: "Direction", direction: "Direction" },
+  { id: 3, quarter: "Vision", name: "Anorexia", adjective: "Stuck", noun: "Inertia", challenge: "Inertia", feels: ["paralyzed", "like something in me says \"don't you dare\"", "stuck behind my own \"no\""], phrase: "Don't you dare!", experience: "Paralysis", task: "Choose love", reward: "Torque", direction: "Torque" },
+  { id: 4, quarter: "Exploration", name: "Launch", adjective: "Burnt out", noun: "Burnout", challenge: "Burnout", feels: ["burned out", "running on fumes", "used up all my launch energy"], phrase: "Into the wild!", experience: "Enthusiasm", task: "Leave home", reward: "Freedom", direction: "Freedom" },
+  { id: 5, quarter: "Exploration", name: "Isolation", adjective: "Distracted", noun: "Distraction", challenge: "Distraction", feels: ["like there's nothing out here", "scattered and alone", "like I need a ground crew I don't have"], phrase: "There's nothing out here", experience: "Despair", task: "Stay vigilant", reward: "Discovery", direction: "Discovery" },
+  { id: 6, quarter: "Exploration", name: "Crisis", adjective: "Overwhelmed", noun: "Overwhelm", challenge: "Overwhelm", feels: ["like everything's against me", "in full panic", "barely holding on"], phrase: "Catch me if you can!", experience: "Panic", task: "Focus", reward: "Capture", direction: "Capture" },
+  { id: 7, quarter: "Incubation", name: "Conception", adjective: "In Shock", noun: "Shock", challenge: "Shock", feels: ["thrown into something brand new", "caught off guard, no footing yet"], phrase: "Wade in the water.", experience: "Wonder", task: "Be receptive", reward: "Fertility", direction: "Fertility" },
+  { id: 8, quarter: "Incubation", name: "Gestation", adjective: "Doubtful", noun: "Doubt", challenge: "Doubt", feels: ["like I'm waiting and don't know for what", "doubting it'll work out"], phrase: "Sitting on the dock of the bay.", experience: "Urgency", task: "Relax", reward: "Faith", direction: "Faith" },
+  { id: 9, quarter: "Incubation", name: "Breakthrough", adjective: "Perfectionistic", noun: "Perfectionism", challenge: "Perfectionism", feels: ["still not good enough to call finished", "can't let it be done, not free yet"], phrase: "Free at last!", experience: "Appreciation", task: "Be present", reward: "Confidence", direction: "Confidence" },
+  { id: 10, quarter: "Cultivation", name: "Nurturing", adjective: "Pressured", noun: "Pressure", challenge: "Pressure", feels: ["like I'm carrying something fragile", "under the weight of watching over it"], phrase: "Someone to watch over you.", experience: "Tenderness", task: "Protect", reward: "Maturity", direction: "Maturity" },
+  { id: 11, quarter: "Cultivation", name: "Pruning", adjective: "Fatigued", noun: "Fatigue", challenge: "Fatigue", feels: ["fatigued", "worn down from cutting things back", "tired of saying goodbye"], phrase: "Time to say goodbye.", experience: "Fatigue", task: "Discipline", reward: "Mastery", direction: "Mastery" },
+  { id: 12, quarter: "Cultivation", name: "Harvest", adjective: "Resistant", noun: "Resistance", challenge: "Resistance", feels: ["dragging my feet toward the finish", "not ready to come home yet"], phrase: "Homeward bound.", experience: "Satisfaction", task: "Release", reward: "Purpose", direction: "Purpose" }
+];
+
+const SCREENS = [
+  { n: 1, name: "Two-Door Entry", paid: false },
+  { n: 2, name: "Felt-Word Grid", paid: false },
+  { n: 3, name: "Discovery Draw", paid: false },
+  { n: 4, name: "Recognition", paid: false },
+  { n: 5, name: "Illumination", paid: false },
+  { n: 6, name: "Wheel Map", paid: false },
+  { n: 7, name: "Go Deeper Prompt", paid: false },
+  { n: 8, name: "Email Capture", paid: false },
+  { n: 9, name: "Unlock Offer", paid: true },
+  { n: 10, name: "Purchase / Checkout", paid: true },
+  { n: 11, name: "Welcome / Course Home", paid: true }
+];
+
+const state = {
+  screen: 1,
+  history: [],
+  door: null,
+  pick: null,
+  stationId: 1,
+  design: null,
+  spinning: false,
+  emailNote: "",
+  mapOpen: false,
+  mapLit: 0
+};
+
+const main = document.getElementById("main");
+const index = document.getElementById("index");
+
+function stationById(id) { return STATIONS.find(s => s.id === id); }
+function stationBorderColor(id) {
+  // Green: Hunger, Appetite, Anorexia
+  if (id <= 3) return "#2f9e38";
+  // Yellow: Launch, Isolation, Crisis
+  if (id <= 6) return "#e2b000";
+  // Blue: Conception, Gestation, Breakthrough
+  if (id <= 9) return "#2b6fd6";
+  // Red: Nurturing, Pruning, Harvest
+  return "#d4145a";
+}
+function stationFillColor(id) {
+  // Much lighter shade of the same color so the border and wheel watermark stay visible
+  if (id <= 3) return "rgba(47, 158, 56, 0.13)";
+  if (id <= 6) return "rgba(226, 176, 0, 0.16)";
+  if (id <= 9) return "rgba(43, 111, 214, 0.13)";
+  return "rgba(212, 20, 90, 0.12)";
+}
+
+function go(n, push) {
+  leaveAdjust();
+  if (push !== false && state.screen !== n) state.history.push(state.screen);
+  state.screen = n;
+  render();
+  window.scrollTo(0, 0);
+  const h = document.querySelector("h1");
+  if (h) h.focus();
+}
+
+
+
+
+function drawMap() {
+  const old = document.getElementById("mapPage");
+  if (old) old.remove();
+  document.body.classList.toggle("map-open", state.mapOpen);
+  if (!state.mapOpen) return;
+  const colors = { Vision: "#e2b000", Exploration: "#d4145a", Incubation: "#2b6fd6", Cultivation: "#2f9e38" };
+  const page = document.createElement("div");
+  page.id = "mapPage";
+  page.className = "map-page";
+  page.innerHTML = `
+    <div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><svg viewBox="0 0 1253 1253"></svg></div>
+    <div class="map-action" id="mapIllum" role="button" tabindex="0">See illumination</div>
+    <div class="map-nav" style="position:fixed; left:0; right:0; bottom:72px; z-index:100; display:flex; justify-content:space-around; padding:0 16px; gap:16px;">
+      <button type="button" id="mapBackBtn">Back</button>
+      <button type="button" id="mapRestartBtn">Start over</button>
+    </div>
+  `;
+  const svg = page.querySelector("svg");
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  svg.appendChild(defs);
+  STATIONS.forEach((item, i) => {
+    const cx = 626, cy = 626, r0 = 464, r1 = 546;
+    const inset = 1.1 * Math.PI / 180;
+    const a1 = (90 - i * 30) * Math.PI / 180 - inset;
+    const a0 = a1 - 30 * Math.PI / 180 + inset * 2;
+    const pt = (a, r) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+    const [x0, y0] = pt(a0, r1);
+    const [x1, y1] = pt(a1, r1);
+    const [x2, y2] = pt(a1, r0);
+    const [x3, y3] = pt(a0, r0);
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const d = "M " + x0 + " " + y0 + " A " + r1 + " " + r1 + " 0 0 1 " + x1 + " " + y1 + " L " + x2 + " " + y2 + " A " + r0 + " " + r0 + " 0 0 0 " + x3 + " " + y3 + " Z";
+    path.setAttribute("d", d);
+    if (state.mapLit === item.id) {
+      const clip = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+      clip.id = "stationClip";
+      clip.setAttribute("clipPathUnits", "userSpaceOnUse");
+      const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      clipPath.setAttribute("d", d);
+      clip.appendChild(clipPath);
+      defs.appendChild(clip);
+      const glow = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      glow.setAttribute("d", d);
+      glow.setAttribute("class", "station-glow");
+      glow.setAttribute("pointer-events", "none");
+      svg.appendChild(glow);
+    }
+    path.setAttribute("aria-label", item.name);
+    path.style.pointerEvents = "none";
+    svg.appendChild(path);
+  });
+  document.body.appendChild(page);
+  const stage = page.querySelector(".map-stage");
+  let scale = 1, tx = 0, ty = 0;
+  let startDist = 0, startScale = 1, startTx = 0, startTy = 0;
+  let panStartX = 0, panStartY = 0, isPanning = false;
+  const dist = (touches) => {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.hypot(dx, dy) || 1;
+  };
+  const apply = () => {
+    const maxPan = (scale - 1) * 0.5 * Math.min(window.innerWidth, window.innerHeight);
+    tx = Math.max(-maxPan, Math.min(maxPan, tx));
+    ty = Math.max(-maxPan, Math.min(maxPan, ty));
+    stage.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+    stage.style.transformOrigin = "center center";
+  };
+  page.addEventListener("touchstart", (e) => {
+    if (e.touches.length === 2) {
+      startDist = dist(e.touches);
+      startScale = scale;
+      startTx = tx;
+      startTy = ty;
+      isPanning = false;
+    } else if (e.touches.length === 1 && scale > 1.05) {
+      isPanning = true;
+      panStartX = e.touches[0].clientX - tx;
+      panStartY = e.touches[0].clientY - ty;
+    }
+  }, { passive: true });
+  page.addEventListener("touchmove", (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const newDist = dist(e.touches);
+      scale = Math.min(5, Math.max(1, startScale * newDist / startDist));
+      apply();
+    } else if (e.touches.length === 1 && isPanning) {
+      e.preventDefault();
+      tx = e.touches[0].clientX - panStartX;
+      ty = e.touches[0].clientY - panStartY;
+      apply();
+    }
+  }, { passive: false });
+  page.addEventListener("touchend", (e) => {
+    isPanning = false;
+    if (scale < 1.02) { scale = 1; tx = 0; ty = 0; apply(); }
+  });
+  page.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    const newScale = Math.min(5, Math.max(1, scale * delta));
+    const rect = stage.getBoundingClientRect();
+    const mx = e.clientX - rect.left - rect.width / 2;
+    const my = e.clientY - rect.top - rect.height / 2;
+    const factor = newScale / scale;
+    tx = mx - (mx - tx) * factor;
+    ty = my - (my - ty) * factor;
+    scale = newScale;
+    apply();
+  }, { passive: false });
+  let mousePanning = false, mouseStartX = 0, mouseStartY = 0;
+  page.addEventListener("mousedown", (e) => {
+    if (e.button !== 0 || scale <= 1.05) return;
+    mousePanning = true;
+    mouseStartX = e.clientX - tx;
+    mouseStartY = e.clientY - ty;
+    page.style.cursor = "grabbing";
+  });
+  page.addEventListener("mousemove", (e) => {
+    if (!mousePanning) return;
+    tx = e.clientX - mouseStartX;
+    ty = e.clientY - mouseStartY;
+    apply();
+  });
+  page.addEventListener("mouseup", () => {
+    mousePanning = false;
+    page.style.cursor = "";
+  });
+  page.addEventListener("mouseleave", () => { mousePanning = false; page.style.cursor = ""; });
+  document.getElementById("mapIllum").onclick = () => {
+    state.mapOpen = false;
+    state.history.push("map");
+    go(5, false);
+  };
+  document.getElementById("mapBackBtn").onclick = back;
+  document.getElementById("mapRestartBtn").onclick = restart;
+}
+
+function playVortex(done) {
+  const layer = document.createElement("div");
+  layer.className = "vortex";
+  layer.setAttribute("aria-hidden", "true");
+  layer.innerHTML = '<div class="vortex-wheel"><img alt="" src="images/wheel-mark.png"></div>';
+  document.body.appendChild(layer);
+  const wheel = layer.querySelector(".vortex-wheel");
+  const img = layer.querySelector("img");
+  const started = performance.now();
+  const life = 1700;
+  let angle = 0;
+  let last = started;
+  function frame(now) {
+    if (!layer.isConnected) return;
+    const t = Math.min(1, (now - started) / life);
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    const scale = 0.16 + t * 0.62;
+    wheel.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+    const speed = 40 + t * t * 700;
+    angle = (angle + speed * dt) % 360;
+    img.style.transform = "rotate(" + angle + "deg)";
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  setTimeout(() => {
+    document.body.classList.add("page-in");
+    document.body.classList.remove("show-page");
+    layer.classList.add("leave");
+    done();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => document.body.classList.add("show-page"));
+    });
+  }, 700);
+  setTimeout(() => layer.remove(), 1700);
+  setTimeout(() => {
+    document.body.classList.remove("page-in");
+    document.body.classList.remove("show-page");
+  }, 3700);
+}
+function startFloat(stage) {
+  const cards = Array.from(stage.querySelectorAll(".fcard"));
+  if (state.floatTimer) cancelAnimationFrame(state.floatTimer);
+  const gap = 18;
+  function place() {
+    const w = stage.clientWidth || 320;
+    const h = stage.clientHeight || 420;
+    const n = cards.length || 1;
+    const cols = w < 520 ? 2 : 3;
+    const rows = Math.ceil(n / cols);
+    const size = Math.max(72, Math.min(168, Math.floor(Math.min((w - gap * (cols + 1)) / cols, (h - gap * (rows + 1)) / rows))));
+    cards.forEach((card, i) => {
+      card.style.width = size + "px";
+      card.style.height = size + "px";
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const cellW = (w - gap) / cols;
+      const cellH = (h - gap) / rows;
+      const maxX = Math.max(0, w - size);
+      const maxY = Math.max(0, h - size);
+      const x = Math.min(maxX, gap + col * cellW + (cellW - size) / 2);
+      const y = Math.min(maxY, gap * 0.35 + row * cellH);
+      card.dataset.px = String(x);
+      card.dataset.py = String(y);
+      card.dataset.vx = String(((i % 5) - 2) * 0.35 || 0.4);
+      card.dataset.vy = String((((i + 2) % 5) - 2) * 0.28 || -0.3);
+      card.style.left = x + "px";
+      card.style.top = y + "px";
+    });
+  }
+  place();
+  function step() {
+    if (state.screen !== 3 || state.design !== 3) return;
+    const w = stage.clientWidth;
+    const h = stage.clientHeight;
+    const size = cards[0] ? cards[0].offsetWidth : 120;
+    const maxX = Math.max(0, w - size);
+    const maxY = Math.max(0, h - size);
+    cards.forEach(card => {
+      if (card.classList.contains("caught") || state.spinning) return;
+      let x = parseFloat(card.dataset.px);
+      let y = parseFloat(card.dataset.py);
+      let vx = parseFloat(card.dataset.vx);
+      let vy = parseFloat(card.dataset.vy);
+      const speed = Math.hypot(vx, vy);
+      if (speed > 1.1) { vx *= 0.92; vy *= 0.92; }
+      if (speed < 0.25) { vx *= 1.08; vy *= 1.08; }
+      x += vx; y += vy;
+      if (x < 0 || x > maxX) { vx *= -1; x = Math.max(0, Math.min(maxX, x)); }
+      if (y < 0 || y > maxY) { vy *= -1; y = Math.max(0, Math.min(maxY, y)); }
+      card.dataset.px = x; card.dataset.py = y; card.dataset.vx = vx; card.dataset.vy = vy;
+    });
+    // Collision resolution removed — wheels may cross / overlap freely.
+    cards.forEach(card => {
+      card.style.left = card.dataset.px + "px";
+      card.style.top = card.dataset.py + "px";
+    });
+    state.floatTimer = requestAnimationFrame(step);
+  }
+  state.floatTimer = requestAnimationFrame(step);
+}
+function back() {
+  if (state.mapOpen) {
+    state.mapOpen = false;
+    render();
+    return;
+  }
+  if (!state.history.length) return;
+  const prev = state.history.pop();
+  if (prev === "map") {
+    state.screen = 4;
+    state.mapOpen = true;
+    state.mapLit = state.stationId;
+    render();
+    return;
+  }
+  state.screen = prev;
+  state.design = null;
+  state.spinning = false;
+  state.mapOpen = false;
+  render();
+}
+
+function restart() {
+  state.screen = 1;
+  state.history = [];
+  state.door = null;
+  state.pick = null;
+  state.stationId = 1;
+  state.emailNote = "";
+  state.design = null;
+  state.spinning = false;
+  state.mapOpen = false;
+  state.mapLit = 0;
+  render();
+}
+
+function chooseStation(id, label, via) {
+  state.stationId = id;
+  state.pick = label;
+  state.door = via;
+  go(4);
+}
+
+function renderIndex() {
+  if (!index) return;
+  index.innerHTML = "";
+  SCREENS.forEach(s => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = "Screen " + s.n + " · " + s.name + (s.paid ? " (paid)" : " (free)");
+    b.addEventListener("click", () => go(s.n));
+    index.appendChild(b);
+  });
+}
+
+function field(label, text) {
+  return '<div class="ph"><span class="tag">Placeholder</span><p><strong>' + label + '</strong></p><p>' + text + '</p></div>';
+}
+
+function render() {
+  const s = SCREENS[state.screen - 1];
+  const st = stationById(state.stationId);
+    document.getElementById("backBtn").disabled = state.history.length === 0 && !state.mapOpen;
+  let html = "";
+  if (s.n === 9) {
+    html += '<div class="paywall"><strong>Paywall boundary.</strong> Free illumination journey ends here. What follows is the paid full course. This is a review divider, not a real charge.</div>';
+  }
+  if (s.n === 1) {
+    html += '<h1 tabindex="-1">Hey there, Human!</h1><p>What\'s going on with you? How are you feeling right now?</p><div class="grid" id="doorWords"></div><div class="cta-gap"><button type="button" id="doorOff" class="tap-text">I wish I knew, help me</button></div>';
+  }
+  if (s.n === 2) {
+    html += '<h1 tabindex="-1">Felt-word grid</h1><p>Tap the feeling that is closest. Each word maps to one station.</p><div class="grid" id="wordGrid"></div>';
+  }
+  if (s.n === 3) {
+    state.design = 3;
+    state.spinning = false;
+    html += '<h1 tabindex="-1">Catch a wheel</h1><p>Tap to try on any feeling.</p><div class="float-stage" id="drawGrid"></div>';
+  }
+  if (s.n === 4) {
+    const feels = (st.feels || []).map(f => "<li>" + f + "</li>").join("");
+    html += '<h1 class="locked-title" tabindex="-1">You\'ve chosen the ' + st.noun + ' card.</h1><div id="cardScroll"><div class="cardish rec-card" id="recCard" style="border-color:' + stationBorderColor(st.id) + '; background:' + stationFillColor(st.id) + ';"><div class="card-wheels"></div><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div class="cta-follow"><span class="tap-text" id="toWheel" role="button" tabindex="0">See where you are</span></div></div>';
+  }
+  if (s.n === 5) {
+    html += '<div class="illum-scroll" id="illumScroll"><div class="illum-stage"><img class="illum-wheel" alt="" src="images/wheel-mark.png"><h1 tabindex="-1">' + st.name + '</h1>';
+    html += '<p>And there you are. Just across the border inside your creative process lies the ' + st.name + ' station. What lies here is the antidote to your experience of ' + st.noun + '. It is the place where the experience is ' + st.experience + ' and the voice inside you cries, “' + st.phrase + '” This is a natural point in your creative process. The task here is to ' + st.task.toLowerCase() + '. Once you\'re able to achieve that, you\'ll be rewarded with ' + st.reward.toLowerCase() + ', which will move you ahead to the next station in your creative process. So what do you do now?</p>';
+    html += '<div class="cta-follow"><button type="button" id="toDeep" class="tap-text">Go deeper</button></div></div></div>';
+  }
+  if (s.n === 6) {
+    html += '<h1 tabindex="-1">You are here</h1><p>' + st.noun + ' sits just outside <strong>' + st.name + '</strong>. The rest of the wheel is visible. Only this station is open.</p><div class="wheel" id="wheel"><div class="wheel-center">You are here<br>' + st.name + '</div></div><div class="cta-gap"><span class="tap-text" id="toIllum" role="button" tabindex="0">See illumination</span></div>';
+  }
+  if (s.n === 7) {
+    html += '<h1 tabindex="-1">Go deeper</h1><p>For <strong>' + st.name + '</strong>, the full course still holds:</p>';
+    html += field("Held back", "A teaching video and a worksheet for this station. They live in the full course, not in this free illumination.");
+    html += '<div class="row"><button class="primary" type="button" id="toEmail">Continue</button></div>';
+  }
+  if (s.n === 8) {
+    html += '<h1 tabindex="-1">Email capture</h1><p>Optional. If you enter an email, this scaffolding would tag it with <strong>' + st.name + '</strong>. Nothing is sent or stored.</p>';
+    html += '<form id="emailForm"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" placeholder="name@example.com"><div class="row"><button class="primary" type="submit">Submit email</button><button type="button" id="skipEmail">Skip</button></div></form>';
+    if (state.emailNote) html += '<p class="notice">' + state.emailNote + '</p><div class="row"><button class="primary" type="button" id="toOffer">Continue to the offer</button></div>';
+  }
+  if (s.n === 9) {
+    html += '<h1 tabindex="-1">Unlock offer</h1><p>One bundle. The full course for all 12 stations.</p>';
+    html += field("Price", "$199 — placeholder price from the asset list, not a real offer.");
+    html += field("Includes", "PLACEHOLDER: video and worksheet for each station, including " + st.name + ".");
+    html += '<div class="row"><button class="primary" type="button" id="toCheckout">Continue to checkout</button></div>';
+  }
+  if (s.n === 10) {
+    html += '<h1 tabindex="-1">Purchase / checkout</h1><p class="notice">Demo — no payment is taken.</p>';
+    html += field("Order", "Wheel of Creativity full course · placeholder $199 · station context: " + st.name + ".");
+    html += '<div class="row"><button class="primary" type="button" id="toHome">Finish demo checkout</button></div>';
+  }
+  if (s.n === 11) {
+    html += '<h1 tabindex="-1">Welcome / course home</h1><p>Library of all 12 stations, marked unlocked for this review. Slots are empty on purpose.</p><div id="library"></div>';
+  }
+  main.innerHTML = html;
+
+  if (s.n === 1) {
+    document.documentElement.setAttribute("data-page", "door");
+    document.documentElement.setAttribute("data-bg", "mark");
+    const words = document.getElementById("doorWords");
+    STATIONS.forEach(item => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "door";
+      b.textContent = item.adjective;
+      b.onclick = () => chooseStation(item.id, item.adjective, "know");
+      words.appendChild(b);
+    });
+    document.getElementById("doorOff").onclick = () => { state.door = "off"; state.design = 3; go(3); };
+    restoreDoorLayout();
+  } else if (s.n === 4) {
+    document.documentElement.setAttribute("data-page", "recognition");
+    document.documentElement.setAttribute("data-bg", "mark");
+    fillCardWheels();
+    enableCardZoom();
+  } else if (s.n === 5) {
+    document.documentElement.setAttribute("data-page", "illum");
+    document.documentElement.setAttribute("data-bg", "mark");
+  } else {
+    document.documentElement.setAttribute("data-page", "other");
+    document.documentElement.setAttribute("data-bg", "mark");
+  }
+  if (s.n === 2) {
+    const g = document.getElementById("wordGrid");
+    STATIONS.forEach(item => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.innerHTML = '<span class="tag">Placeholder</span><br>' + item.challenge;
+      b.onclick = () => chooseStation(item.id, item.challenge, "know");
+      g.appendChild(b);
+    });
+  }
+  if (s.n === 3 && !state.design) {
+    document.getElementById("opt1").onclick = () => { state.design = 1; render(); };
+    document.getElementById("opt2").onclick = () => { state.design = 2; render(); };
+    document.getElementById("opt3").onclick = () => { state.design = 3; render(); };
+  }
+  if (s.n === 3 && state.design) {
+    const g = document.getElementById("drawGrid");
+    STATIONS.forEach((item, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      const img = '<img class="mark" alt="" src="images/wheel-mark.png">';
+      if (state.design === 1) {
+        b.className = "pcard";
+        const col = i % 4;
+        const row = Math.floor(i / 4);
+        b.style.left = (8 + col * 22) + "%";
+        b.style.top = (row * 150 + (col % 2) * 18) + "px";
+        b.style.transform = "rotate(" + ((col - 1.5) * 6) + "deg)";
+        b.innerHTML = img;
+        b.setAttribute("aria-label", "Playing card " + item.id + " " + item.challenge);
+      } else if (state.design === 2) {
+        b.className = "wcard";
+        const col = i % 3;
+        const row = Math.floor(i / 3);
+        b.style.left = (6 + col * 30) + "%";
+        b.style.top = (row * 130) + "px";
+        b.innerHTML = img;
+        b.setAttribute("aria-label", "Wheel card " + item.id + " " + item.challenge);
+      } else {
+        b.className = "fcard";
+        b.dataset.x = String(8 + ((i * 37) % 70));
+        b.dataset.y = String(8 + ((i * 53) % 62));
+        b.dataset.vx = String(((i % 5) - 2) * 0.08 || 0.12);
+        b.dataset.vy = String((((i + 2) % 5) - 2) * 0.07 || -0.1);
+        b.style.left = b.dataset.x + "%";
+        b.style.top = b.dataset.y + "%";
+        b.innerHTML = img;
+        b.querySelector(".mark").style.animationDelay = (-(i * 0.35)) + "s";
+        b.setAttribute("aria-label", "Catch wheel " + item.id + " " + item.challenge);
+      }
+      const spinIt = (e) => {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        if (state.spinning) return;
+        state.spinning = true;
+        b.classList.add("caught");
+        playVortex(() => chooseStation(item.id, "Card " + item.id + " (" + item.challenge + ")", "off"));
+      };
+      b.addEventListener("pointerdown", spinIt);
+      g.appendChild(b);
+    });
+    if (state.design === 3) startFloat(g);
+  }
+  if (s.n === 4) {
+    document.getElementById("toWheel").onclick = () => { state.mapLit = state.stationId; state.mapOpen = true; render(); };
+    restoreStationLayout();
+  }
+  drawMap();
+  addGrabZones();
+  if (s.n === 5) {
+    document.getElementById("toDeep").onclick = () => go(7);
+  }
+  if (s.n === 6) {
+    document.getElementById("toIllum").onclick = () => go(5);
+    const wheel = document.getElementById("wheel");
+    STATIONS.forEach((item, i) => {
+      const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "station-btn" + (item.id === state.stationId ? " here" : "");
+      b.style.left = (50 + Math.cos(angle) * 38) + "%";
+      b.style.top = (50 + Math.sin(angle) * 38) + "%";
+      b.textContent = item.id + ". " + (item.name.indexOf("PLACEHOLDER") === 0 ? "Station " + item.id : item.name);
+      b.setAttribute("aria-label", "Station " + item.id + " " + item.name + (item.id === state.stationId ? ", you are here" : ""));
+      b.disabled = item.id !== state.stationId;
+      b.onclick = () => {};
+      wheel.appendChild(b);
+    });
+  }
+  if (s.n === 7) document.getElementById("toEmail").onclick = () => go(9);
+  if (s.n === 8) {
+    document.getElementById("emailForm").onsubmit = (e) => {
+      e.preventDefault();
+      const v = document.getElementById("email").value.trim();
+      state.emailNote = v
+        ? "Not stored. A real app would tag " + v + " with " + st.name + "."
+        : "No email entered. Nothing stored.";
+      render();
+    };
+    document.getElementById("skipEmail").onclick = () => { state.emailNote = "Skipped. Nothing stored. Tag would have been " + st.name + "."; go(9); };
+    const next = document.getElementById("toOffer");
+    if (next) next.onclick = () => go(9);
+  }
+  if (s.n === 9) document.getElementById("toCheckout").onclick = () => go(10);
+  if (s.n === 10) document.getElementById("toHome").onclick = () => go(11);
+  if (s.n === 11) {
+    const lib = document.getElementById("library");
+    STATIONS.forEach(item => {
+      const d = document.createElement("div");
+      d.className = "cardish";
+      d.style.marginBottom = "10px";
+      d.innerHTML = '<h2>Station ' + item.id + ' · ' + item.name + '</h2><p class="muted">' + item.quarter + ' · ' + item.challenge + ' · unlocked</p>'
+        + field("Video", "PLACEHOLDER video slot")
+        + field("Worksheet", "PLACEHOLDER worksheet slot");
+      lib.appendChild(d);
+    });
+  }
+}
+
+document.getElementById("backBtn").onclick = back;
+document.getElementById("restartBtn").onclick = restart;
+const settings = document.getElementById("settings");
+function closeMenu() { settings.classList.add("hidden"); }
+document.getElementById("menuBtn").onclick = (e) => {
+  e.stopPropagation();
+  settings.classList.toggle("hidden");
+};
+document.addEventListener("click", (e) => {
+  if (!settings.contains(e.target)) closeMenu();
+});
+document.getElementById("themeBtn").onclick = () => {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
+  document.getElementById("themeBtn").textContent = dark ? "Switch to dark mode" : "Switch to light mode";
+  closeMenu();
+};
+function setBackground(name) {
+  if (state.screen === 1) name = "mark";
+  document.documentElement.setAttribute("data-bg", name);
+}
+const scatter = document.getElementById("scatter");
+const bgLayer = document.getElementById("bgLayer");
+function saved(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch (e) { return fallback; }
+}
+const scatterSaved = saved("woc-layout-scatter", null);
+if (scatterSaved) {
+  scatterSaved.forEach(item => {
+    const img = document.createElement("img");
+    img.src = "images/wheel-mark.png";
+    img.alt = "";
+    img.style.width = item.size + "px";
+    img.style.left = item.left + "%";
+    img.style.top = item.top + "%";
+    img.style.transform = "rotate(" + item.rot + "deg)";
+    scatter.appendChild(img);
+  });
+} else {
+  const placed = [];
+  for (let n = 0; n < 10; n++) {
+    const size = 36 + Math.round(Math.random() * 56);
+    let left = 8, top = 8, ok = false;
+    for (let tryN = 0; tryN < 40 && !ok; tryN++) {
+      left = 4 + Math.random() * 78;
+      top = 4 + Math.random() * 78;
+      ok = placed.every(p => Math.hypot(left - p.left, top - p.top) > 18);
+    }
+    if (!ok) continue;
+    placed.push({ left, top });
+    const img = document.createElement("img");
+    img.src = "images/wheel-mark.png";
+    img.alt = "";
+    img.style.width = size + "px";
+    img.style.left = left + "%";
+    img.style.top = top + "%";
+    img.style.transform = "rotate(" + Math.round(Math.random() * 360) + "deg)";
+    scatter.appendChild(img);
+  }
+}
+function applyLayer(name) {
+  const layout = saved("woc-layout-" + name, null);
+  const opacity = name === "scatter" && layout && layout[0] ? layout[0].opacity : (layout && layout.opacity) || 20;
+  document.getElementById("opacitySlider").value = opacity;
+  applyOpacity(opacity);
+  if (name === "fill") {
+    bgLayer.style.width = (layout ? layout.size : 340) + "vw";
+  } else {
+    bgLayer.style.width = (layout ? layout.size : 88) + "vmin";
+  }
+  bgLayer.style.left = (layout ? layout.left : 50) + "%";
+  bgLayer.style.top = (layout ? layout.top : 42) + "%";
+  if (!layout) bgLayer.style.transform = "translate(-50%, -50%)";
+}
+const origSet = setBackground;
+setBackground = function(name) { origSet(name); applyLayer(name); };
+function leaveAdjust() {
+  document.documentElement.setAttribute("data-adjust", "0");
+  document.documentElement.setAttribute("data-hide", "0");
+  const hide = document.getElementById("hideBtn");
+  if (hide) hide.textContent = "Hide text";
+}
+document.addEventListener("touchmove", (e) => {
+  if (document.documentElement.getAttribute("data-adjust") === "1") return;
+  if (e.target.closest("#doorWords, #cardScroll, #mapPage")) return;
+  e.preventDefault();
+}, { passive: false });
+document.getElementById("pencilBtn").onclick = () => {
+  const on = document.documentElement.getAttribute("data-adjust") === "1";
+  if (on) leaveAdjust();
+  else document.documentElement.setAttribute("data-adjust", "1");
+  addGrabZones();
+};
+document.addEventListener("click", (e) => {
+  if (document.documentElement.getAttribute("data-adjust") !== "1") return;
+  if (e.target.closest(".ver-banner, .settings, #layoutMenu, #coordBox")) return;
+  if (e.target.closest("#mapPage")) return;
+  if (e.target.closest("button, summary, a")) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}, true);
+const guide = document.getElementById("centerGuide");
+const tag = document.getElementById("centerTag");
+let move = null;
+function canMove(el) {
+  if (state.screen !== 4) return null;
+  if (document.documentElement.getAttribute("data-adjust") !== "1" || !el || !el.closest) return null;
+  const grab = el.closest(".grab-right");
+  if (!grab) return null;
+  const card = grab.closest(".cardish");
+  return card;
+}
+
+function makeStationWheels() {
+  const placed = [];
+  const items = [];
+  for (let n = 0; n < 10; n++) {
+    const size = 36 + Math.round(Math.random() * 56);
+    let left = 8, top = 8, ok = false;
+    for (let tryN = 0; tryN < 40 && !ok; tryN++) {
+      left = 4 + Math.random() * 70;
+      top = 8 + Math.random() * 70;
+      ok = placed.every(p => Math.hypot(left - p.left, top - p.top) > 16);
+    }
+    placed.push({ left, top });
+    items.push({ size, left, top, rot: Math.round(Math.random() * 360) });
+  }
+  return items;
+}
+function saveStationWheels() {
+  const imgs = [...document.querySelectorAll("#stationWheels img")];
+  localStorage.setItem("woc-page-4-wheels", JSON.stringify(imgs.map(img => ({
+    size: parseFloat(img.style.width) || 48,
+    left: parseFloat(img.style.left) || 0,
+    top: parseFloat(img.style.top) || 0,
+    rot: parseFloat(String(img.style.transform).replace(/[^\d.-]/g, "")) || 0
+  }))));
+}
+function enableCardZoom() {
+  const stage = document.getElementById("recCard");
+  if (!stage) return;
+  let scale = 1, tx = 0, ty = 0;
+  let startDist = 0, startScale = 1;
+  let panStartX = 0, panStartY = 0, isPanning = false;
+  const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) || 1;
+  const apply = () => {
+    const maxPan = (scale - 1) * 160;
+    tx = Math.max(-maxPan, Math.min(maxPan, tx));
+    ty = Math.max(-maxPan, Math.min(maxPan, ty));
+    stage.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + scale + ")";
+  };
+  stage.addEventListener("touchstart", (e) => {
+    if (e.touches.length === 2) {
+      startDist = dist(e.touches);
+      startScale = scale;
+      isPanning = false;
+    } else if (e.touches.length === 1 && scale > 1.05) {
+      isPanning = true;
+      panStartX = e.touches[0].clientX - tx;
+      panStartY = e.touches[0].clientY - ty;
+    }
+  }, { passive: true });
+  stage.addEventListener("touchmove", (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      scale = Math.min(4, Math.max(1, startScale * dist(e.touches) / startDist));
+      apply();
+    } else if (e.touches.length === 1 && isPanning) {
+      e.preventDefault();
+      tx = e.touches[0].clientX - panStartX;
+      ty = e.touches[0].clientY - panStartY;
+      apply();
+    }
+  }, { passive: false });
+  stage.addEventListener("touchend", () => {
+    isPanning = false;
+    if (scale < 1.02) { scale = 1; tx = 0; ty = 0; apply(); }
+  });
+  stage.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    scale = Math.min(4, Math.max(1, scale + (e.deltaY < 0 ? 0.15 : -0.15)));
+    if (scale <= 1) { scale = 1; tx = 0; ty = 0; }
+    apply();
+  }, { passive: false });
+}
+function fillCardWheels() {
+  const card = document.querySelector(".rec-card");
+  if (!card) return;
+  let layer = card.querySelector(".card-wheels");
+  if (!layer) {
+    layer = document.createElement("div");
+    layer.className = "card-wheels";
+    card.insertBefore(layer, card.firstChild);
+  }
+  layer.innerHTML = "";
+  const img = document.createElement("img");
+  img.src = "images/wheel-mark.png";
+  img.alt = "";
+  layer.appendChild(img);
+}
+function ensureStationWheels() {
+  const box = document.getElementById("stationWheels");
+  const savedWheels = saved("woc-page-4-wheels", null);
+  if (box.dataset.ready === "1") return;
+  box.innerHTML = "";
+  (savedWheels || makeStationWheels()).forEach(item => {
+    const img = document.createElement("img");
+    img.src = "images/wheel-mark.png";
+    img.alt = "";
+    img.style.width = item.size + "px";
+    img.style.left = item.left + "%";
+    img.style.top = item.top + "%";
+    img.style.transform = "rotate(" + item.rot + "deg)";
+    img.style.opacity = "0.2";
+    box.appendChild(img);
+  });
+  box.dataset.ready = "1";
+  if (!savedWheels) saveStationWheels();
+}
+function saveStationLayout() {
+  if (state.screen !== 4) return;
+  const card = document.querySelector(".wrap .cardish");
+  if (!card) return;
+  localStorage.setItem("woc-page-4", JSON.stringify({ left: card.style.left || "", top: card.style.top || "" }));
+}
+function restoreStationLayout() {
+  const savedLayout = saved("woc-page-4", null);
+  const card = document.querySelector(".wrap .cardish");
+  if (!savedLayout || !card) return;
+  card.style.position = "relative";
+  card.style.left = savedLayout.left || "";
+  card.style.top = savedLayout.top || "";
+}
+function captureDoorLayout() {
+  return {
+    items: captureItems(),
+    wheel: {
+      left: bgLayer.style.left,
+      top: bgLayer.style.top,
+      width: bgLayer.style.width,
+      opacity: bgLayer.style.opacity,
+      transform: bgLayer.style.transform || "translate(-50%, -50%)"
+    }
+  };
+}
+function saveDoorLayout() {
+  if (state.screen !== 1) return;
+  localStorage.setItem("woc-page-1", JSON.stringify(captureDoorLayout()));
+}
+function restoreDoorLayout() {
+  const savedLayout = saved("woc-page-1", null);
+  if (!savedLayout) return;
+  applyItems(savedLayout.items);
+  if (!savedLayout.wheel) return;
+  bgLayer.style.left = savedLayout.wheel.left || "50%";
+  bgLayer.style.top = savedLayout.wheel.top || "42%";
+  bgLayer.style.width = savedLayout.wheel.width || "88vmin";
+  bgLayer.style.opacity = savedLayout.wheel.opacity || "0.2";
+  bgLayer.style.transform = savedLayout.wheel.transform || "translate(-50%, -50%)";
+  const size = parseFloat(savedLayout.wheel.width);
+  if (size) document.getElementById("opacitySlider").value = Math.round((size - 20) / 1.6);
+}
+function textLineRects(el) {
+  if (el.classList.contains("cardish")) return [el.getBoundingClientRect()];
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const lines = [...range.getClientRects()].filter(r => r.width > 2 && r.height > 2);
+  return lines.length ? lines : [el.getBoundingClientRect()];
+}
+function addGrabZones() {
+  document.querySelectorAll(".grab-right").forEach(n => n.remove());
+  if (state.screen !== 4) { syncWmGrab(); return; }
+  document.querySelectorAll(".wrap .cardish").forEach(el => {
+    if (getComputedStyle(el).position === "static") el.style.position = "relative";
+    const host = el.getBoundingClientRect();
+    const g = document.createElement("span");
+    g.className = "grab-right";
+    g.setAttribute("aria-hidden", "true");
+    g.style.left = (host.width * 0.75) + "px";
+    g.style.top = "0px";
+    g.style.width = Math.max(16, host.width * 0.25) + "px";
+    g.style.height = host.height + "px";
+    el.appendChild(g);
+  });
+  syncWmGrab();
+}
+function syncWmGrab() {
+  const grab = document.getElementById("wmGrab");
+  if (!grab || !bgLayer) return;
+  const r = bgLayer.getBoundingClientRect();
+  grab.style.left = r.left + "px";
+  grab.style.top = r.top + "px";
+  grab.style.width = Math.max(28, r.width * 0.25) + "px";
+  grab.style.height = r.height + "px";
+}
+document.addEventListener("pointerdown", (e) => {
+  const el = canMove(e.target);
+  if (!el || e.target.closest(".ver-banner, .settings")) return;
+  const r = el.getBoundingClientRect();
+  move = { el, x: e.clientX, y: e.clientY, left: r.left, top: r.top };
+  el.style.position = "relative";
+  e.preventDefault();
+  e.stopPropagation();
+});
+document.addEventListener("pointermove", (e) => {
+  if (!move) return;
+  const dx = e.clientX - move.x, dy = e.clientY - move.y;
+  move.el.style.left = dx + "px";
+  move.el.style.top = dy + "px";
+  const r = move.el.getBoundingClientRect();
+  const mid = r.left + r.width / 2;
+  const centered = Math.abs(mid - window.innerWidth / 2) < 8;
+  guide.classList.toggle("on", centered);
+  tag.classList.toggle("on", centered);
+});
+document.addEventListener("pointerup", () => { if (move) { saveStationLayout(); addGrabZones(); } move = null; guide.classList.remove("on"); tag.classList.remove("on"); });
+function applyOpacity(value) {
+  const o = value / 100;
+  document.querySelectorAll("#scatter img").forEach(img => img.style.opacity = o);
+  bgLayer.style.opacity = o;
+  document.body.style.setProperty("--bg-opacity", o);
+}
+const slider = document.getElementById("opacitySlider");
+const sliderLabel = document.getElementById("sliderLabel");
+function selectedWheel() { return document.querySelector("#scatter img.sel") || document.querySelector("#bgLayer.sel"); }
+slider.oninput = (e) => {
+  const img = selectedWheel();
+  if (!img) { applyOpacity(e.target.value); if (state.screen === 1) saveDoorLayout(); return; }
+  if (img.id === "bgLayer") img.style.width = (20 + e.target.value * 1.6) + "vmin";
+  else img.style.width = (24 + e.target.value * 1.4) + "px";
+  if (state.screen === 1) saveDoorLayout();
+  syncWmGrab();
+};
+function showSize(img) {
+  sliderLabel.firstChild.textContent = "Size ";
+  const n = parseFloat(img.style.width) || 70;
+  slider.value = img.id === "bgLayer" ? Math.round((n - 20) / 1.6) : Math.round((n - 24) / 1.4);
+}
+function showOpacity() {
+  sliderLabel.firstChild.textContent = "Opacity ";
+}
+document.getElementById("hideBtn").onclick = () => {
+  const on = document.documentElement.getAttribute("data-hide") === "1";
+  document.documentElement.setAttribute("data-hide", on ? "0" : "1");
+  document.getElementById("hideBtn").textContent = on ? "Hide text" : "Show text";
+};
+function layoutKey(el, i) { return (el.id || el.textContent || "item").trim().slice(0, 40) + "-" + i; }
+function layoutNodes() {
+  return [...document.querySelectorAll(".wrap h1, .wrap p, .wrap button, .wrap .cardish, footer.tools button, footer.tools summary")]
+    .filter(el => !el.closest(".cardish") || el.classList.contains("cardish"));
+}
+function captureItems() {
+  return layoutNodes().map((el, i) => ({
+    key: layoutKey(el, i), left: el.style.left || "", top: el.style.top || ""
+  }));
+}
+function applyItems(items) {
+  if (!items) return;
+  layoutNodes().forEach((el, i) => {
+    const hit = items.find(x => x.key === layoutKey(el, i));
+    if (!hit) return;
+    el.style.position = "relative";
+    el.style.left = hit.left;
+    el.style.top = hit.top;
+  });
+}
+function presets() { return saved("woc-presets", []); }
+function writePresets(list) { localStorage.setItem("woc-presets", JSON.stringify(list)); }
+document.getElementById("diskBtn").onclick = (e) => {
+  e.stopPropagation();
+  let menu = document.getElementById("layoutMenu");
+  if (menu) { menu.remove(); return; }
+  menu = document.createElement("div");
+  menu.id = "layoutMenu";
+  menu.innerHTML = '<button type="button" id="savePreset">Save this layout</button><button type="button" id="showCoords">Show coordinates</button>';
+  presets().forEach((item, i) => {
+    menu.innerHTML += '<button type="button" data-load="' + i + '">' + item.name + '</button>';
+  });
+  document.body.appendChild(menu);
+  menu.querySelector("#showCoords").onclick = async () => {
+    const key = state.screen === 4 ? "woc-page-4" : "woc-page-1";
+    const raw = localStorage.getItem(key) || (state.screen === 4 ? "No station-card layout saved yet." : JSON.stringify(captureDoorLayout()));
+    let box = document.getElementById("coordBox");
+    if (!box) {
+      box = document.createElement("div");
+      box.id = "coordBox";
+      box.style.cssText = "position:fixed;left:12px;right:12px;bottom:96px;z-index:90;background:#fffaf3;color:#1c1612;padding:12px;border-radius:10px;text-align:left;";
+      box.innerHTML = '<p id="coordNote" style="margin:0 0 8px;font:16px Georgia,serif;"></p><textarea id="coordText" readonly style="width:100%;height:140px;font:14px/1.4 ui-monospace,monospace;user-select:text;-webkit-user-select:text;"></textarea><button type="button" id="coordShare">Share coordinates</button>';
+      document.body.appendChild(box);
+      box.querySelector("#coordShare").onclick = async (ev) => {
+        ev.stopPropagation();
+        const text = box.querySelector("#coordText").value;
+        if (navigator.share) {
+          try { await navigator.share({ text }); return; } catch (err) {}
+        }
+        const field = box.querySelector("#coordText");
+        field.focus();
+        field.select();
+      };
+    }
+    const field = box.querySelector("#coordText");
+    const note = box.querySelector("#coordNote");
+    field.value = raw;
+    field.focus();
+    field.select();
+    let copied = false;
+    try { copied = document.execCommand("copy"); } catch (err) {}
+    if (!copied && navigator.clipboard && navigator.clipboard.writeText) {
+      try { await navigator.clipboard.writeText(raw); copied = true; } catch (err) {}
+    }
+    note.textContent = copied ? "Copied. Paste it into the chat." : "If paste is empty, tap Share coordinates, or hold the text and choose Copy.";
+  };
+  menu.querySelector("#savePreset").onclick = () => {
+    if (state.screen === 4) { saveStationLayout(); menu.remove(); return; }
+    if (state.screen !== 1) return;
+    const name = prompt("Name this door-page layout");
+    if (!name) return;
+    const page = captureDoorLayout();
+    const list = presets();
+    list.push({ name, screen: 1, items: page.items, wheel: page.wheel, bg: "mark" });
+    writePresets(list);
+    saveDoorLayout();
+    menu.remove();
+  };
+  menu.querySelectorAll("[data-load]").forEach(btn => btn.onclick = () => {
+    if (state.screen !== 1) return;
+    const item = presets()[btn.dataset.load];
+    if (item.screen && item.screen !== 1) return;
+    applyItems(item.items);
+    if (item.wheel) {
+      bgLayer.style.left = item.wheel.left || "50%";
+      bgLayer.style.top = item.wheel.top || "42%";
+      bgLayer.style.width = item.wheel.width || "88vmin";
+      bgLayer.style.opacity = item.wheel.opacity || "0.2";
+      bgLayer.style.transform = item.wheel.transform || "translate(-50%, -50%)";
+    }
+    saveDoorLayout();
+    menu.remove();
+  });
+};
+let drag = null;
+function point(t) { return { x: t.clientX, y: t.clientY }; }
+scatter.addEventListener("pointerdown", (e) => {
+  if (document.documentElement.getAttribute("data-adjust") !== "1") return;
+  const img = e.target.closest("img");
+  if (!img) return;
+  scatter.querySelectorAll("img").forEach(el => el.classList.remove("sel"));
+  img.classList.add("sel");
+  showSize(img);
+  drag = { img, x: e.clientX, y: e.clientY, left: parseFloat(img.style.left), top: parseFloat(img.style.top) };
+});
+window.addEventListener("pointermove", (e) => {
+  if (!drag) return;
+  if (drag.img === bgLayer) {
+    drag.img.style.left = "50%";
+    drag.img.style.transform = "translate(-50%, -50%)";
+    drag.img.style.top = (drag.top + (e.clientY - drag.y) / window.innerHeight * 100) + "%";
+    syncWmGrab();
+    return;
+  }
+  drag.img.style.left = (drag.left + (e.clientX - drag.x) / window.innerWidth * 100) + "%";
+  drag.img.style.top = (drag.top + (e.clientY - drag.y) / window.innerHeight * 100) + "%";
+});
+window.addEventListener("pointerup", () => { if (drag && drag.page === 4) saveStationWheels(); drag = null; });
+scatter.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 2 && e.target.closest("img")) {
+    const img = e.target.closest("img");
+    drag = null;
+    img._pinch = { d: Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY), size: parseFloat(img.style.width) };
+  }
+}, { passive: true });
+scatter.addEventListener("touchmove", (e) => {
+  const img = document.querySelector("#scatter img.sel");
+  if (!img || !img._pinch || e.touches.length < 2) return;
+  const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  img.style.width = Math.max(24, img._pinch.size * d / img._pinch.d) + "px";
+}, { passive: true });
+function stationWheelAt(x, y) {
+  const imgs = [...document.querySelectorAll("#stationWheels img")];
+  for (let i = imgs.length - 1; i >= 0; i--) {
+    const r = imgs[i].getBoundingClientRect();
+    if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return imgs[i];
+  }
+  return null;
+}
+function startStationWheel(img, e) {
+  document.querySelectorAll("#stationWheels img").forEach(el => el.classList.remove("sel"));
+  img.classList.add("sel");
+  drag = { img, page: 4, x: e.clientX, y: e.clientY, left: parseFloat(img.style.left), top: parseFloat(img.style.top) };
+  e.preventDefault();
+  e.stopPropagation();
+}
+document.addEventListener("pointerdown", (e) => {
+  if (state.screen !== 4 || document.documentElement.getAttribute("data-adjust") !== "1") return;
+  if (e.target.closest(".ver-banner button, .ver-banner input, .ver-banner label, .settings, #layoutMenu, #coordBox, .grab-right")) return;
+  const img = stationWheelAt(e.clientX, e.clientY);
+  if (!img) return;
+  startStationWheel(img, e);
+}, true);
+document.getElementById("stationWheels").addEventListener("pointerdown", (e) => {
+  if (state.screen !== 4 || document.documentElement.getAttribute("data-adjust") !== "1") return;
+  const img = e.target.closest("img");
+  if (!img) return;
+  startStationWheel(img, e);
+});
+document.getElementById("wmGrab").addEventListener("pointerdown", (e) => {
+  if (true) return;
+  scatter.querySelectorAll("img").forEach(el => el.classList.remove("sel"));
+  bgLayer.classList.add("sel");
+  showSize(bgLayer);
+  drag = { img: bgLayer, x: e.clientX, y: e.clientY, left: 50, top: parseFloat(bgLayer.style.top) };
+  e.preventDefault();
+  e.stopPropagation();
+});
+bgLayer.style.left = "50%";
+bgLayer.style.transform = "translate(-50%, -50%)";
+bgLayer.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 2) {
+    drag = null;
+    bgLayer._pinch = { d: Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY), size: parseFloat(bgLayer.style.width) };
+  }
+}, { passive: true });
+bgLayer.addEventListener("touchmove", (e) => {
+  if (!bgLayer._pinch || e.touches.length < 2) return;
+  const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  bgLayer.style.width = Math.max(20, bgLayer._pinch.size * d / bgLayer._pinch.d) + (bgLayer.style.width.endsWith("vw") ? "vw" : "vmin");
+}, { passive: true });
+setBackground("mark");
+document.documentElement.setAttribute("data-theme", "light");
+renderIndex();
+render();
+
+const APP_VERSION = "2.97";
+(function () {
+  const handle = document.getElementById("bannerHandle");
+  if (!handle) return;
+  handle.addEventListener("click", () => {
+    const hidden = document.documentElement.getAttribute("data-banner") === "hide";
+    if (hidden) {
+      document.documentElement.removeAttribute("data-banner");
+      handle.setAttribute("aria-label", "Hide version bar");
+    } else {
+      document.documentElement.setAttribute("data-banner", "hide");
+      handle.setAttribute("aria-label", "Show version bar");
+    }
+  });
+})();
+
+async function loadNewest() {
+  if ("serviceWorker" in navigator) {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map((reg) => reg.unregister()));
+  }
+  if (window.caches) {
+    const keys = await caches.keys();
+    await Promise.all(keys.map((key) => caches.delete(key)));
+  }
+  location.reload();
+}
+
+async function checkVersion() {
+  try {
+    const res = await fetch("version.json?ts=" + Date.now(), { cache: "no-store" });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.version && data.version !== APP_VERSION) {
+      const flash = document.getElementById("verUpdate");
+      if (flash) {
+        flash.textContent = "New version " + data.version + " is available — tap to load";
+        flash.classList.remove("hidden");
+      }
+      const banner = document.getElementById("updateBanner");
+      if (banner) {
+        document.getElementById("updateText").textContent = "New version " + data.version + " is available.";
+        banner.classList.remove("hidden");
+      }
+    }
+  } catch (err) {}
+}
+
+document.getElementById("refreshBtn").onclick = loadNewest;
+document.getElementById("updateBtn").onclick = loadNewest;
+document.getElementById("verUpdate").onclick = loadNewest;
+checkVersion();
+setInterval(checkVersion, 10000);
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
+
+
