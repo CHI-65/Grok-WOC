@@ -20,15 +20,15 @@ A gap of more than 10 minutes starts a new session. Closed sessions count 10 min
 
 ### App commits since 2026-10-08 23:49 UTC
 Clusters of app-changing commits (time-log updates excluded), through version 2.97.
-- Counted: 525 min
+- Counted: 524 min
 
 ### Zoom call
 2026-10-14 23:00 UTC through 2026-10-15 00:20 UTC (4:00–5:20 PM local on the 14th).
 - Counted: 80 min
 
 ## Running total
-11 hours 15 minutes.
+11 hours 14 minutes.
 
-60 min Zoom (Oct 7), 10 min on 1.5, 525 min from repo commit clusters since 2026-10-08 23:49 UTC through version 2.97, plus 80 min Zoom (Oct 14).
+60 min Zoom (Oct 7), 10 min on 1.5, 524 min from repo commit clusters since 2026-10-08 23:49 UTC through version 2.97, plus 80 min Zoom (Oct 14).
 
 Versions 1.6 through 2.17 are restored from the earlier log. This repo's commit history starts at 2.49.
