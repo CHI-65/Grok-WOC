@@ -226,8 +226,8 @@
     touch-action: pan-y;
     padding-right: 2px;
   }
-  html[data-page="station"] .wrap,
-  html[data-page="recognition"] .wrap { height: 100dvh; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 168px; }
+  html[data-page="station"] .wrap { height: 100dvh; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 168px; }
+  html[data-page="recognition"] .wrap { height: 100dvh; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 118px; }
   html[data-page="station"] main,
   html[data-page="recognition"] main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   .locked-title { flex: none; background: var(--bg); margin: 0 0 8px; padding: 4px 0; }
@@ -237,7 +237,9 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
     touch-action: pan-y;
-    padding: 4px 20px 28px;
+    padding: 4px 20px 8px;
+    display: flex;
+    flex-direction: column;
   }
   .rec-card {
     max-width: 92%;
@@ -259,8 +261,19 @@
   }
   .card-wheels img {
     position: absolute;
-    opacity: 0.22;
+    left: 50%;
+    top: 50%;
+    width: 70%;
+    max-width: 280px;
+    transform: translate(-50%, -50%);
+    opacity: 0.11;
     pointer-events: none;
+  }
+  .cta-follow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0 4px;
   }
   .rec-card > *:not(.card-wheels) {
     position: relative;
@@ -531,7 +544,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.75</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.76</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -972,7 +985,7 @@ function render() {
   }
   if (s.n === 4) {
     const feels = (st.feels || []).map(f => "<li>" + f + "</li>").join("");
-    html += '<h1 class="locked-title" tabindex="-1">You\'ve chosen the ' + st.noun + ' card.</h1><div id="cardScroll"><div class="cardish rec-card" style="border-color:' + stationBorderColor(st.id) + '; background:#fff;"><div class="card-wheels"></div><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div class="cta-gap"><span class="tap-text" id="toWheel" role="button" tabindex="0">See where you are</span></div></div>';
+    html += '<h1 class="locked-title" tabindex="-1">You\'ve chosen the ' + st.noun + ' card.</h1><div id="cardScroll"><div class="cardish rec-card" style="border-color:' + stationBorderColor(st.id) + '; background:#fff;"><div class="card-wheels"></div><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div style="flex:1; min-height:0;"></div><div class="cta-follow"><span class="tap-text" id="toWheel" role="button" tabindex="0">See where you are</span></div><div style="flex:1; min-height:4px;"></div></div>';
   }
   if (s.n === 5) {
     html += '<h1 tabindex="-1">' + st.name + '</h1>';
@@ -1297,21 +1310,10 @@ function fillCardWheels() {
     card.insertBefore(layer, card.firstChild);
   }
   layer.innerHTML = "";
-  const savedWheels = saved("woc-page-4-wheels", null);
-  const items = savedWheels || makeStationWheels();
-  items.forEach(item => {
-    const img = document.createElement("img");
-    img.src = "images/wheel-mark.png";
-    img.alt = "";
-    img.style.width = item.size + "px";
-    img.style.left = item.left + "%";
-    img.style.top = item.top + "%";
-    img.style.transform = "rotate(" + item.rot + "deg)";
-    layer.appendChild(img);
-  });
-  if (!savedWheels) {
-    localStorage.setItem("woc-page-4-wheels", JSON.stringify(items));
-  }
+  const img = document.createElement("img");
+  img.src = "images/wheel-mark.png";
+  img.alt = "";
+  layer.appendChild(img);
 }
 function ensureStationWheels() {
   const box = document.getElementById("stationWheels");
@@ -1645,7 +1647,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.75";
+const APP_VERSION = "2.76";
 (function () {
   const handle = document.getElementById("bannerHandle");
   if (!handle) return;
