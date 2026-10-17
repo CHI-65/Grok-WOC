@@ -6,6 +6,8 @@ Time-log update commits are not work. They do not start or extend a session.
 
 Times are UTC. Retroactive from the prompt that produced version 1.5.
 
+A gap of more than 10 minutes starts a new session. Closed sessions count 10 minutes after the last commit. An open session (newest commit within 10 minutes of now) runs through now.
+
 ## Sessions
 
 ### Zoom call
@@ -16,17 +18,13 @@ Times are UTC. Retroactive from the prompt that produced version 1.5.
 - Close: 2026-10-08 15:50:09
 - Counted: 10 min
 
-### 2 — versions 1.6 through early 2.x
-Opened 2026-10-08 23:49 UTC. Clustered app commits through 2026-10-09 06:29 UTC.
-- Counted: 317 min
-
-### 3 — versions 2.60 through 2.86
-Opened 2026-10-17 04:57 UTC. Session still open through now.
-- Counted so far: 122 min
+### App commits since 2026-10-08 23:49 UTC
+Nine clusters of app-changing commits (time-log updates excluded).
+- Counted: 451 min
 
 ## Running total
-8 hours 29 minutes.
+8 hours 41 minutes.
 
-60 min Zoom (Oct 7), 10 min on 1.5, 439 min from repo commit clusters since 2026-10-08 23:49 UTC (including the open session through version 2.86).
+60 min Zoom (Oct 7), 10 min on 1.5, 451 min from repo commit clusters since 2026-10-08 23:49 UTC through version 2.86.
 
 Versions 1.6 through 2.17 are restored from the earlier log. This repo's commit history starts at 2.49.
