@@ -85,6 +85,9 @@
   #bgLayer { position: fixed; left: 50%; top: 42%; width: 88vmin; transform: translate(-50%, -50%); opacity: 0.2; pointer-events: none; z-index: 0; display: none; touch-action: none; }
   html[data-bg="mark"] #bgLayer, html[data-bg="fill"] #bgLayer { display: block; }
   html[data-bg="mark"] body::before, html[data-bg="fill"] body::before { opacity: 0; }
+  html[data-page="recognition"] #bgLayer,
+  html[data-page="recognition"] body::before { display: none !important; opacity: 0 !important; }
+  html[data-page="recognition"] { background: var(--bg); }
   html[data-adjust="1"] #scatter { pointer-events: auto; }
   html[data-adjust="1"] #bgLayer { pointer-events: none; }
   #wmGrab { display: none; position: fixed; z-index: 3; touch-action: none; background: transparent; }
@@ -223,8 +226,10 @@
     touch-action: pan-y;
     padding-right: 2px;
   }
-  html[data-page="station"] .wrap { height: 100dvh; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 168px; }
-  html[data-page="station"] main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  html[data-page="station"] .wrap,
+  html[data-page="recognition"] .wrap { height: 100dvh; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 168px; }
+  html[data-page="station"] main,
+  html[data-page="recognition"] main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   .locked-title { flex: none; background: var(--bg); margin: 0 0 8px; padding: 4px 0; }
   #cardScroll {
     flex: 1; min-height: 0;
@@ -481,10 +486,10 @@
     outline: 2px solid var(--focus);
     outline-offset: 3px;
   }
-  .map-action {
-    position: absolute;
+  .map-action, .cta-gap {
+    position: fixed;
     left: 50%;
-    bottom: 160px;
+    bottom: 148px;
     transform: translateX(-50%);
     z-index: 95;
   }
@@ -526,7 +531,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.74</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.75</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -956,7 +961,7 @@ function render() {
     html += '<div class="paywall"><strong>Paywall boundary.</strong> Free illumination journey ends here. What follows is the paid full course. This is a review divider, not a real charge.</div>';
   }
   if (s.n === 1) {
-    html += '<h1 tabindex="-1">Hey there, Human!</h1><p>What\'s going on with you? How are you feeling right now?</p><div class="grid" id="doorWords"></div><div class="row" style="justify-content:center"><button type="button" id="doorOff" class="tap-text">I wish I knew, help me</button></div>';
+    html += '<h1 tabindex="-1">Hey there, Human!</h1><p>What\'s going on with you? How are you feeling right now?</p><div class="grid" id="doorWords"></div><div class="cta-gap"><button type="button" id="doorOff" class="tap-text">I wish I knew, help me</button></div>';
   }
   if (s.n === 2) {
     html += '<h1 tabindex="-1">Felt-word grid</h1><p>Tap the feeling that is closest. Each word maps to one station.</p><div class="grid" id="wordGrid"></div>';
@@ -967,15 +972,15 @@ function render() {
   }
   if (s.n === 4) {
     const feels = (st.feels || []).map(f => "<li>" + f + "</li>").join("");
-    html += '<h1 class="locked-title" tabindex="-1">You\'ve chosen the ' + st.noun + ' card.</h1><div id="cardScroll"><div class="cardish rec-card" style="border-color:' + stationBorderColor(st.id) + '; background:#fff;"><div class="card-wheels"></div><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div class="row" style="justify-content:center; margin-top: 28px; margin-bottom: 12px;"><span class="tap-text" id="toWheel" role="button" tabindex="0">See where you are</span></div></div>';
+    html += '<h1 class="locked-title" tabindex="-1">You\'ve chosen the ' + st.noun + ' card.</h1><div id="cardScroll"><div class="cardish rec-card" style="border-color:' + stationBorderColor(st.id) + '; background:#fff;"><div class="card-wheels"></div><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div class="cta-gap"><span class="tap-text" id="toWheel" role="button" tabindex="0">See where you are</span></div></div>';
   }
   if (s.n === 5) {
     html += '<h1 tabindex="-1">' + st.name + '</h1>';
     html += '<p>And there you are. Just across the border inside your creative process lies the ' + st.name + ' station. What lies here is the antidote to your experience of ' + st.noun + '. It is the place where the experience is ' + st.experience + ' and the voice inside you cries, “' + st.phrase + '” This is a natural point in your creative process. The task here is to ' + st.task.toLowerCase() + '. Once you\'re able to achieve that, you\'ll be rewarded with ' + st.reward.toLowerCase() + ', which will move you ahead to the next station in your creative process. So what do you do now?</p>';
-    html += '<div class="row" style="justify-content:center"><button type="button" id="toDeep" class="tap-text">Go deeper</button></div>';
+    html += '<div class="cta-gap"><button type="button" id="toDeep" class="tap-text">Go deeper</button></div>';
   }
   if (s.n === 6) {
-    html += '<h1 tabindex="-1">You are here</h1><p>' + st.noun + ' sits just outside <strong>' + st.name + '</strong>. The rest of the wheel is visible. Only this station is open.</p><div class="wheel" id="wheel"><div class="wheel-center">You are here<br>' + st.name + '</div></div><div class="row" style="justify-content:center; margin-top: 24px;"><span class="tap-text" id="toIllum" role="button" tabindex="0">See illumination</span></div>';
+    html += '<h1 tabindex="-1">You are here</h1><p>' + st.noun + ' sits just outside <strong>' + st.name + '</strong>. The rest of the wheel is visible. Only this station is open.</p><div class="wheel" id="wheel"><div class="wheel-center">You are here<br>' + st.name + '</div></div><div class="cta-gap"><span class="tap-text" id="toIllum" role="button" tabindex="0">See illumination</span></div>';
   }
   if (s.n === 7) {
     html += '<h1 tabindex="-1">Go deeper</h1><p>For <strong>' + st.name + '</strong>, the full course still holds:</p>';
@@ -1640,7 +1645,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.74";
+const APP_VERSION = "2.75";
 (function () {
   const handle = document.getElementById("bannerHandle");
   if (!handle) return;
