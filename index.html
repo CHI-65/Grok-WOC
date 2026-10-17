@@ -591,7 +591,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.87</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.88</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -915,7 +915,6 @@ function startFloat(stage) {
     const size = cards[0] ? cards[0].offsetWidth : 120;
     const maxX = Math.max(0, w - size);
     const maxY = Math.max(0, h - size);
-    const min = size + gap;
     cards.forEach(card => {
       if (card.classList.contains("caught") || state.spinning) return;
       let x = parseFloat(card.dataset.px);
@@ -930,29 +929,7 @@ function startFloat(stage) {
       if (y < 0 || y > maxY) { vy *= -1; y = Math.max(0, Math.min(maxY, y)); }
       card.dataset.px = x; card.dataset.py = y; card.dataset.vx = vx; card.dataset.vy = vy;
     });
-    for (let a = 0; a < cards.length; a++) {
-      for (let b = a + 1; b < cards.length; b++) {
-        const A = cards[a], B = cards[b];
-        let ax = parseFloat(A.dataset.px), ay = parseFloat(A.dataset.py);
-        let bx = parseFloat(B.dataset.px), by = parseFloat(B.dataset.py);
-        let dx = bx - ax, dy = by - ay;
-        let dist = Math.hypot(dx, dy) || 0.01;
-        if (dist < min) {
-          const push = (min - dist) / 2;
-          const nx = dx / dist, ny = dy / dist;
-          ax = Math.max(0, Math.min(maxX, ax - nx * push));
-          ay = Math.max(0, Math.min(maxY, ay - ny * push));
-          bx = Math.max(0, Math.min(maxX, bx + nx * push));
-          by = Math.max(0, Math.min(maxY, by + ny * push));
-          A.dataset.px = ax; A.dataset.py = ay;
-          B.dataset.px = bx; B.dataset.py = by;
-          A.dataset.vx = String(parseFloat(A.dataset.vx) - nx * 0.2);
-          A.dataset.vy = String(parseFloat(A.dataset.vy) - ny * 0.2);
-          B.dataset.vx = String(parseFloat(B.dataset.vx) + nx * 0.2);
-          B.dataset.vy = String(parseFloat(B.dataset.vy) + ny * 0.2);
-        }
-      }
-    }
+    // Collision resolution removed — wheels may cross / overlap freely.
     cards.forEach(card => {
       card.style.left = card.dataset.px + "px";
       card.style.top = card.dataset.py + "px";
@@ -1754,7 +1731,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.87";
+const APP_VERSION = "2.88";
 (function () {
   const handle = document.getElementById("bannerHandle");
   if (!handle) return;
