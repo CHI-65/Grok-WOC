@@ -495,7 +495,7 @@
     display: inline-block;
     margin: 0;
     -webkit-appearance: none;
-    animation: ctaGlow 8s ease-in-out infinite;
+    animation: ctaGlow 4s ease-in-out infinite;
   }
   #toDeep, #toDeep:hover, #toDeep:focus, #toDeep:focus-visible {
     background: transparent !important;
@@ -591,7 +591,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.88</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.89</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -1731,7 +1731,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.88";
+const APP_VERSION = "2.89";
 (function () {
   const handle = document.getElementById("bannerHandle");
   if (!handle) return;
