@@ -378,6 +378,7 @@
   .map-stage path { fill: transparent; stroke: transparent; cursor: pointer; }
   .map-stage path.lit { fill: transparent; }
   .map-back { position: absolute; top: 10px; left: 10px; z-index: 2; }
+  #mapIllum { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 2; }
 
   .hidden { display: none !important; }
 </style>
@@ -412,7 +413,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><span class="banner-handle" id="bannerHandle" aria-label="Hide version bar"></span><span id="verLabel">You are on version 2.61</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><span class="banner-handle" id="bannerHandle" aria-label="Hide version bar"></span><span id="verLabel">You are on version 2.62</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -514,7 +515,7 @@ function drawMap() {
   const page = document.createElement("div");
   page.id = "mapPage";
   page.className = "map-page";
-  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><svg viewBox="0 0 1253 1253"></svg></div>';
+  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><svg viewBox="0 0 1253 1253"></svg></div><button type="button" class="primary" id="mapIllum">See illumination</button>';
   const svg = page.querySelector("svg");
   const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
   svg.appendChild(defs);
@@ -547,39 +548,12 @@ function drawMap() {
       svg.appendChild(lit);
     }
     path.setAttribute("aria-label", item.name);
-    path.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      if (state.mapLit !== item.id) {
-        state.mapLit = item.id;
-        const oldLit = svg.querySelector("image.lit");
-        if (oldLit) oldLit.remove();
-        let clip = svg.querySelector("#stationClip");
-        if (!clip) {
-          clip = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
-          clip.id = "stationClip";
-          clip.setAttribute("clipPathUnits", "userSpaceOnUse");
-          clip.appendChild(document.createElementNS("http://www.w3.org/2000/svg", "path"));
-          defs.appendChild(clip);
-        }
-        clip.querySelector("path").setAttribute("d", d);
-        const lit = document.createElementNS("http://www.w3.org/2000/svg", "image");
-        lit.setAttribute("class", "lit");
-        lit.setAttribute("href", "images/printed-wheel-color.png");
-        lit.setAttribute("width", "1253");
-        lit.setAttribute("height", "1253");
-        lit.setAttribute("clip-path", "url(#stationClip)");
-        lit.setAttribute("pointer-events", "none");
-        svg.appendChild(lit);
-        return;
-      }
-      state.mapOpen = false;
-      state.mapLit = 0;
-      playVortex(() => chooseStation(item.id, item.name, "map"));
-    });
+    path.style.pointerEvents = "none";
     svg.appendChild(path);
   });
   document.body.appendChild(page);
   document.getElementById("closeMap").onclick = () => { state.mapOpen = false; state.mapLit = 0; render(); };
+  document.getElementById("mapIllum").onclick = () => { state.mapOpen = false; go(5); };
 }
 
 function playVortex(done) {
@@ -894,7 +868,7 @@ function render() {
     if (state.design === 3) startFloat(g);
   }
   if (s.n === 4) {
-    document.getElementById("toWheel").onclick = () => { state.mapLit = state.stationId; go(6); };
+    document.getElementById("toWheel").onclick = () => { state.mapLit = state.stationId; state.mapOpen = true; render(); };
     restoreStationLayout();
   }
   drawMap();
@@ -1418,7 +1392,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.61";
+const APP_VERSION = "2.62";
 (function () {
   const bar = document.querySelector(".ver-banner");
   const handle = document.getElementById("bannerHandle");
