@@ -40,4 +40,4 @@ App commits 2026-10-09 05:08 UTC through 06:19 UTC. Catch-a-wheel layout, door p
 
 60 min Zoom (Oct 7), 10 min on 1.5, 159 min on 1.6–2.12, 54 min on 2.13–2.17, 81 min on 2.49–2.59, 29 min on the screen-flow review, 60 min app session (Oct 16, pending overview).
 
-Versions 1.6 through 2.17 were dropped in the last rebuild because this repo's commit history starts at 2.49. They are restored from the earlier log. The 38-hour total counted hourly time-log commits as work and stays rejected.
+Versions 1.6 through 2.17 are restored from the earlier log. This repo's commit history starts at 2.49.
