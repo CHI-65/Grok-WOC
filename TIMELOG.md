@@ -20,13 +20,13 @@ Times are UTC. Retroactive from the prompt that produced version 1.5.
 Opened 2026-10-08 23:49 UTC. Clustered app commits through 2026-10-09 06:29 UTC.
 - Counted: 317 min
 
-### 3 — versions 2.60 through 2.73
+### 3 — versions 2.60 through 2.86
 Opened 2026-10-17 04:57 UTC. Session still open through now.
-- Counted so far: 62 min
+- Counted so far: 122 min
 
 ## Running total
-7 hours 29 minutes.
+8 hours 29 minutes.
 
-60 min Zoom (Oct 7), 10 min on 1.5, 379 min from repo commit clusters since 2026-10-08 23:49 UTC (including the open session through version 2.73).
+60 min Zoom (Oct 7), 10 min on 1.5, 439 min from repo commit clusters since 2026-10-08 23:49 UTC (including the open session through version 2.86).
 
 Versions 1.6 through 2.17 are restored from the earlier log. This repo's commit history starts at 2.49.
