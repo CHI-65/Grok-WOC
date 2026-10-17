@@ -240,6 +240,26 @@
     border-width: 12px;
     border-style: solid;
     box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    color: #1c1612;
+  }
+  .card-wheels {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .card-wheels img {
+    position: absolute;
+    opacity: 0.22;
+    pointer-events: none;
+  }
+  .rec-card > *:not(.card-wheels) {
+    position: relative;
+    z-index: 1;
   }
   #cardScroll .row { margin-top: 22px; }
   #doorWords .door { min-height: 72px; font-size: 18px; }
@@ -407,7 +427,9 @@
     font-size: 22px;
     cursor: pointer;
     background: none;
-    border: none;
+    border: 0;
+    outline: none;
+    box-shadow: none;
     color: inherit;
     text-align: center;
     padding: 10px 16px;
@@ -415,6 +437,12 @@
     display: inline-block;
     margin: 0;
     animation: ctaGlow 8s ease-in-out infinite;
+  }
+  #mapIllum, #mapIllum:hover, #mapIllum:focus, #mapIllum:focus-visible {
+    border: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
   }
   @keyframes ctaGlow {
     0% {
@@ -448,7 +476,7 @@
         0 0 40px rgba(47, 158, 56, 0.35);
     }
   }
-  #mapIllum:hover, #mapIllum:focus, .tap-text:hover, .tap-text:focus,
+  .tap-text:hover, .tap-text:focus,
   #doorOff:hover, #doorOff:focus, #toDeep:hover, #toDeep:focus {
     outline: 2px solid var(--focus);
     outline-offset: 3px;
@@ -498,7 +526,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.73</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.74</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -939,7 +967,7 @@ function render() {
   }
   if (s.n === 4) {
     const feels = (st.feels || []).map(f => "<li>" + f + "</li>").join("");
-    html += '<h1 class="locked-title" tabindex="-1">You\'ve chosen the ' + st.noun + ' card.</h1><div id="cardScroll"><div class="cardish rec-card" style="border-color:' + stationBorderColor(st.id) + '"><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div class="row" style="justify-content:center; margin-top: 28px; margin-bottom: 12px;"><span class="tap-text" id="toWheel" role="button" tabindex="0">See where you are</span></div></div>';
+    html += '<h1 class="locked-title" tabindex="-1">You\'ve chosen the ' + st.noun + ' card.</h1><div id="cardScroll"><div class="cardish rec-card" style="border-color:' + stationBorderColor(st.id) + '; background:#fff;"><div class="card-wheels"></div><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div class="row" style="justify-content:center; margin-top: 28px; margin-bottom: 12px;"><span class="tap-text" id="toWheel" role="button" tabindex="0">See where you are</span></div></div>';
   }
   if (s.n === 5) {
     html += '<h1 tabindex="-1">' + st.name + '</h1>';
@@ -990,9 +1018,9 @@ function render() {
     document.getElementById("doorOff").onclick = () => { state.door = "off"; state.design = 3; go(3); };
     restoreDoorLayout();
   } else if (s.n === 4) {
-    document.documentElement.setAttribute("data-page", "station");
+    document.documentElement.setAttribute("data-page", "recognition");
     document.documentElement.setAttribute("data-bg", "mark");
-    ensureStationWheels();
+    fillCardWheels();
   } else {
     document.documentElement.setAttribute("data-page", "other");
     document.documentElement.setAttribute("data-bg", "mark");
@@ -1253,6 +1281,32 @@ function saveStationWheels() {
     top: parseFloat(img.style.top) || 0,
     rot: parseFloat(String(img.style.transform).replace(/[^\d.-]/g, "")) || 0
   }))));
+}
+function fillCardWheels() {
+  const card = document.querySelector(".rec-card");
+  if (!card) return;
+  let layer = card.querySelector(".card-wheels");
+  if (!layer) {
+    layer = document.createElement("div");
+    layer.className = "card-wheels";
+    card.insertBefore(layer, card.firstChild);
+  }
+  layer.innerHTML = "";
+  const savedWheels = saved("woc-page-4-wheels", null);
+  const items = savedWheels || makeStationWheels();
+  items.forEach(item => {
+    const img = document.createElement("img");
+    img.src = "images/wheel-mark.png";
+    img.alt = "";
+    img.style.width = item.size + "px";
+    img.style.left = item.left + "%";
+    img.style.top = item.top + "%";
+    img.style.transform = "rotate(" + item.rot + "deg)";
+    layer.appendChild(img);
+  });
+  if (!savedWheels) {
+    localStorage.setItem("woc-page-4-wheels", JSON.stringify(items));
+  }
 }
 function ensureStationWheels() {
   const box = document.getElementById("stationWheels");
@@ -1586,7 +1640,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.73";
+const APP_VERSION = "2.74";
 (function () {
   const handle = document.getElementById("bannerHandle");
   if (!handle) return;
