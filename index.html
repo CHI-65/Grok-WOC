@@ -380,18 +380,24 @@
   .map-page {
     position: fixed; inset: 0; z-index: 80;
     display: flex; align-items: center; justify-content: center;
-    padding: 16px 12px 108px;
+    padding: 16px 12px 168px;
     background: var(--bg);
+    overflow: hidden;
+    touch-action: none;
   }
-  body.map-open .wrap { visibility: hidden; }
-  .map-stage { position: relative; width: min(100%, calc(100vh - 124px)); max-height: calc(100vh - 124px); }
+  body.map-open .wrap header,
+  body.map-open .wrap main { visibility: hidden; }
+  body.map-open footer.tools { visibility: visible; z-index: 90; }
+  .map-stage { position: relative; width: min(100%, calc(100vh - 180px)); max-height: calc(100vh - 180px); transform-origin: center center; }
   .map-stage img.color { display: none; }
   .map-stage img.map { width: 100%; height: auto; display: block; }
   .map-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .map-stage path { fill: transparent; stroke: transparent; cursor: pointer; }
   .map-stage path.lit { fill: transparent; }
-  .map-back { position: absolute; top: 10px; left: 10px; z-index: 2; }
-  #mapIllum { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 2; }
+  #mapIllum {
+    position: absolute; left: 50%; bottom: 132px; transform: translateX(-50%);
+    z-index: 2; min-height: 36px; padding: 6px 14px; font-size: 15px;
+  }
 
   .hidden { display: none !important; }
 </style>
@@ -430,7 +436,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.66</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.67</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -528,7 +534,7 @@ function drawMap() {
   const page = document.createElement("div");
   page.id = "mapPage";
   page.className = "map-page";
-  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><svg viewBox="0 0 1253 1253"></svg></div><button type="button" class="primary" id="mapIllum">See illumination</button>';
+  page.innerHTML = '<div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><svg viewBox="0 0 1253 1253"></svg></div><button type="button" class="primary" id="mapIllum">See illumination</button>';
   const svg = page.querySelector("svg");
   const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
   svg.appendChild(defs);
@@ -565,7 +571,24 @@ function drawMap() {
     svg.appendChild(path);
   });
   document.body.appendChild(page);
-  document.getElementById("closeMap").onclick = () => back();
+  const stage = page.querySelector(".map-stage");
+  let scale = 1, startDist = 0, startScale = 1;
+  const dist = (touches) => {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.hypot(dx, dy) || 1;
+  };
+  const apply = () => { stage.style.transform = "scale(" + scale + ")"; };
+  page.addEventListener("touchstart", (e) => {
+    if (e.touches.length === 2) { startDist = dist(e.touches); startScale = scale; }
+  }, { passive: true });
+  page.addEventListener("touchmove", (e) => {
+    if (e.touches.length !== 2) return;
+    e.preventDefault();
+    scale = Math.min(4, Math.max(1, startScale * dist(e.touches) / startDist));
+    apply();
+  }, { passive: false });
+  page.addEventListener("touchend", () => { if (scale < 1.02) { scale = 1; apply(); } });
   document.getElementById("mapIllum").onclick = () => {
     state.mapOpen = false;
     state.history.push("map");
@@ -1035,7 +1058,7 @@ function leaveAdjust() {
 }
 document.addEventListener("touchmove", (e) => {
   if (document.documentElement.getAttribute("data-adjust") === "1") return;
-  if (e.target.closest("#doorWords, #cardScroll")) return;
+  if (e.target.closest("#doorWords, #cardScroll, #mapPage")) return;
   e.preventDefault();
 }, { passive: false });
 document.getElementById("pencilBtn").onclick = () => {
@@ -1422,7 +1445,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.66";
+const APP_VERSION = "2.67";
 (function () {
   const handle = document.getElementById("bannerHandle");
   if (!handle) return;
