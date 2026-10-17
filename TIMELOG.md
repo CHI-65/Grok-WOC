@@ -21,7 +21,11 @@ Logged as Zoom call. 2026-10-07 23:00 UTC through 2026-10-08 00:00 UTC.
 Rebuilt the running total from repo commit times since 2026-10-08 23:49 UTC. Clustered commits so a gap of more than 10 minutes starts a new session, counting 10 minutes after the last commit in each closed cluster.
 - Counted from commits: 37 hours 32 minutes
 
-## Running total
-38 hours 42 minutes.
+### Prompt — Katherine email and screen-flow review
+- 2026-10-16 14:26 UTC. Read Katherine's screen-flow email. Next prompt was the next morning, so this session closed. Counted: 10 min
+- 2026-10-17 04:19 UTC through now (04:30 UTC). Diagram, copy grid, and change review. Session still open. Counted so far: 11 min
 
-Rebuilt through 2026-10-17 04:00 UTC (newest commit at 03:01 UTC). Newest commit more than 10 minutes ago, so last session closed with 10 minutes after the final commit.
+## Running total
+39 hours 3 minutes.
+
+Commit clusters through 2026-10-17 04:00 UTC: 38 hours 42 minutes. Plus this thread: 21 minutes (10 closed, 11 open). Open session runs through now, 2026-10-17 04:30 UTC.
