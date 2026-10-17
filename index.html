@@ -206,7 +206,7 @@
   .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
   footer.tools .row { justify-content: space-between; gap: 22%; flex-wrap: nowrap; }
   footer.tools .row button { flex: 1 1 0; min-width: 0; }
-  #toIllum { background: none; border: none; display: inline-block; margin: 8px auto; }
+  #toIllum { background: transparent; border-color: transparent; display: block; margin: 8px auto; }
   .primary {
     background: var(--accent); color: var(--accent-ink); border-color: var(--accent);
     font-weight: 700;
@@ -232,7 +232,14 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
     touch-action: pan-y;
-    padding-bottom: 28px;
+    padding: 4px 20px 28px;
+  }
+  .rec-card {
+    max-width: 92%;
+    margin: 8px auto;
+    border-width: 4px;
+    border-style: solid;
+    box-sizing: border-box;
   }
   #cardScroll .row { margin-top: 22px; }
   #doorWords .door { min-height: 72px; font-size: 18px; }
@@ -379,12 +386,11 @@
   .mini-wheel img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
   .map-page {
     position: fixed; inset: 0; z-index: 80;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 12px 12px 140px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px 12px 168px;
     background: var(--bg);
     overflow: hidden;
     touch-action: none;
-    gap: 8px;
   }
   body.map-open .wrap header,
   body.map-open .wrap main { visibility: hidden; }
@@ -395,25 +401,9 @@
   .map-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .map-stage path { fill: transparent; stroke: transparent; cursor: pointer; }
   .map-stage path.lit { fill: transparent; }
-  #mapIllum, .tap-text {
-    font-weight: 700;
-    font-size: 22px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: inherit;
-    text-align: center;
-    padding: 12px 16px;
-    min-height: 0;
-    display: inline-block;
-  }
-  #mapIllum:hover, #mapIllum:focus, .tap-text:hover, .tap-text:focus {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
-  }
-  .map-action {
-    margin: 8px 0 20px;
-    z-index: 5;
+  #mapIllum {
+    position: absolute; left: 50%; bottom: 132px; transform: translateX(-50%);
+    z-index: 2; min-height: 36px; padding: 6px 14px; font-size: 15px;
   }
 
   .hidden { display: none !important; }
@@ -453,7 +443,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.69</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 2.70</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -528,6 +518,16 @@ const main = document.getElementById("main");
 const index = document.getElementById("index");
 
 function stationById(id) { return STATIONS.find(s => s.id === id); }
+function stationBorderColor(id) {
+  // Green: Hunger, Appetite, Anorexia
+  if (id <= 3) return "#2f9e38";
+  // Yellow: Launch, Isolation, Crisis
+  if (id <= 6) return "#e2b000";
+  // Blue: Conception, Gestation, Breakthrough
+  if (id <= 9) return "#2b6fd6";
+  // Red: Nurturing, Pruning, Harvest
+  return "#d4145a";
+}
 
 function go(n, push) {
   leaveAdjust();
@@ -553,7 +553,7 @@ function drawMap() {
   page.className = "map-page";
   page.innerHTML = `
     <div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><svg viewBox="0 0 1253 1253"></svg></div>
-    <div class="map-action" id="mapIllum" role="button" tabindex="0">See illumination</div>
+    <button type="button" class="primary" id="mapIllum">See illumination</button>
     <div class="map-nav" style="position:fixed; left:0; right:0; bottom:72px; z-index:100; display:flex; justify-content:space-around; padding:0 16px; gap:16px;">
       <button type="button" id="mapBackBtn">Back</button>
       <button type="button" id="mapRestartBtn">Start over</button>
@@ -884,7 +884,7 @@ function render() {
   }
   if (s.n === 4) {
     const feels = (st.feels || []).map(f => "<li>" + f + "</li>").join("");
-    html += '<h1 class="locked-title" tabindex="-1">You\'ve chosen the ' + st.noun + ' card.</h1><div id="cardScroll"><div class="cardish"><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div class="row" style="justify-content:center"><span class="tap-text" id="toWheel" role="button" tabindex="0">See where you are</span></div></div>';
+    html += '<h1 class="locked-title" tabindex="-1">You\'ve chosen the ' + st.noun + ' card.</h1><div id="cardScroll"><div class="cardish rec-card" style="border-color:' + stationBorderColor(st.id) + '"><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div class="row" style="justify-content:center"><span class="tap-text" id="toWheel" role="button" tabindex="0">See where you are</span></div></div>';
   }
   if (s.n === 5) {
     html += '<h1 tabindex="-1">' + st.name + '</h1>';
@@ -892,7 +892,7 @@ function render() {
     html += '<div class="row" style="justify-content:center"><button class="primary" type="button" id="toDeep">Go deeper</button></div>';
   }
   if (s.n === 6) {
-    html += '<h1 tabindex="-1">You are here</h1><p>' + st.noun + ' sits just outside <strong>' + st.name + '</strong>. The rest of the wheel is visible. Only this station is open.</p><div class="wheel" id="wheel"><div class="wheel-center">You are here<br>' + st.name + '</div></div><div class="row" style="justify-content:center"><span class="tap-text" id="toIllum" role="button" tabindex="0">See illumination</span></div>';
+    html += '<h1 tabindex="-1">You are here</h1><p>' + st.noun + ' sits just outside <strong>' + st.name + '</strong>. The rest of the wheel is visible. Only this station is open.</p><div class="wheel" id="wheel"><div class="wheel-center">You are here<br>' + st.name + '</div></div><div class="row" style="justify-content:center"><button class="primary" type="button" id="toIllum">See illumination</button></div>';
   }
   if (s.n === 7) {
     html += '<h1 tabindex="-1">Go deeper</h1><p>For <strong>' + st.name + '</strong>, the full course still holds:</p>';
@@ -1531,7 +1531,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "2.69";
+const APP_VERSION = "2.70";
 (function () {
   const handle = document.getElementById("bannerHandle");
   if (!handle) return;
