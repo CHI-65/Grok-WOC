@@ -50,7 +50,7 @@
 </head>
 <body>
 <h1>Card design</h1>
-<p class="ver">Design 1.5</p>
+<p class="ver">Design 1.6</p>
 <p class="note">Separate from the app. Design the card background, then we copy it in.</p>
 <div class="stage">
   <h2 class="card-title">You’ve chosen the Overwhelm card.</h2>
@@ -132,12 +132,33 @@ wheels.addEventListener("pointermove", (e) => {
   if (img) { img.style.left = item.x + "%"; img.style.top = item.y + "%"; }
 });
 wheels.addEventListener("pointerup", () => { if (drag) save(); drag = null; });
-document.getElementById("addBtn").onclick = () => {
+const addBtn = document.getElementById("addBtn");
+let hold = null, held = false;
+function addWheel(copy) {
+  const src = items[sel];
   const id = Math.max(0, ...items.map(it => it.id)) + 1;
-  items.push({ id, x: 30 + (items.length * 13) % 50, y: 20 + (items.length * 17) % 60, size: 90, opacity: 0.2, center: false });
+  const base = copy && src ? src : { size: 90, opacity: 0.2 };
+  items.push({
+    id,
+    x: Math.min(90, (src ? src.x : 40) + 8),
+    y: Math.min(90, (src ? src.y : 30) + 8),
+    size: base.size,
+    opacity: base.opacity,
+    center: false
+  });
   sel = items.length - 1;
   draw();
-};
+}
+addBtn.addEventListener("pointerdown", (e) => {
+  held = false;
+  hold = setTimeout(() => { held = true; addWheel(true); }, 450);
+});
+addBtn.addEventListener("pointerup", () => {
+  clearTimeout(hold);
+  if (!held) addWheel(false);
+  held = false;
+});
+addBtn.addEventListener("pointerleave", () => clearTimeout(hold));
 size.oninput = () => { if (items[sel]) { items[sel].size = +size.value; draw(); } };
 op.oninput = () => { if (items[sel]) { items[sel].opacity = +op.value / 100; draw(); } };
 delBtn.onclick = () => { if (items[sel] && !items[sel].center) { items.splice(sel, 1); sel = 0; draw(); } };
