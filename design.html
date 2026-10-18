@@ -8,17 +8,18 @@
   :root { --bg:#f6f1e8; --ink:#1c1612; --line:#2a211b; --card:#fffaf3; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font: 18px/1.35 Georgia, "Iowan Old Style", Palatino, serif; }
-  body { padding: 12px 12px 150px; }
+  body { padding: 8px 0 150px; }
   h1 { font-size: 22px; margin: 4px 0 8px; text-align: center; }
   .note { text-align: center; color: #4a4038; font-size: 14px; margin: 0 0 12px; }
-  .stage { max-width: 420px; margin: 0 auto; }
+  .stage { width: 393px; max-width: 100%; margin: 0 auto; padding: 0 16px; }
   .card {
     position: relative;
+    width: 92%;
+    margin: 8px auto;
     border: 12px solid #e2b000;
     border-radius: 14px;
     background: rgba(226, 176, 0, 0.16);
-    padding: 16px 14px;
-    min-height: 460px;
+    padding: 12px;
     overflow: hidden;
   }
   .wheels { position: absolute; inset: 0; z-index: 0; }
@@ -29,8 +30,8 @@
   }
   .wheels img.sel { outline: 2px solid #e2b000; outline-offset: 2px; border-radius: 50%; }
   .copy { position: relative; z-index: 1; pointer-events: none; text-align: center; }
-  .copy h2 { margin: 0 0 8px; font-size: 26px; }
-  .copy p { margin: 0 0 8px; }
+  .copy h2 { margin: 8px 0 12px; font-size: 34px; line-height: 1.15; }
+  .copy p { margin: 0 0 12px; }
   .copy ul { text-align: left; margin: 8px auto; padding-left: 1.2em; max-width: 22em; }
   .bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
