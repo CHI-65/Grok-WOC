@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card design — Wheel of Creativity</title>
+<style>
+  :root { --bg:#f6f1e8; --ink:#1c1612; --line:#2a211b; --card:#fffaf3; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font: 18px/1.35 Georgia, "Iowan Old Style", Palatino, serif; }
+  body { padding: 12px 12px 150px; }
+  h1 { font-size: 22px; margin: 4px 0 8px; text-align: center; }
+  .note { text-align: center; color: #4a4038; font-size: 14px; margin: 0 0 12px; }
+  .stage { max-width: 420px; margin: 0 auto; }
+  .card {
+    position: relative;
+    border: 12px solid #e2b000;
+    border-radius: 14px;
+    background: rgba(226, 176, 0, 0.16);
+    padding: 16px 14px;
+    min-height: 460px;
+    overflow: hidden;
+  }
+  .wheels { position: absolute; inset: 0; z-index: 0; }
+  .wheels img {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    touch-action: none; user-select: none; -webkit-user-select: none;
+  }
+  .wheels img.sel { outline: 2px solid #e2b000; outline-offset: 2px; border-radius: 50%; }
+  .copy { position: relative; z-index: 1; pointer-events: none; text-align: center; }
+  .copy h2 { margin: 0 0 8px; font-size: 26px; }
+  .copy p { margin: 0 0 8px; }
+  .copy ul { text-align: left; margin: 8px auto; padding-left: 1.2em; max-width: 22em; }
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+    background: #1c1612; color: #fff8f4;
+    padding: 10px 14px 16px;
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center;
+  }
+  .bar button, .bar label { color: #ffd36a; font: 700 16px/1.2 Georgia, serif; background: transparent; border: 0; }
+  .bar button { min-height: 36px; padding: 6px 10px; }
+  #addBtn { font-size: 28px; width: 44px; height: 44px; border-radius: 50%; background: #ffd36a; color: #1c1612; }
+  input[type="range"] { width: 140px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<h1>Card design</h1>
+<p class="note">Separate from the app. Design the card background, then we copy it in.</p>
+<div class="stage">
+  <div class="card" id="card">
+    <div class="wheels" id="wheels"></div>
+    <div class="copy">
+      <h2>You’ve chosen the Overwhelm card.</h2>
+      <p>Overwhelm can leave you feeling:</p>
+      <ul><li>like everything’s against me</li><li>in full panic</li><li>barely holding on</li></ul>
+      <p>These are all symptoms of being out of alignment with your personal creative process.</p>
+      <p>And when you look at the map of your creative process, Overwhelm is just outside…</p>
+    </div>
+  </div>
+</div>
+<div class="bar">
+  <button type="button" id="addBtn" aria-label="Add a wheel">+</button>
+  <label id="sizeLabel" class="hidden">Size <input id="size" type="range" min="40" max="420" value="220"></label>
+  <label id="opLabel" class="hidden">Opacity <input id="op" type="range" min="5" max="80" value="11"></label>
+  <button type="button" id="delBtn" class="hidden">Remove</button>
+  <button type="button" id="copyBtn">Copy design</button>
+</div>
+<script>
+const wheels = document.getElementById("wheels");
+const size = document.getElementById("size");
+const op = document.getElementById("op");
+const sizeLabel = document.getElementById("sizeLabel");
+const opLabel = document.getElementById("opLabel");
+const delBtn = document.getElementById("delBtn");
+let items = [];
+let sel = 0;
+let drag = null;
+
+function load() {
+  try { items = JSON.parse(localStorage.getItem("woc-card-design") || "null") || []; } catch (e) { items = []; }
+  if (!items.length) {
+    items = [{ id: 1, x: 50, y: 46, size: 280, opacity: 0.11, center: true }];
+  }
+}
+function save() { localStorage.setItem("woc-card-design", JSON.stringify(items)); }
+function draw() {
+  wheels.innerHTML = "";
+  items.forEach((item, i) => {
+    const img = document.createElement("img");
+    img.src = "images/wheel-mark.png";
+    img.alt = "";
+    img.style.left = item.x + "%";
+    img.style.top = item.y + "%";
+    img.style.width = item.size + "px";
+    img.style.opacity = item.opacity;
+    if (i === sel) img.classList.add("sel");
+    img.addEventListener("pointerdown", (e) => startDrag(e, i));
+    wheels.appendChild(img);
+  });
+  const on = sel != null && items[sel];
+  sizeLabel.classList.toggle("hidden", !on);
+  opLabel.classList.toggle("hidden", !on);
+  delBtn.classList.toggle("hidden", !on || items[sel].center);
+  if (on) {
+    size.value = items[sel].size;
+    op.value = Math.round(items[sel].opacity * 100);
+  }
+  save();
+}
+function startDrag(e, i) {
+  sel = i;
+  const img = e.currentTarget;
+  const r = wheels.getBoundingClientRect();
+  drag = { i, dx: e.clientX - img.getBoundingClientRect().left, dy: e.clientY - img.getBoundingClientRect().top, r };
+  img.setPointerCapture(e.pointerId);
+  draw();
+}
+wheels.addEventListener("pointermove", (e) => {
+  if (!drag) return;
+  const item = items[drag.i];
+  const x = ((e.clientX - drag.dx + item.size / 2 - drag.r.left) / drag.r.width) * 100;
+  const y = ((e.clientY - drag.dy + item.size / 2 - drag.r.top) / drag.r.height) * 100;
+  item.x = Math.max(-10, Math.min(110, x));
+  item.y = Math.max(-10, Math.min(110, y));
+  const img = wheels.children[drag.i];
+  if (img) { img.style.left = item.x + "%"; img.style.top = item.y + "%"; }
+});
+wheels.addEventListener("pointerup", () => { if (drag) save(); drag = null; });
+document.getElementById("addBtn").onclick = () => {
+  const id = Math.max(0, ...items.map(it => it.id)) + 1;
+  items.push({ id, x: 30 + (items.length * 13) % 50, y: 20 + (items.length * 17) % 60, size: 90, opacity: 0.2, center: false });
+  sel = items.length - 1;
+  draw();
+};
+size.oninput = () => { if (items[sel]) { items[sel].size = +size.value; draw(); } };
+op.oninput = () => { if (items[sel]) { items[sel].opacity = +op.value / 100; draw(); } };
+delBtn.onclick = () => { if (items[sel] && !items[sel].center) { items.splice(sel, 1); sel = 0; draw(); } };
+document.getElementById("copyBtn").onclick = async () => {
+  const text = JSON.stringify(items, null, 2);
+  try { await navigator.clipboard.writeText(text); alert("Design copied."); }
+  catch (e) { prompt("Copy this design:", text); }
+};
+load();
+draw();
+</script>
+</body>
+</html>
