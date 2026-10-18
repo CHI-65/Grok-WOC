@@ -4,6 +4,8 @@ For client review. Clock runs on app-changing commits and the two Zoom calls.
 
 Time-log update commits are not work. They do not start or extend a session.
 
+Cluster commits so a gap of more than 10 minutes starts a new session, and count 10 minutes after the last commit in a closed cluster. If the newest commit is within 10 minutes of now, keep that session open through now.
+
 ## Sessions
 
 ### Zoom call
@@ -28,7 +30,11 @@ App-changing commits only. Time before each update is on the client list.
 2026-10-14, 4:00–5:20 PM local.
 - Counted: 80 min
 
-## Running total
-10 hours 22 minutes.
+### Versions 3.00–3.01
+Closed session after the last commit.
+- Counted: 12 min
 
-60 min Zoom (Oct 7), 10 min on 1.5, 213 min on 1.6–2.17, 259 min on 2.49–2.99, 80 min Zoom (Oct 14).
+## Running total
+10 hours 34 minutes.
+
+60 min Zoom (Oct 7), 10 min on 1.5, 213 min on 1.6–2.17, 259 min on 2.49–2.99, 80 min Zoom (Oct 14), 12 min on 3.00–3.01.
