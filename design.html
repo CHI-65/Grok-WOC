@@ -6,7 +6,7 @@
 <title>Card design — Wheel of Creativity</title>
 <style>
   :root { --bg:#f6f1e8; --ink:#1c1612; --line:#2a211b; --card:#fffaf3; }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font: 20px/1.45 Georgia, "Iowan Old Style", Palatino, serif; }
   body { padding: 8px 0 150px; }
   h1 { font-size: 22px; margin: 4px 0 2px; text-align: center; }
@@ -28,7 +28,9 @@
   .wheels img {
     position: absolute; left: 50%; top: 50%;
     transform: translate(-50%, -50%);
-    touch-action: none; user-select: none; -webkit-user-select: none;
+    touch-action: none;
+    -webkit-user-drag: none;
+    pointer-events: auto;
   }
   .wheels img.sel { outline: 2px solid #e2b000; outline-offset: 2px; border-radius: 50%; }
   .copy { position: relative; z-index: 1; pointer-events: none; text-align: center; }
@@ -50,7 +52,7 @@
 </head>
 <body>
 <h1>Card design</h1>
-<p class="ver">Design 1.6</p>
+<p class="ver">Design 1.7</p>
 <p class="note">Separate from the app. Design the card background, then we copy it in.</p>
 <div class="stage">
   <h2 class="card-title">You’ve chosen the Overwhelm card.</h2>
@@ -167,6 +169,7 @@ document.getElementById("copyBtn").onclick = async () => {
   try { await navigator.clipboard.writeText(text); alert("Design copied."); }
   catch (e) { prompt("Copy this design:", text); }
 };
+document.addEventListener("contextmenu", (e) => e.preventDefault());
 load();
 draw();
 </script>
