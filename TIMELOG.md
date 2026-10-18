@@ -1,6 +1,6 @@
 # Wheel of Creativity — time log
 
-For client review. Clock runs on app-changing commits and the two Zoom calls.
+For client review. Clock runs on work in this Wheel of Creativity chat, on app-changing commits, and on the Zoom calls.
 
 Time-log update commits are not work. They do not start or extend a session.
 
