@@ -21,15 +21,18 @@
   th { font-size:16px; letter-spacing:0.04em; text-transform:uppercase; }
   a.ver { font-weight:700; font-size:22px; }
   .back { display:inline-flex; align-items:center; min-height:56px; padding:12px 16px; border:2px solid var(--line); border-radius:12px; text-decoration:none; color:var(--ink); font-weight:700; background:var(--card); }
+  .sticky-header { position:sticky; top:0; background:var(--bg); z-index:20; padding:8px 0 12px; margin:0 -16px 0; padding-left:16px; padding-right:16px; border-bottom:2px solid var(--line); }
+  .sticky-header .total { margin-bottom:0; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <p><a class="back" href="index.html">Back to the app</a></p>
-  <h1>Time log</h1>
-  <p class="muted">Time spent on this app. A version number opens that version, so you can see the progress.</p>
-  <p class="total">10 hours 22 minutes</p>
-  <p class="muted">60 minutes Zoom (Oct 7), 10 minutes on 1.5, 213 minutes on 1.6–2.17, 259 minutes on 2.49–2.99, and 80 minutes Zoom (Oct 14).</p>
+  <div class="sticky-header">
+    <p><a class="back" href="index.html">Back to the app</a></p>
+    <h1>Time log</h1>
+    <p class="muted">Time spent on this app. A version number opens that version, so you can see the progress.</p>
+    <p class="total">10 hours 22 minutes</p>
+  </div>
 
   <h2>Versions</h2>
   <table>
