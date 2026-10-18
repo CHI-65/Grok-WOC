@@ -35,10 +35,10 @@ Closed session after the last commit.
 - Counted: 12 min
 
 ### Design app 1.0–1.8
-Separate card design app. Closed session.
+Separate card design app. Open session.
 - Counted: 38 min
 
 ## Running total
-11 hours 12 minutes.
+12 hours 23 minutes.
 
 60 min Zoom (Oct 7), 10 min on 1.5, 213 min on 1.6–2.17, 259 min on 2.49–2.99, 80 min Zoom (Oct 14), 12 min on 3.00–3.01, 38 min on the design app.
