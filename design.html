@@ -71,6 +71,16 @@
   }
   .grid.on { display: block; }
   body.hide-text .copy, body.hide-text .card-title { visibility: hidden; }
+  .card-wrap { position: relative; width: 303px; max-width: 100%; margin: 8px auto; }
+  .card { margin: 0 auto; }
+  .lock {
+    position: absolute; top: -6px; right: -6px; z-index: 4;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid #1c1612; background: #fffaf3; color: #1c1612;
+    padding: 0; min-height: 0; display: flex; align-items: center; justify-content: center;
+  }
+  .lock svg { width: 14px; height: 14px; }
+  .lock.on { background: #1c1612; color: #ffd36a; }
 </style>
 </head>
 <body>
@@ -82,15 +92,18 @@
   <button type="button" id="hideTextBtn">Hide text</button>
 </div>
 <h1>Card design</h1>
-<p class="ver">Design 1.10</p>
+<p class="ver">Design 1.11</p>
 <p class="note">Swipe left or right for the four color sets. Each keeps its own design.</p>
 <div class="stage" id="stage">
   <p class="group" id="groupName"></p>
   <h2 class="card-title" id="cardTitle"></h2>
+  <div class="card-wrap">
+  <button type="button" class="lock" id="lockBtn" aria-label="Lock this card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2"/><rect x="5" y="10" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
   <div class="card" id="card">
     <div class="wheels" id="wheels"></div>
     <div class="grid" id="grid"></div>
     <div class="copy" id="copy"></div>
+  </div>
   </div>
 </div>
 <div class="bar" id="bar">
@@ -136,6 +149,7 @@ let designs = {};
 let sel = 0;
 let drag = null;
 let history = [];
+let locks = {};
 const ORIGINAL = [{ id: 1, x: 50, y: 46, size: 220, opacity: 0.11, center: true }];
 function snapshot() { history.push(JSON.stringify(designs)); if (history.length > 40) history.shift(); }
 
@@ -150,11 +164,14 @@ const picks = pick();
 function items() { return designs[GROUPS[gi].key]; }
 function load() {
   designs = JSON.parse(localStorage.getItem("woc-card-designs") || "null") || {};
+  locks = JSON.parse(localStorage.getItem("woc-design-locks") || "null") || {};
   GROUPS.forEach(g => {
     if (!designs[g.key]) designs[g.key] = [{ id: 1, x: 50, y: 46, size: 220, opacity: 0.11, center: true }];
   });
 }
+function locked() { return !!locks[GROUPS[gi].key]; }
 function save() { localStorage.setItem("woc-card-designs", JSON.stringify(designs)); }
+function saveLocks() { localStorage.setItem("woc-design-locks", JSON.stringify(locks)); }
 function undo() {
   if (!history.length) return;
   designs = JSON.parse(history.pop());
@@ -172,6 +189,9 @@ function showCard() {
 }
 function draw() {
   showCard();
+  const lockBtn = document.getElementById("lockBtn");
+  lockBtn.classList.toggle("on", locked());
+  lockBtn.setAttribute("aria-label", locked() ? "Unlock this card" : "Lock this card");
   wheels.innerHTML = "";
   items().forEach((item, i) => {
     const img = document.createElement("img");
@@ -194,6 +214,7 @@ function draw() {
 }
 function itemSize(item) { return Math.max(12, item.size); }
 function startDrag(e, i) {
+  if (locked()) return;
   sel = i;
   const img = e.currentTarget;
   const r = wheels.getBoundingClientRect();
@@ -213,6 +234,7 @@ wheels.addEventListener("pointerdown", () => snapshot(), true);
 wheels.addEventListener("pointerup", () => { if (drag) save(); drag = null; });
 snapshot();
 function addWheel(copy) {
+  if (locked()) return;
   const list = items();
   const src = list[sel];
   const base = copy && src ? src : { size: 90, opacity: 0.2 };
@@ -230,7 +252,7 @@ size.oninput = () => { if (items()[sel]) { items()[sel].size = +size.value; draw
 snapshot();
 op.oninput = () => { if (items()[sel]) { items()[sel].opacity = +op.value / 100; draw(); } };
 snapshot();
-delBtn.onclick = () => { if (items()[sel] && !items()[sel].center) { items().splice(sel, 1); sel = 0; draw(); } };
+delBtn.onclick = () => { if (locked()) return; if (items()[sel] && !items()[sel].center) { items().splice(sel, 1); sel = 0; draw(); } };
 document.getElementById("copyBtn").onclick = async () => {
   const text = JSON.stringify({ group: GROUPS[gi].key, card: GROUPS[gi].cards[picks[gi]].noun, wheels: items() }, null, 2);
   try { await navigator.clipboard.writeText(text); alert("This color's design copied."); }
@@ -255,6 +277,11 @@ document.getElementById("hideTextBtn").onclick = () => {
   const on = document.body.classList.toggle("hide-text");
   document.getElementById("hideTextBtn").textContent = on ? "Show text" : "Hide text";
   document.getElementById("menu").classList.remove("open");
+};
+document.getElementById("lockBtn").onclick = () => {
+  locks[GROUPS[gi].key] = !locked();
+  saveLocks();
+  draw();
 };
 document.getElementById("chev").onclick = () => {
   bar.classList.toggle("hide");
