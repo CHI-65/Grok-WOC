@@ -109,7 +109,7 @@
   <button type="button" id="hideTextBtn">Hide text</button>
 </div>
 <h1>Card design</h1>
-<p class="ver">Design 1.13</p>
+<p class="ver">Design 1.14</p>
 <p class="note">Choose the card from the menu. Each keeps its own design.</p>
 <div class="stage" id="stage">
   <p class="group" id="groupName"></p>
@@ -251,7 +251,7 @@ function startDrag(e, i) {
   const r = wheels.getBoundingClientRect();
   drag = { i, dx: e.clientX - img.getBoundingClientRect().left, dy: e.clientY - img.getBoundingClientRect().top, r };
   img.setPointerCapture(e.pointerId);
-  draw();
+  wheels.querySelectorAll("img").forEach((el, n) => el.classList.toggle("sel", n === i));
 }
 wheels.addEventListener("pointermove", (e) => {
   if (!drag) return;
@@ -326,14 +326,13 @@ document.querySelectorAll("[data-card]").forEach(b => b.onclick = () => {
 document.getElementById("undoIcon").onclick = () => undo();
 const wrap = document.querySelector(".card-wrap");
 let pinch = null;
-wrap.addEventListener("pointerdown", (e) => {
-  if (e.target.closest(".wheels img")) return;
-  wrap.setPointerCapture(e.pointerId);
-});
 const touches = new Map();
-wrap.addEventListener("pointerdown", (e) => { touches.set(e.pointerId, { x: e.clientX, y: e.clientY }); });
+wrap.addEventListener("pointerdown", (e) => {
+  if (e.target.closest(".wheels img") || drag) return;
+  touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+});
 wrap.addEventListener("pointermove", (e) => {
-  if (!touches.has(e.pointerId)) return;
+  if (drag || !touches.has(e.pointerId)) return;
   touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
   if (touches.size < 2) return;
   const [a, b] = [...touches.values()];
