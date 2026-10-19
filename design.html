@@ -12,7 +12,8 @@
   h1 { font-size: 22px; margin: 4px 0 2px; text-align: center; }
   .ver { text-align: center; font-weight: 700; color: #e2b000; margin: 0 0 8px; }
   .note { text-align: center; color: #4a4038; font-size: 14px; margin: 0 0 12px; }
-  .stage { width: 393px; max-width: 100%; margin: 0 auto; padding: 0 16px; touch-action: pan-y; }
+  #page { transform-origin: center top; }
+  .stage { width: 393px; max-width: 100%; margin: 0 auto; padding: 0 16px; touch-action: none; }
   .card {
     position: relative; width: 303px; max-width: 100%; margin: 8px auto;
     border: 2px solid #e2b000; border-radius: 14px;
@@ -108,8 +109,9 @@
   <button type="button" id="gridBtn">Show grid</button>
   <button type="button" id="hideTextBtn">Hide text</button>
 </div>
+<div id="page">
 <h1>Card design</h1>
-<p class="ver">Design 1.15</p>
+<p class="ver">Design 1.16</p>
 <p class="note">Choose the card from the menu. Each keeps its own design.</p>
 <div class="stage" id="stage">
   <p class="group" id="groupName"></p>
@@ -121,6 +123,7 @@
     <div class="copy" id="copy"></div>
   </div>
   </div>
+</div>
 </div>
 <div class="bar" id="bar">
   <button type="button" class="chev" id="chev" aria-label="Hide design bar"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -325,7 +328,7 @@ document.querySelectorAll("[data-card]").forEach(b => b.onclick = () => {
   document.getElementById("menu").classList.remove("open");
 });
 document.getElementById("undoIcon").onclick = () => undo();
-const wrap = document.querySelector(".card-wrap");
+const wrap = document.getElementById("page");
 function applyView() {
   const z = zoom[key()] || 1;
   const p = pan[key()] || { x: 0, y: 0 };
