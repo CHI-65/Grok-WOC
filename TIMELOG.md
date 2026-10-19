@@ -17,13 +17,9 @@ Cluster commits so a gap of more than 10 minutes starts a new session, and count
 
 ### Repo commits since 2026-10-08 23:49 UTC
 Clustered by the 10-minute gap rule, excluding time-log update commits. Closed sessions include 10 minutes after the last commit.
-- Counted: 593 min
-
-### Design 1.9–1.16
-Menu, lock, denser grid, hide text, card picker, per-card undo, pinch zoom, zoom and pan.
-- Counted: 41 min
+- Counted: 631 min
 
 ## Running total
-11 hours 44 minutes.
+11 hours 41 minutes.
 
-Zoom calls are listed with the versions. 60 min Zoom (Oct 7), 80 min Zoom (Oct 14), 10 min on 1.5, 593 min on clustered app commits, 41 min on Design 1.9–1.16.
+Zoom calls are listed with the versions. 60 min Zoom (Oct 7), 10 min on 1.5, 631 min on clustered app commits through Design 1.16.
