@@ -61,6 +61,8 @@
   }
   .menu.open { display: block; }
   .menu button { display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 12px 14px; font: 700 18px/1.2 Georgia, serif; color: #1c1612; }
+  .menu-label { margin: 8px 14px 0; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #4a4038; }
+  .menu button.on { background: #efe6d6; }
   .grid {
     position: absolute; inset: 0; z-index: 2; pointer-events: none; display: none;
     background:
@@ -71,10 +73,18 @@
   }
   .grid.on { display: block; }
   body.hide-text .copy, body.hide-text .card-title { visibility: hidden; }
-  .card-wrap { position: relative; width: 303px; max-width: 100%; margin: 8px auto; }
+  .card-wrap { position: relative; width: 303px; max-width: 100%; margin: 8px auto; transform-origin: center top; }
   .card { margin: 0 auto; }
+  .undo-btn, .lock {
+    position: fixed; top: 10px; z-index: 8;
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 1px solid #1c1612; background: #fffaf3; color: #1c1612;
+    padding: 0; min-height: 0; display: flex; align-items: center; justify-content: center;
+  }
+  .undo-btn { left: 64px; }
+  .undo-btn svg { width: 18px; height: 18px; }
   .lock {
-    position: fixed; top: 10px; left: 12px; z-index: 8;
+    left: 12px;
     width: 44px; height: 44px; border-radius: 50%;
     border: 1px solid #1c1612; background: #fffaf3; color: #1c1612;
     padding: 0; min-height: 0; display: flex; align-items: center; justify-content: center;
@@ -84,17 +94,23 @@
 </style>
 </head>
 <body>
+<button type="button" class="undo-btn" id="undoIcon" aria-label="Undo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 9h10a6 6 0 1 1 0 12H9" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
 <button type="button" class="lock" id="lockBtn" aria-label="Lock this card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2"/><rect x="5" y="10" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
 <button type="button" class="menu-btn" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
 <div class="menu" id="menu">
+  <p class="menu-label">Card</p>
+  <button type="button" data-card="0">Green</button>
+  <button type="button" data-card="1">Gold</button>
+  <button type="button" data-card="2">Blue</button>
+  <button type="button" data-card="3">Red</button>
   <button type="button" id="undoBtn">Undo</button>
   <button type="button" id="defaultBtn">Default</button>
   <button type="button" id="gridBtn">Show grid</button>
   <button type="button" id="hideTextBtn">Hide text</button>
 </div>
 <h1>Card design</h1>
-<p class="ver">Design 1.12</p>
-<p class="note">Swipe left or right for the four color sets. Each keeps its own design.</p>
+<p class="ver">Design 1.13</p>
+<p class="note">Choose the card from the menu. Each keeps its own design.</p>
 <div class="stage" id="stage">
   <p class="group" id="groupName"></p>
   <h2 class="card-title" id="cardTitle"></h2>
@@ -148,10 +164,17 @@ let gi = 0;
 let designs = {};
 let sel = 0;
 let drag = null;
-let history = [];
+let history = { green: [], gold: [], blue: [], red: [] };
 let locks = {};
+let views = { green: {}, gold: {}, blue: {}, red: {} };
+let zoom = { green: 1, gold: 1, blue: 1, red: 1 };
 const ORIGINAL = [{ id: 1, x: 50, y: 46, size: 220, opacity: 0.11, center: true }];
-function snapshot() { history.push(JSON.stringify(designs)); if (history.length > 40) history.shift(); }
+function key() { return GROUPS[gi].key; }
+function snapshot() {
+  const stack = history[key()];
+  stack.push(JSON.stringify(designs[key()]));
+  if (stack.length > 4) stack.shift();
+}
 
 function pick() {
   const saved = JSON.parse(localStorage.getItem("woc-design-picks") || "null");
@@ -173,8 +196,9 @@ function locked() { return !!locks[GROUPS[gi].key]; }
 function save() { localStorage.setItem("woc-card-designs", JSON.stringify(designs)); }
 function saveLocks() { localStorage.setItem("woc-design-locks", JSON.stringify(locks)); }
 function undo() {
-  if (!history.length) return;
-  designs = JSON.parse(history.pop());
+  const stack = history[key()];
+  if (!stack.length) return;
+  designs[key()] = JSON.parse(stack.pop());
   sel = 0;
   draw();
 }
@@ -189,6 +213,13 @@ function showCard() {
 }
 function draw() {
   showCard();
+  const v = views[key()];
+  document.getElementById("grid").classList.toggle("on", !!v.grid);
+  document.body.classList.toggle("hide-text", !!v.hide);
+  document.getElementById("gridBtn").textContent = v.grid ? "Hide grid" : "Show grid";
+  document.getElementById("hideTextBtn").textContent = v.hide ? "Show text" : "Hide text";
+  document.querySelectorAll("[data-card]").forEach(b => b.classList.toggle("on", +b.dataset.card === gi));
+  document.querySelector(".card-wrap").style.transform = "scale(" + (zoom[key()] || 1) + ")";
   const lockBtn = document.getElementById("lockBtn");
   lockBtn.classList.toggle("on", locked());
   lockBtn.setAttribute("aria-label", locked() ? "Unlock this card" : "Lock this card");
@@ -262,20 +293,19 @@ document.getElementById("menuBtn").onclick = () => document.getElementById("menu
 document.getElementById("undoBtn").onclick = () => { undo(); document.getElementById("menu").classList.remove("open"); };
 document.getElementById("defaultBtn").onclick = () => {
   snapshot();
-  GROUPS.forEach(g => { designs[g.key] = JSON.parse(JSON.stringify(ORIGINAL)); });
+  designs[key()] = JSON.parse(JSON.stringify(ORIGINAL));
   sel = 0;
   draw();
   document.getElementById("menu").classList.remove("open");
 };
 document.getElementById("gridBtn").onclick = () => {
-  const grid = document.getElementById("grid");
-  grid.classList.toggle("on");
-  document.getElementById("gridBtn").textContent = grid.classList.contains("on") ? "Hide grid" : "Show grid";
+  views[key()].grid = !views[key()].grid;
+  draw();
   document.getElementById("menu").classList.remove("open");
 };
 document.getElementById("hideTextBtn").onclick = () => {
-  const on = document.body.classList.toggle("hide-text");
-  document.getElementById("hideTextBtn").textContent = on ? "Show text" : "Hide text";
+  views[key()].hide = !views[key()].hide;
+  draw();
   document.getElementById("menu").classList.remove("open");
 };
 document.getElementById("lockBtn").onclick = () => {
@@ -287,16 +317,38 @@ document.getElementById("chev").onclick = () => {
   bar.classList.toggle("hide");
   document.getElementById("chev").setAttribute("aria-label", bar.classList.contains("hide") ? "Show design bar" : "Hide design bar");
 };
-let sx = 0;
-document.getElementById("stage").addEventListener("pointerdown", (e) => { if (e.target.closest(".wheels img")) return; sx = e.clientX; });
-document.getElementById("stage").addEventListener("pointerup", (e) => {
-  if (e.target.closest(".wheels img")) return;
-  const dx = e.clientX - sx;
-  if (Math.abs(dx) < 40) return;
-  gi = (gi + (dx < 0 ? 1 : -1) + GROUPS.length) % GROUPS.length;
+document.querySelectorAll("[data-card]").forEach(b => b.onclick = () => {
+  gi = +b.dataset.card;
   sel = 0;
   draw();
+  document.getElementById("menu").classList.remove("open");
 });
+document.getElementById("undoIcon").onclick = () => undo();
+const wrap = document.querySelector(".card-wrap");
+let pinch = null;
+wrap.addEventListener("pointerdown", (e) => {
+  if (e.target.closest(".wheels img")) return;
+  wrap.setPointerCapture(e.pointerId);
+});
+wrap.addEventListener("pointermove", (e) => {
+  const pts = [];
+  // two-pointer pinch via event cache
+});
+const touches = new Map();
+wrap.addEventListener("pointerdown", (e) => { touches.set(e.pointerId, { x: e.clientX, y: e.clientY }); });
+wrap.addEventListener("pointermove", (e) => {
+  if (!touches.has(e.pointerId)) return;
+  touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (touches.size < 2) return;
+  const [a, b] = [...touches.values()];
+  const dist = Math.hypot(a.x - b.x, a.y - b.y);
+  if (!pinch) pinch = { dist, scale: zoom[key()] || 1 };
+  zoom[key()] = Math.min(3, Math.max(1, pinch.scale * dist / pinch.dist));
+  wrap.style.transform = "scale(" + zoom[key()] + ")";
+});
+function endPinch(e) { touches.delete(e.pointerId); if (touches.size < 2) pinch = null; }
+wrap.addEventListener("pointerup", endPinch);
+wrap.addEventListener("pointercancel", endPinch);
 document.addEventListener("contextmenu", (e) => e.preventDefault());
 load();
 draw();
