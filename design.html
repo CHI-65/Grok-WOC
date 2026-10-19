@@ -66,10 +66,11 @@
     background:
       linear-gradient(to right, transparent calc(50% - 1.5px), #1c1612 calc(50% - 1.5px), #1c1612 calc(50% + 1.5px), transparent calc(50% + 1.5px)),
       linear-gradient(to bottom, transparent calc(50% - 1.5px), #1c1612 calc(50% - 1.5px), #1c1612 calc(50% + 1.5px), transparent calc(50% + 1.5px)),
-      repeating-linear-gradient(to right, rgba(28,22,18,0.28) 0 1px, transparent 1px 25%),
-      repeating-linear-gradient(to bottom, rgba(28,22,18,0.28) 0 1px, transparent 1px 25%);
+      repeating-linear-gradient(to right, rgba(28,22,18,0.28) 0 1px, transparent 1px 8.33%),
+      repeating-linear-gradient(to bottom, rgba(28,22,18,0.28) 0 1px, transparent 1px 8.33%);
   }
   .grid.on { display: block; }
+  body.hide-text .copy, body.hide-text .card-title { visibility: hidden; }
 </style>
 </head>
 <body>
@@ -78,9 +79,10 @@
   <button type="button" id="undoBtn">Undo</button>
   <button type="button" id="defaultBtn">Default</button>
   <button type="button" id="gridBtn">Show grid</button>
+  <button type="button" id="hideTextBtn">Hide text</button>
 </div>
 <h1>Card design</h1>
-<p class="ver">Design 1.9</p>
+<p class="ver">Design 1.10</p>
 <p class="note">Swipe left or right for the four color sets. Each keeps its own design.</p>
 <div class="stage" id="stage">
   <p class="group" id="groupName"></p>
@@ -247,6 +249,11 @@ document.getElementById("gridBtn").onclick = () => {
   const grid = document.getElementById("grid");
   grid.classList.toggle("on");
   document.getElementById("gridBtn").textContent = grid.classList.contains("on") ? "Hide grid" : "Show grid";
+  document.getElementById("menu").classList.remove("open");
+};
+document.getElementById("hideTextBtn").onclick = () => {
+  const on = document.body.classList.toggle("hide-text");
+  document.getElementById("hideTextBtn").textContent = on ? "Show text" : "Hide text";
   document.getElementById("menu").classList.remove("open");
 };
 document.getElementById("chev").onclick = () => {
