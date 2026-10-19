@@ -109,7 +109,7 @@
   <button type="button" id="hideTextBtn">Hide text</button>
 </div>
 <h1>Card design</h1>
-<p class="ver">Design 1.14</p>
+<p class="ver">Design 1.15</p>
 <p class="note">Choose the card from the menu. Each keeps its own design.</p>
 <div class="stage" id="stage">
   <p class="group" id="groupName"></p>
@@ -168,6 +168,7 @@ let history = { green: [], gold: [], blue: [], red: [] };
 let locks = {};
 let views = { green: {}, gold: {}, blue: {}, red: {} };
 let zoom = { green: 1, gold: 1, blue: 1, red: 1 };
+let pan = { green: {x:0,y:0}, gold: {x:0,y:0}, blue: {x:0,y:0}, red: {x:0,y:0} };
 const ORIGINAL = [{ id: 1, x: 50, y: 46, size: 220, opacity: 0.11, center: true }];
 function key() { return GROUPS[gi].key; }
 function snapshot() {
@@ -219,7 +220,7 @@ function draw() {
   document.getElementById("gridBtn").textContent = v.grid ? "Hide grid" : "Show grid";
   document.getElementById("hideTextBtn").textContent = v.hide ? "Show text" : "Hide text";
   document.querySelectorAll("[data-card]").forEach(b => b.classList.toggle("on", +b.dataset.card === gi));
-  document.querySelector(".card-wrap").style.transform = "scale(" + (zoom[key()] || 1) + ")";
+  applyView();
   const lockBtn = document.getElementById("lockBtn");
   lockBtn.classList.toggle("on", locked());
   lockBtn.setAttribute("aria-label", locked() ? "Unlock this card" : "Lock this card");
@@ -325,23 +326,42 @@ document.querySelectorAll("[data-card]").forEach(b => b.onclick = () => {
 });
 document.getElementById("undoIcon").onclick = () => undo();
 const wrap = document.querySelector(".card-wrap");
+function applyView() {
+  const z = zoom[key()] || 1;
+  const p = pan[key()] || { x: 0, y: 0 };
+  wrap.style.transform = "translate(" + p.x + "px," + p.y + "px) scale(" + z + ")";
+}
 let pinch = null;
+let panDrag = null;
 const touches = new Map();
 wrap.addEventListener("pointerdown", (e) => {
   if (e.target.closest(".wheels img") || drag) return;
   touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (touches.size === 1 && (zoom[key()] || 1) > 1) {
+    panDrag = { x: e.clientX, y: e.clientY, px: pan[key()].x, py: pan[key()].y };
+  }
 });
 wrap.addEventListener("pointermove", (e) => {
   if (drag || !touches.has(e.pointerId)) return;
+  const prev = touches.get(e.pointerId);
   touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
-  if (touches.size < 2) return;
-  const [a, b] = [...touches.values()];
-  const dist = Math.hypot(a.x - b.x, a.y - b.y);
-  if (!pinch) pinch = { dist, scale: zoom[key()] || 1 };
-  zoom[key()] = Math.min(3, Math.max(1, pinch.scale * dist / pinch.dist));
-  wrap.style.transform = "scale(" + zoom[key()] + ")";
+  if (touches.size >= 2) {
+    const [a, b] = [...touches.values()];
+    const dist = Math.hypot(a.x - b.x, a.y - b.y);
+    if (!pinch) pinch = { dist, scale: zoom[key()] || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, px: pan[key()].x, py: pan[key()].y };
+    zoom[key()] = Math.min(4, Math.max(1, pinch.scale * dist / pinch.dist));
+    pan[key()].x = pinch.px + ((a.x + b.x) / 2 - pinch.mx);
+    pan[key()].y = pinch.py + ((a.y + b.y) / 2 - pinch.my);
+    applyView();
+    return;
+  }
+  if (panDrag && (zoom[key()] || 1) > 1) {
+    pan[key()].x = panDrag.px + (e.clientX - panDrag.x);
+    pan[key()].y = panDrag.py + (e.clientY - panDrag.y);
+    applyView();
+  }
 });
-function endPinch(e) { touches.delete(e.pointerId); if (touches.size < 2) pinch = null; }
+function endPinch(e) { touches.delete(e.pointerId); if (touches.size < 2) pinch = null; if (!touches.size) panDrag = null; }
 wrap.addEventListener("pointerup", endPinch);
 wrap.addEventListener("pointercancel", endPinch);
 document.addEventListener("contextmenu", (e) => e.preventDefault());
