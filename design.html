@@ -330,10 +330,6 @@ wrap.addEventListener("pointerdown", (e) => {
   if (e.target.closest(".wheels img")) return;
   wrap.setPointerCapture(e.pointerId);
 });
-wrap.addEventListener("pointermove", (e) => {
-  const pts = [];
-  // two-pointer pinch via event cache
-});
 const touches = new Map();
 wrap.addEventListener("pointerdown", (e) => { touches.set(e.pointerId, { x: e.clientX, y: e.clientY }); });
 wrap.addEventListener("pointermove", (e) => {
