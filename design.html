@@ -49,17 +49,45 @@
   input[type="range"] { width: 120px; }
   .hidden { display: none; }
   .group { text-align: center; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 6px; }
+  .menu-btn {
+    position: fixed; top: 10px; right: 12px; z-index: 8;
+    width: 44px; height: 44px; border: 0; background: transparent; padding: 8px;
+  }
+  .menu-btn span { display: block; height: 3px; margin: 5px 0; background: #1c1612; border-radius: 2px; }
+  .menu {
+    position: fixed; top: 56px; right: 12px; z-index: 8;
+    background: #fffaf3; border: 2px solid #1c1612; border-radius: 12px; min-width: 160px;
+    display: none; overflow: hidden;
+  }
+  .menu.open { display: block; }
+  .menu button { display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 12px 14px; font: 700 18px/1.2 Georgia, serif; color: #1c1612; }
+  .grid {
+    position: absolute; inset: 0; z-index: 2; pointer-events: none; display: none;
+    background:
+      linear-gradient(to right, transparent calc(50% - 1.5px), #1c1612 calc(50% - 1.5px), #1c1612 calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+      linear-gradient(to bottom, transparent calc(50% - 1.5px), #1c1612 calc(50% - 1.5px), #1c1612 calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+      repeating-linear-gradient(to right, rgba(28,22,18,0.28) 0 1px, transparent 1px 25%),
+      repeating-linear-gradient(to bottom, rgba(28,22,18,0.28) 0 1px, transparent 1px 25%);
+  }
+  .grid.on { display: block; }
 </style>
 </head>
 <body>
+<button type="button" class="menu-btn" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="menu" id="menu">
+  <button type="button" id="undoBtn">Undo</button>
+  <button type="button" id="defaultBtn">Default</button>
+  <button type="button" id="gridBtn">Show grid</button>
+</div>
 <h1>Card design</h1>
-<p class="ver">Design 1.8</p>
+<p class="ver">Design 1.9</p>
 <p class="note">Swipe left or right for the four color sets. Each keeps its own design.</p>
 <div class="stage" id="stage">
   <p class="group" id="groupName"></p>
   <h2 class="card-title" id="cardTitle"></h2>
   <div class="card" id="card">
     <div class="wheels" id="wheels"></div>
+    <div class="grid" id="grid"></div>
     <div class="copy" id="copy"></div>
   </div>
 </div>
@@ -105,6 +133,9 @@ let gi = 0;
 let designs = {};
 let sel = 0;
 let drag = null;
+let history = [];
+const ORIGINAL = [{ id: 1, x: 50, y: 46, size: 220, opacity: 0.11, center: true }];
+function snapshot() { history.push(JSON.stringify(designs)); if (history.length > 40) history.shift(); }
 
 function pick() {
   const saved = JSON.parse(localStorage.getItem("woc-design-picks") || "null");
@@ -122,6 +153,12 @@ function load() {
   });
 }
 function save() { localStorage.setItem("woc-card-designs", JSON.stringify(designs)); }
+function undo() {
+  if (!history.length) return;
+  designs = JSON.parse(history.pop());
+  sel = 0;
+  draw();
+}
 function showCard() {
   const g = GROUPS[gi];
   const card = g.cards[picks[gi]];
@@ -170,7 +207,9 @@ wheels.addEventListener("pointermove", (e) => {
   const img = wheels.children[drag.i];
   if (img) { img.style.left = item.x + "%"; img.style.top = item.y + "%"; }
 });
+wheels.addEventListener("pointerdown", () => snapshot(), true);
 wheels.addEventListener("pointerup", () => { if (drag) save(); drag = null; });
+snapshot();
 function addWheel(copy) {
   const list = items();
   const src = list[sel];
@@ -184,13 +223,31 @@ let hold = null, held = false;
 addBtn.addEventListener("pointerdown", () => { held = false; hold = setTimeout(() => { held = true; addWheel(true); }, 450); });
 addBtn.addEventListener("pointerup", () => { clearTimeout(hold); if (!held) addWheel(false); held = false; });
 addBtn.addEventListener("pointerleave", () => clearTimeout(hold));
+snapshot();
 size.oninput = () => { if (items()[sel]) { items()[sel].size = +size.value; draw(); } };
+snapshot();
 op.oninput = () => { if (items()[sel]) { items()[sel].opacity = +op.value / 100; draw(); } };
+snapshot();
 delBtn.onclick = () => { if (items()[sel] && !items()[sel].center) { items().splice(sel, 1); sel = 0; draw(); } };
 document.getElementById("copyBtn").onclick = async () => {
   const text = JSON.stringify({ group: GROUPS[gi].key, card: GROUPS[gi].cards[picks[gi]].noun, wheels: items() }, null, 2);
   try { await navigator.clipboard.writeText(text); alert("This color's design copied."); }
   catch (e) { prompt("Copy this design:", text); }
+};
+document.getElementById("menuBtn").onclick = () => document.getElementById("menu").classList.toggle("open");
+document.getElementById("undoBtn").onclick = () => { undo(); document.getElementById("menu").classList.remove("open"); };
+document.getElementById("defaultBtn").onclick = () => {
+  snapshot();
+  GROUPS.forEach(g => { designs[g.key] = JSON.parse(JSON.stringify(ORIGINAL)); });
+  sel = 0;
+  draw();
+  document.getElementById("menu").classList.remove("open");
+};
+document.getElementById("gridBtn").onclick = () => {
+  const grid = document.getElementById("grid");
+  grid.classList.toggle("on");
+  document.getElementById("gridBtn").textContent = grid.classList.contains("on") ? "Hide grid" : "Show grid";
+  document.getElementById("menu").classList.remove("open");
 };
 document.getElementById("chev").onclick = () => {
   bar.classList.toggle("hide");
