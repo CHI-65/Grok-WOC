@@ -26,4 +26,4 @@ Menu: undo, default, show grid.
 ## Running total
 11 hours 13 minutes.
 
-60 min Zoom (Oct 7), 10 min on 1.5, 593 min on clustered app commits since 2026-10-08 23:49 UTC, 10 min on Design 1.9.
+Zoom calls are listed with the versions. 60 min Zoom (Oct 7), 80 min Zoom (Oct 14), 10 min on 1.5, 593 min on clustered app commits, 10 min on Design 1.9.
