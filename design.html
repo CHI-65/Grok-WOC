@@ -44,15 +44,16 @@
   }
   .chev svg { width: 18px; height: 18px; }
   .bar.hide .chev svg { transform: rotate(180deg); }
-  .bar button, .bar label { color: #ffd36a; font: 700 16px/1.2 Georgia, serif; background: transparent; border: 0; }
-  .bar button { min-height: 36px; padding: 6px 10px; }
+  .bar button, .bar label { color: #ffd36a; font: 700 16px/1.2 Georgia, serif; }
+  .bar button { min-height: 36px; padding: 6px 12px; border: 2px solid #ffd36a; border-radius: 10px; background: transparent; }
   #addBtn { font-size: 28px; width: 44px; height: 44px; border-radius: 50%; background: #ffd36a; color: #1c1612; }
   input[type="range"] { width: 120px; }
   .hidden { display: none; }
   .group { text-align: center; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 6px; }
   .menu-btn {
     position: fixed; top: 10px; right: 12px; z-index: 8;
-    width: 44px; height: 44px; border: 0; background: transparent; padding: 8px;
+    width: 44px; height: 44px; border: 1px solid #1c1612; border-radius: 50%;
+    background: #fffaf3; padding: 8px;
   }
   .menu-btn span { display: block; height: 3px; margin: 5px 0; background: #1c1612; border-radius: 2px; }
   .menu {
@@ -61,7 +62,7 @@
     display: none; overflow: hidden;
   }
   .menu.open { display: block; }
-  .menu button { display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 12px 14px; font: 700 18px/1.2 Georgia, serif; color: #1c1612; }
+  .menu button { display: block; width: calc(100% - 12px); margin: 4px 6px; text-align: left; background: #fff; border: 2px solid #1c1612; border-radius: 10px; padding: 10px 12px; font: 700 18px/1.2 Georgia, serif; color: #1c1612; }
   .menu-label { margin: 8px 14px 0; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #4a4038; }
   .menu button.on { background: #efe6d6; }
   .grid {
@@ -111,7 +112,7 @@
 </div>
 <div id="page">
 <h1>Card design</h1>
-<p class="ver">Design 1.16</p>
+<p class="ver">Design 1.17</p>
 <p class="note">Choose the card from the menu. Each keeps its own design.</p>
 <div class="stage" id="stage">
   <p class="group" id="groupName"></p>
