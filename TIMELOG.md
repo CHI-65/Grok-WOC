@@ -19,11 +19,11 @@ Cluster commits so a gap of more than 10 minutes starts a new session, and count
 Clustered by the 10-minute gap rule, excluding time-log update commits. Closed sessions include 10 minutes after the last commit.
 - Counted: 644 min
 
-### Version 3.02
-Tappable controls look like buttons.
-- Counted: 10 min
+### Version 3.02–3.03
+Tappable controls look like buttons. All 12 adjectives fit, with smaller Back and Start over.
+- Counted: 15 min
 
 ## Running total
-12 hours 4 minutes.
+12 hours 9 minutes.
 
-Zoom calls are listed with the versions. 60 min Zoom (Oct 7), 10 min on 1.5, 644 min on clustered app commits through Design 1.16, 10 min on version 3.02.
+Zoom calls are listed with the versions. 60 min Zoom (Oct 7), 10 min on 1.5, 644 min on clustered app commits through Design 1.16, 15 min on versions 3.02–3.03.
