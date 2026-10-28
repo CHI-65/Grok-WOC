@@ -392,6 +392,8 @@
   }
   footer.tools { position: fixed; left: 0; right: 0; bottom: 72px; margin: 0; padding: 0 16px; text-align: center; z-index: 4; }
   footer.tools .row button { min-height: 32px; padding: 4px 8px; font-size: 14px; }
+  .wish-line { text-align: center; margin: 10px 0 4px; }
+  .help-btn { min-height: 32px; padding: 4px 8px; font-size: 14px; }
   footer.tools details { margin: 0 0 8px; }
   #centerGuide { position: fixed; top: 0; bottom: 0; left: 50%; width: 1px; background: #e2b000; z-index: 50; display: none; pointer-events: none; }
   html[data-adjust="1"] #centerGuide.on { display: block; }
@@ -612,7 +614,7 @@
   html[data-adjust="1"] .adjust-controls button, html[data-adjust="1"] #pencilBtn { font-size: 16px; min-height: 32px; }
   
 </style>
-<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 3.05</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
+<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 3.06</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a><span class="adjust-controls"><label id="sliderLabel">Opacity <input id="opacitySlider" type="range" min="0" max="100" value="20"></label><button type="button" id="hideBtn">Hide text</button><button type="button" id="diskBtn" aria-label="Layout presets"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4v5h8V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></span><button type="button" id="pencilBtn" aria-label="Adjust background"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.8 6.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
 
 <div class="wrap">
   <div id="updateBanner" class="update-banner hidden" role="status">
@@ -1029,7 +1031,7 @@ function render() {
     html += '<h1 tabindex="-1">Hey there, Human!</h1><p>What\'s going on with you? How are you feeling right now?</p><div class="cta-gap"><button type="button" id="doorFeel" class="tap-text">I feel</button></div><p class="muted">Tap to name your feeling</p>';
   }
   if (s.n === 2) {
-    html += '<h1 tabindex="-1">I feel…</h1><p>Tap to explore your feeling</p><div class="grid" id="wordGrid"></div><div class="cta-gap"><button type="button" id="doorOff" class="tap-text">I wish I knew, help me</button></div>';
+    html += '<h1 tabindex="-1">I feel…</h1><p>Tap to explore your feeling</p><div class="grid" id="wordGrid"></div><p class="wish-line">I wish I knew what I was feeling</p><div class="cta-gap"><button type="button" id="doorOff" class="help-btn">Help me</button></div>';
   }
   if (s.n === 3) {
     state.design = 3;
@@ -1746,7 +1748,7 @@ document.documentElement.setAttribute("data-theme", "light");
 renderIndex();
 render();
 
-const APP_VERSION = "3.05";
+const APP_VERSION = "3.06";
 (function () {
   const handle = document.getElementById("bannerHandle");
   if (!handle) return;
