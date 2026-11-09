@@ -19,7 +19,11 @@ Cluster commits so a gap of more than 10 minutes starts a new session, and count
 Clustered by the 10-minute gap rule, excluding time-log update commits. Closed sessions include 10 minutes after the last commit. Newest commit is more than 10 minutes before now, so that session is closed.
 - Counted: 657 min
 
-## Running total
-12 hours 7 minutes.
+### Version 3.08 content update
+2026-11-09. Integrated Katherine's Oct 27 Master Copy Grid (new second-person "You feel…" options for Screen 4 recognition cards).
+- Counted: 15 min
 
-Zoom calls are listed with the versions. 60 min Zoom (Oct 7), 10 min on 1.5, 657 min on 16 clustered app commits through Version 3.07.
+## Running total
+12 hours 22 minutes.
+
+Zoom calls are listed with the versions. 60 min Zoom (Oct 7), 10 min on 1.5, 657 min on 16 clustered app commits through Version 3.07, 15 min on 3.08 content update.
