@@ -410,9 +410,40 @@
   .map-action, .cta-gap {
     display: flex; justify-content: center; margin: 12px 0;
   }
+  .ver-banner {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 300;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    min-height: 84px; padding: 22px 20px 16px;
+    background: #1c1612; color: #fff8f4;
+    font: 700 26px/1.2 Georgia, "Iowan Old Style", Palatino, serif;
+    box-shadow: 0 -6px 18px rgba(0,0,0,0.28);
+    transition: transform 0.2s ease;
+    touch-action: none;
+  }
+  .banner-handle {
+    position: absolute; top: 2px; left: 50%; transform: translateX(-50%);
+    width: 64px; height: 22px; border-radius: 11px; background: #ffd36a; color: #1c1612;
+    display: flex; align-items: center; justify-content: center; padding: 0;
+    min-height: 0; z-index: 2;
+  }
+  .banner-handle svg { width: 18px; height: 18px; display: block; }
+  html[data-banner="hide"] .ver-banner { transform: translateY(calc(100% - 26px)); }
+  html[data-banner="hide"] footer.tools { bottom: 32px; }
+  html[data-banner="hide"] .banner-handle svg { transform: rotate(180deg); }
+  .ver-banner a, .ver-banner button { color: #ffd36a; font-weight: 700; font-size: 22px; background: transparent; border: 0; padding: 0; min-height: 0; text-align: center; }
+  .ver-update.hidden { display: none; }
+  .ver-update { display: block; width: 100%; margin-top: 6px; color: #1c1612; background: #ffd36a; border-radius: 10px; padding: 10px 12px; text-align: center; animation: verFlash 1s linear infinite; }
+  @keyframes verFlash { 50% { opacity: 0.35; } }
+  .ver-banner { flex-wrap: wrap; }
+  body { padding-bottom: 150px; }
+  /* Entry screen: push CTAs below the wheel watermark */
+  html[data-page="entry"] .cta-gap { margin-top: 18vh; }
+  html[data-page="entry"] .muted { margin-top: 0.6em; }
+  html[data-page="entry"] #bgLayer { top: 38%; }
 </style>
 </head>
 <body>
+<div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Hide version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 3.10</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
 <div class="wrap">
   <header class="app">
     <p class="brand">The Wheel of Creativity</p>
@@ -482,17 +513,12 @@ const state = {
 };
 
 const main = document.getElementById("main");
-const index = document.getElementById("index");
 
 function stationById(id) { return STATIONS.find(s => s.id === id); }
 function stationBorderColor(id) {
-  // Q1 Vision (Hunger, Appetite, Anorexia): yellow
   if (id <= 3) return "#e2b000";
-  // Q2 Exploration (Launch, Isolation, Crisis): Rubine red
   if (id <= 6) return "#d4145a";
-  // Q3 Incubation (Conception, Gestation, Breakthrough): blue
   if (id <= 9) return "#2b6fd6";
-  // Q4 Cultivation (Nurturing, Pruning, Harvest): green
   return "#2f9e38";
 }
 function stationFillColor(id) {
@@ -503,7 +529,6 @@ function stationFillColor(id) {
 }
 
 function go(n, push) {
-  leaveAdjust();
   if (push !== false && state.screen !== n) state.history.push(state.screen);
   state.screen = n;
   render();
@@ -513,17 +538,10 @@ function go(n, push) {
 }
 
 function back() {
-  leaveAdjust();
   if (state.mapOpen) { state.mapOpen = false; render(); return; }
   if (!state.history.length) return;
   state.screen = state.history.pop();
   render();
-}
-
-function leaveAdjust() {
-  document.documentElement.removeAttribute("data-adjust");
-  const menu = document.getElementById("layoutMenu");
-  if (menu) menu.remove();
 }
 
 function render() {
@@ -565,7 +583,7 @@ function render() {
     html += '<form id="emailForm"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" placeholder="name@example.com"><div class="row"><button class="primary" type="submit">Submit email</button><button type="button" id="skipEmail">Skip</button></div></form>';
   }
   main.innerHTML = html;
-  document.documentElement.setAttribute("data-page", s.n === 4 ? "recognition" : s.n === 5 ? "illum" : s.n === 6 ? "station" : "other");
+  document.documentElement.setAttribute("data-page", s.n === 1 ? "entry" : s.n === 4 ? "recognition" : s.n === 5 ? "illum" : s.n === 6 ? "station" : "other");
   document.documentElement.setAttribute("data-bg", "mark");
   if (s.n === 2) {
     const g = document.getElementById("wordGrid");
@@ -578,13 +596,13 @@ function render() {
       g.appendChild(b);
     });
     const doorOff = document.getElementById("doorOff"); if (doorOff) doorOff.onclick = () => { state.door = "off"; state.design = 3; go(3); };
-    const chooseAnother = document.getElementById("chooseAnother"); if (chooseAnother) chooseAnother.onclick = () => { go(2); };
   }
   if (s.n === 1) {
     document.getElementById("doorFeel").onclick = () => { state.door = "know"; go(2); };
   }
   if (s.n === 4) {
-    document.getElementById("toWheel").onclick = () => go(6);
+    const toWheel = document.getElementById("toWheel"); if (toWheel) toWheel.onclick = () => go(6);
+    const chooseAnother = document.getElementById("chooseAnother"); if (chooseAnother) chooseAnother.onclick = () => { go(2); };
   }
   if (s.n === 6) {
     document.getElementById("toIllum").onclick = () => go(5);
@@ -612,8 +630,12 @@ document.getElementById("themeBtn").onclick = () => {
   document.documentElement.setAttribute("data-theme", t);
 };
 document.getElementById("logLink").onclick = () => { window.location.href = "timelog.html"; };
+document.getElementById("bannerHandle").onclick = () => {
+  const cur = document.documentElement.getAttribute("data-banner");
+  document.documentElement.setAttribute("data-banner", cur === "hide" ? "" : "hide");
+};
 
-fetch("version.json").then(r => r.json()).then(v => { document.getElementById("ver").textContent = v.version; }).catch(() => {});
+fetch("version.json").then(r => r.json()).then(v => { document.getElementById("ver").textContent = v.version; const vl = document.getElementById("verLabel"); if (vl) vl.textContent = "You are on version " + v.version; }).catch(() => {});
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch(() => {});
