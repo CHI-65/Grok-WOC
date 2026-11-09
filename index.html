@@ -1,1 +1,625 @@
-PLACEHOLDER_FOR_LARGE_CONTENT
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#8a3d2a">
+<meta name="description" content="Wheel of Creativity scaffolding. Illumination journey and full-course review.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Wheel">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Wheel of Creativity — Scaffolding</title>
+<style>
+  :root {
+    --bg: #f6f1e8;
+    --ink: #1c1612;
+    --muted: #4a4038;
+    --card: #fffaf3;
+    --line: #2a211b;
+    --accent: #8a3d2a;
+    --accent-ink: #fff8f4;
+    --focus: #0b5cab;
+    --placeholder: #6b4e1e;
+    --pay: #5c2a4a;
+    --ok: #1e5c3a;
+    --shadow: 0 1px 0 rgba(28,22,18,0.06);
+    color-scheme: light;
+  }
+  html[data-theme="dark"] {
+    --bg: #16130f;
+    --ink: #f6efe6;
+    --muted: #d4c7b8;
+    --card: #241e18;
+    --line: #f0e6da;
+    --accent: #e07a62;
+    --accent-ink: #1c1210;
+    --focus: #ffd36a;
+    --placeholder: #e6c27a;
+    --pay: #f0b4d4;
+    --ok: #8fd9ae;
+    --shadow: none;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; overscroll-behavior: none; }
+  body {
+    user-select: none; -webkit-user-select: none;
+    text-align: center;
+    font-family: Georgia, "Iowan Old Style", Palatino, serif;
+    background-color: var(--bg);
+    background-image: none;
+    color: var(--ink);
+    font-size: 20px;
+    line-height: 1.45;
+    min-height: 100vh;
+  }
+  /* iPad / large portrait: max size that fits, same aspect as iPhone, no crop */
+  @media (min-width: 500px) and (orientation: portrait) {
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 393px;
+      height: 852px;
+      transform: scale(min(calc(100vw / 393px), calc(100dvh / 852px)));
+      transform-origin: center center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -196.5px;
+      margin-top: -426px;
+    }
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: url("images/wheel-mark.png") center / contain no-repeat;
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 0;
+  }
+  html[data-bg="scatter"] body::before { opacity: 0; }
+  html[data-bg="fill"] body::before {
+    background-size: 340%;
+    opacity: 0.2;
+  }
+  #scatter, #stationWheels {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; display: none;
+  }
+  html[data-bg="scatter"] #scatter { display: block; }
+  html[data-page="station"] #stationWheels { display: block; }
+  html[data-page="station"] #bgLayer, html[data-page="station"] #wmGrab { display: none !important; }
+  #stationWheels img { position: absolute; opacity: 0.2; touch-action: none; }
+  html[data-adjust="1"][data-page="station"] #stationWheels { pointer-events: none; z-index: 8; }
+  html[data-adjust="1"][data-page="station"] #stationWheels img { pointer-events: auto; }
+  html[data-adjust="1"][data-page="station"] footer.tools { pointer-events: none; }
+  html[data-adjust="1"][data-page="station"] #stationWheels img.sel { outline: 2px solid #e2b000; }
+  #scatter img { position: absolute; opacity: 0.2; touch-action: none; }
+  #bgLayer { position: fixed; left: 50%; top: 42%; width: 88vmin; transform: translate(-50%, -50%); opacity: 0.2; pointer-events: none; z-index: 0; display: none; touch-action: none; }
+  html[data-bg="mark"] #bgLayer, html[data-bg="fill"] #bgLayer { display: block; }
+  html[data-bg="mark"] body::before, html[data-bg="fill"] body::before { opacity: 0; }
+  html[data-page="recognition"] #bgLayer,
+  html[data-page="recognition"] body::before { display: none !important; opacity: 0 !important; }
+  html[data-page="recognition"] { background: var(--bg); }
+  html[data-adjust="1"] #scatter { pointer-events: auto; }
+  html[data-adjust="1"] #bgLayer { pointer-events: none; }
+  #wmGrab { display: none; position: fixed; z-index: 3; touch-action: none; background: transparent; }
+  html[data-adjust="1"] #wmGrab { display: block; }
+  html[data-adjust="1"] .wrap h1, html[data-adjust="1"] .wrap p, html[data-adjust="1"] .wrap button, html[data-adjust="1"] .wrap .cardish, html[data-adjust="1"] footer.tools button, html[data-adjust="1"] footer.tools summary { pointer-events: none; }
+  .grab-right { display: none; }
+  html[data-adjust="1"] .grab-right { display: block; position: absolute; pointer-events: auto; touch-action: none; }
+  html[data-adjust="1"] #scatter img.sel, html[data-adjust="1"] #bgLayer.sel { outline: 2px solid #e2b000; }
+  .adjust-controls { display: none; align-items: center; gap: 8px; }
+  #layoutMenu { position: fixed; right: 12px; bottom: 64px; z-index: 70; background: #fffaf3; color: #1c1612; border-radius: 10px; padding: 8px; min-width: 200px; }
+  #layoutMenu button { display: block; width: 100%; text-align: left; min-height: 40px; background: transparent; color: #1c1612; }
+  html[data-adjust="1"] .adjust-controls { display: flex; }
+  .adjust-controls button, .adjust-controls label { min-height: 36px; }
+  #pencilBtn { min-height: 0; width: 36px; height: 36px; padding: 4px; border: 0; background: transparent; }
+  .design-bar button { min-height: 40px; padding: 8px 12px; }
+  .design-bar input { width: 110px; }
+  html[data-hide="1"] header.app, html[data-hide="1"] #journey, html[data-hide="1"] main, html[data-hide="1"] footer.tools { visibility: hidden; }
+  .wrap, .ver-banner, .map-page { position: relative; z-index: 1; }
+  button, input, select {
+    font: inherit;
+    color: inherit;
+  }
+  button {
+    min-height: 56px;
+    padding: 12px 16px;
+    border: 3px solid transparent;
+    border-radius: 12px;
+    background:
+      linear-gradient(rgba(255,250,243,0.5), rgba(255,250,243,0.5)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
+    cursor: pointer;
+    text-align: center;
+  }
+  html[data-theme="dark"] button {
+    background:
+      linear-gradient(rgba(36,30,24,0.48), rgba(36,30,24,0.48)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
+  }
+  button.door { min-height: 40px; }
+  button.icon-btn {
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+  button.icon-btn { min-height: 0; padding: 4px; width: 48px; height: 48px; }
+  button.icon-btn svg { width: 32px; height: 32px; display: block; }
+  .settings {
+    position: absolute; right: 12px; top: 64px; z-index: 6;
+    background: rgba(255,250,243,0.96); border: 1px solid var(--line);
+    border-radius: 10px; padding: 6px; min-width: 220px;
+    box-shadow: var(--shadow);
+  }
+  .settings .menu-item {
+    display: block; width: 100%; min-height: 44px; text-align: left;
+    border: 0; border-radius: 8px; background: transparent; padding: 10px 12px;
+  }
+  .settings .menu-item.on { font-weight: 700; }
+  .menu-label { margin: 8px 12px 2px; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+  html[data-theme="dark"] .settings { background: rgba(36,30,24,0.92); }
+  html[data-theme="dark"] button.door, html[data-theme="dark"] button.icon-btn { background: transparent; }
+  button:hover { outline: 3px solid var(--focus); }
+  button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+  a { color: var(--accent); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 16px 16px 40px; }
+    header.app {
+    display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .brand {
+    font-size: 16px; letter-spacing: 0.02em; text-transform: uppercase; margin: 0;
+    text-align: center; white-space: nowrap;
+  }
+  .head-tools { display: flex; justify-content: center; gap: 18px; }
+  .version { margin: 0; font-size: 22px; font-weight: 700; }
+  a.loglink {
+    display: inline-flex; align-items: center; min-height: 56px; padding: 12px 16px;
+    border: 2px solid var(--line); background: var(--card); border-radius: 12px;
+    color: var(--ink); text-decoration: none; font-weight: 700;
+  }
+  a.doorlink { font-size: 22px; }
+  .update-banner {
+    border: 3px solid var(--ok);
+    background: var(--card);
+    border-radius: 12px;
+    padding: 12px;
+    margin: 0 0 12px;
+  }
+  .update-banner p { font-size: 22px; font-weight: 700; margin: 0 0 8px; }
+
+  .screen-label {
+    font-size: 22px; font-weight: 700; margin: 8px 0 4px;
+  }
+  .journey {
+    display: inline-block; font-size: 16px; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 8px 14px; border-radius: 999px;
+    border: 3px solid transparent;
+    background:
+      linear-gradient(rgba(255,250,243,0.5), rgba(255,250,243,0.5)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
+  }
+  html[data-theme="dark"] .journey {
+    background:
+      linear-gradient(rgba(36,30,24,0.48), rgba(36,30,24,0.48)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
+  }
+  .journey.paid { border-color: var(--pay); color: var(--pay); }
+  h1 { font-size: 34px; line-height: 1.15; margin: 8px 0 12px; }
+  h2 { font-size: 26px; margin: 0 0 8px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--muted); }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+  footer.tools .row { justify-content: space-between; gap: 22%; flex-wrap: nowrap; }
+  footer.tools .row button { flex: 1 1 0; min-width: 0; }
+  #toIllum { background: transparent; border-color: transparent; display: block; margin: 8px auto; }
+  .primary {
+    background: var(--accent); color: var(--accent-ink); border-color: var(--accent);
+    font-weight: 700;
+  }
+  .grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  #doorWords, #wordGrid {
+    grid-template-columns: 1fr 1fr;
+    padding-right: 2px;
+  }
+  #wordGrid { gap: 6px; }
+  #wordGrid .door { min-height: 40px; font-size: 20px; padding: 4px 6px; }
+  html[data-page="station"] .wrap { height: 100dvh; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 168px; }
+  html[data-page="recognition"] .wrap { height: 100dvh; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 118px; }
+  html[data-page="station"] main,
+  html[data-page="recognition"] main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .locked-title { flex: none; background: var(--bg); margin: 0 0 8px; padding: 4px 0; }
+  #cardScroll {
+    flex: 1; min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    padding: 4px 16px 12px;
+  }
+  .rec-card {
+    max-width: 92%;
+    margin: 8px auto;
+    border-width: 12px;
+    border-style: solid;
+    box-sizing: border-box;
+    position: relative;
+    overflow: visible;
+    flex: none;
+    height: auto;
+    background: #fff;
+    color: #1c1612;
+  }
+  .card-wheels {
+    position: absolute;
+    inset: 12px;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .card-wheels img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    max-width: none;
+    transform: translate(-50%, -50%);
+    opacity: 0.11;
+    pointer-events: none;
+  }
+  .cta-follow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.6em;
+    padding: 8px 0 12px;
+    flex: none;
+  }
+  html[data-page="illum"] .cta-follow { margin-top: 0; }
+  #recCard {
+    transform-origin: center center;
+    touch-action: pan-y;
+  }
+  html[data-page="illum"] .wrap { height: 100dvh; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 88px; overflow: hidden; }
+  html[data-page="illum"] main { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+  .illum-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    touch-action: none;
+    padding: 4px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .illum-stage {
+    position: relative;
+    max-width: 40em;
+    margin: 0 auto;
+    padding: 0 8px;
+  }
+  html[data-page="illum"] .illum-stage h1 { margin: 0 0 10px; }
+  html[data-page="illum"] .illum-stage p { margin: 0; }
+  .illum-wheel {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: min(100%, 40em);
+    max-width: 88vmin;
+    transform: translate(-50%, -50%);
+    opacity: 0.11;
+    pointer-events: none;
+    z-index: 0;
+  }
+  html[data-page="illum"] #bgLayer,
+  html[data-page="illum"] body::before { display: none !important; opacity: 0 !important; }
+  .illum-stage > *:not(.illum-wheel) { position: relative; z-index: 1; }
+  .rec-card > *:not(.card-wheels) {
+    position: relative;
+    z-index: 1;
+  }
+  #cardScroll .row { margin-top: 22px; }
+  #doorWords .door { min-height: 72px; font-size: 18px; }
+  .door { min-height: 96px; font-size: 22px; font-weight: 700; }
+  .tag {
+    display: inline-block; font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+    border: 2px dashed var(--placeholder); color: var(--placeholder);
+    padding: 2px 6px; border-radius: 6px; margin-bottom: 6px;
+  }
+  .ph {
+    border: 2px dashed var(--placeholder); border-radius: 12px;
+    padding: 12px; margin: 8px 0; background: transparent;
+  }
+  .cardish, .ph, .paywall, .update-banner, details { text-align: center; }
+  details summary { text-align: center; }
+    background: rgba(255,250,243,0.58);
+  }
+  html[data-theme="dark"] .cardish, html[data-theme="dark"] .ph, html[data-theme="dark"] .paywall, html[data-theme="dark"] .update-banner {
+    background: rgba(36,30,24,0.5);
+  }
+  .cardish {
+    border: 2px solid var(--line); border-radius: 14px;
+    padding: 12px; box-shadow: none;
+  }
+  .cardish ul { text-align: left; margin: 8px auto; padding-left: 1.2em; max-width: 28em; }
+  .cardish li { text-align: left; margin: 4px 0; }
+  label { display: block; font-weight: 700; margin: 8px 0 6px; }
+  input[type="email"] {
+    width: 100%; min-height: 56px; padding: 10px 12px;
+    border: 2px solid var(--line); border-radius: 12px; background: rgba(255,250,243,0.55);
+  }
+  .paywall {
+    margin: 18px 0; padding: 14px; border: 3px solid var(--pay); border-radius: 14px;
+    background: var(--card);
+  }
+  .paywall strong { color: var(--pay); }
+  details { margin: 10px 0 16px; }
+  summary {
+    min-height: 56px; display: flex; align-items: center;
+    cursor: pointer; font-weight: 700;
+  }
+  .index { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .wheel {
+    position: relative; width: min(100%, 520px); aspect-ratio: 1;
+    margin: 12px auto 20px;
+  }
+  .wheel-center {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 42%; text-align: center; font-size: 18px; font-weight: 700;
+  }
+  .station-btn {
+    position: absolute; width: 108px; min-height: 56px; font-size: 15px;
+    transform: translate(-50%, -50%); padding: 6px 8px; text-align: center;
+  }
+  .station-btn.here { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .notice {
+    border: 3px solid var(--ok); padding: 12px; border-radius: 12px; font-weight: 700;
+  }
+  footer.tools { position: fixed; left: 0; right: 0; bottom: 72px; margin: 0; padding: 0 16px; text-align: center; z-index: 4; }
+  footer.tools .row button { min-height: 32px; padding: 4px 8px; font-size: 14px; }
+  .wish-line { text-align: center; margin: 10px 0 4px; }
+  .help-btn { min-height: 32px; padding: 4px 8px; font-size: 14px; }
+  #mapIllum, .tap-text, #doorOff, #doorFeel, #toDeep {
+    display: inline-block; min-height: 44px; padding: 10px 16px; border-radius: 12px;
+    border: 3px solid transparent;
+    background:
+      linear-gradient(rgba(255,250,243,0.5), rgba(255,250,243,0.5)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
+    cursor: pointer; font-weight: 700;
+  }
+  html[data-theme="dark"] #mapIllum, html[data-theme="dark"] .tap-text, html[data-theme="dark"] #doorOff, html[data-theme="dark"] #doorFeel, html[data-theme="dark"] #toDeep {
+    background:
+      linear-gradient(rgba(36,30,24,0.48), rgba(36,30,24,0.48)) padding-box,
+      conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
+  }
+  .map-action, .cta-gap {
+    display: flex; justify-content: center; margin: 12px 0;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="app">
+    <p class="brand">The Wheel of Creativity</p>
+    <div class="head-tools">
+      <p class="version">v<span id="ver">…</span></p>
+      <button type="button" class="icon-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </header>
+  <div id="settings" class="settings" hidden>
+    <button type="button" class="menu-item" id="themeBtn">Theme</button>
+    <button type="button" class="menu-item" id="logLink">Time log</button>
+  </div>
+  <main id="main"></main>
+  <footer class="tools">
+    <div class="row">
+      <button type="button" id="backBtn">Back</button>
+      <button type="button" id="homeBtn">Home</button>
+    </div>
+  </footer>
+</div>
+<div id="scatter"></div>
+<img id="bgLayer" alt="" src="images/wheel-mark.png"><div id="wmGrab" aria-hidden="true"></div>
+<div id="stationWheels"></div>
+<script>
+const STATIONS = [
+  { id: 1, quarter: "Vision", name: "Hunger", adjective: "Uncertain", noun: "Uncertainty", challenge: "Uncertainty", feels: ["like this isn't it", "restless and dissatisfied - like something's wrong", "stagnant, bored with your own life"], phrase: "Something's Missing.", experience: "Restlessness", task: "Tell the truth", reward: "Awareness", direction: "Awareness" },
+  { id: 2, quarter: "Vision", name: "Appetite", adjective: "Vague", noun: "Vagueness", challenge: "Vagueness", feels: ["like the light just went on - you know what you're hungry for", "your desire just got specific", "a craving, something you can finally name"], phrase: "You're all I want.", experience: "Desire", task: "Pay attention", reward: "Direction", direction: "Direction" },
+  { id: 3, quarter: "Vision", name: "Anorexia", adjective: "Stuck", noun: "Inertia", challenge: "Inertia", feels: ["stuck at the bud, unable to bloom", "like something in you says \"don't you dare\"", "locked in a loop of want/refuse/want/refuse", "resisting the very thing you're attracted to"], phrase: "Don't you dare!", experience: "Paralysis", task: "Choose love", reward: "Torque", direction: "Torque" },
+  { id: 4, quarter: "Exploration", name: "Launch", adjective: "Burnt out", noun: "Burnout", challenge: "Burnout", feels: ["not yet, you're not ready \u2014 even though you want to be", "trying so hard but never breaking free", "worn out from just getting to the edge", "can't let go of the status quo"], phrase: "Into the wild!", experience: "Enthusiasm", task: "Leave home", reward: "Freedom", direction: "Freedom" },
+  { id: 5, quarter: "Exploration", name: "Isolation", adjective: "Distracted", noun: "Distraction", challenge: "Distraction", feels: ["like there's nothing out there", "completely alone and lost at sea", "like you made a huge mistake leaving what you knew", "there's no shore behind, no shore ahead"], phrase: "There's nothing out here", experience: "Despair", task: "Stay vigilant", reward: "Discovery", direction: "Discovery" },
+  { id: 6, quarter: "Exploration", name: "Crisis", adjective: "Overwhelmed", noun: "Overwhelm", challenge: "Overwhelm", feels: ["like everything's turning and you can't tell which way is up", "at the breaking point", "like the ground just shifted under you", "in the middle of a turning point you didn't choose"], phrase: "Catch me if you can!", experience: "Panic", task: "Focus", reward: "Capture", direction: "Capture" },
+  { id: 7, quarter: "Incubation", name: "Conception", adjective: "In Shock", noun: "Shock", challenge: "Shock", feels: ["you're in awe - like something brand new is calling you", "you're suddenly part of something bigger than you", "caught at the very beginning, still catching your breath", "struck by something you can't explain yet"], phrase: "Wade in the water.", experience: "Wonder", task: "Be receptive", reward: "Fertility", direction: "Fertility" },
+  { id: 8, quarter: "Incubation", name: "Gestation", adjective: "Doubtful", noun: "Doubt", challenge: "Doubt", feels: ["like you're just sitting and watching time pass", "you're waiting and trying to trust without any proof yet", "everything's dark and quiet - worried nothing's happening"], phrase: "Sitting on the dock of the bay.", experience: "Urgency", task: "Relax", reward: "Faith", direction: "Faith" },
+  { id: 9, quarter: "Incubation", name: "Breakthrough", adjective: "Perfectionistic", noun: "Perfectionism", challenge: "Perfectionism", feels: ["like something new has been born - is it good enough?", "not ready to share it", "on the edge of birth but not sure it's time", "can't push it, can't stop it either"], phrase: "Free at last!", experience: "Appreciation", task: "Be present", reward: "Confidence", direction: "Confidence" },
+  { id: 10, quarter: "Cultivation", name: "Nurturing", adjective: "Pressured", noun: "Pressure", challenge: "Pressure", feels: ["in love with your work", "responsible for keeping something fragile from breaking", "tempted to share something too soon - a need to push through too quickly - you have to make something with it"], phrase: "Someone to watch over you.", experience: "Tenderness", task: "Protect", reward: "Maturity", direction: "Maturity" },
+  { id: 11, quarter: "Cultivation", name: "Pruning", adjective: "Fatigued", noun: "Fatigue", challenge: "Fatigue", feels: ["like it's time to let go of what doesn't fit", "the need to cut things away, even the parts you love", "worn down by all the iterations", "it's still not quite right"], phrase: "Time to say goodbye.", experience: "Fatigue", task: "Discipline", reward: "Mastery", direction: "Mastery" },
+  { id: 12, quarter: "Cultivation", name: "Harvest", adjective: "Resistant", noun: "Resistance", challenge: "Resistance", feels: ["like you're finally bringing it home", "not ready to call it finished and celebrate", "the cutting's done, but you haven't celebrated yet - afraid to send it out into the world - reluctant to let it go"], phrase: "Homeward bound.", experience: "Satisfaction", task: "Release", reward: "Purpose", direction: "Purpose" }
+];
+
+const SCREENS = [
+  { n: 1, name: "Two-Door Entry", paid: false },
+  { n: 2, name: "Felt-Word Grid", paid: false },
+  { n: 3, name: "Discovery Draw", paid: false },
+  { n: 4, name: "Recognition", paid: false },
+  { n: 5, name: "Illumination", paid: false },
+  { n: 6, name: "Wheel Map", paid: false },
+  { n: 7, name: "Go Deeper Prompt", paid: false },
+  { n: 8, name: "Email Capture", paid: false },
+  { n: 9, name: "Unlock Offer", paid: true },
+  { n: 10, name: "Purchase / Checkout", paid: true },
+  { n: 11, name: "Welcome / Course Home", paid: true }
+];
+
+const state = {
+  screen: 1,
+  history: [],
+  door: null,
+  pick: null,
+  stationId: 1,
+  design: null,
+  spinning: false,
+  emailNote: "",
+  mapOpen: false,
+  mapLit: 0
+};
+
+const main = document.getElementById("main");
+const index = document.getElementById("index");
+
+function stationById(id) { return STATIONS.find(s => s.id === id); }
+function stationBorderColor(id) {
+  // Q1 Vision (Hunger, Appetite, Anorexia): yellow
+  if (id <= 3) return "#e2b000";
+  // Q2 Exploration (Launch, Isolation, Crisis): Rubine red
+  if (id <= 6) return "#d4145a";
+  // Q3 Incubation (Conception, Gestation, Breakthrough): blue
+  if (id <= 9) return "#2b6fd6";
+  // Q4 Cultivation (Nurturing, Pruning, Harvest): green
+  return "#2f9e38";
+}
+function stationFillColor(id) {
+  if (id <= 3) return "rgba(226, 176, 0, 0.16)";
+  if (id <= 6) return "rgba(212, 20, 90, 0.12)";
+  if (id <= 9) return "rgba(43, 111, 214, 0.13)";
+  return "rgba(47, 158, 56, 0.13)";
+}
+
+function go(n, push) {
+  leaveAdjust();
+  if (push !== false && state.screen !== n) state.history.push(state.screen);
+  state.screen = n;
+  render();
+  window.scrollTo(0, 0);
+  const h = document.querySelector("h1");
+  if (h) h.focus();
+}
+
+function back() {
+  leaveAdjust();
+  if (state.mapOpen) { state.mapOpen = false; render(); return; }
+  if (!state.history.length) return;
+  state.screen = state.history.pop();
+  render();
+}
+
+function leaveAdjust() {
+  document.documentElement.removeAttribute("data-adjust");
+  const menu = document.getElementById("layoutMenu");
+  if (menu) menu.remove();
+}
+
+function render() {
+  const s = SCREENS[state.screen - 1];
+  const st = stationById(state.stationId);
+  document.getElementById("backBtn").disabled = state.history.length === 0 && !state.mapOpen;
+  let html = "";
+  if (s.n === 9) {
+    html += '<div class="paywall"><strong>Paywall boundary.</strong> Free illumination journey ends here. What follows is the paid full course. This is a review divider, not a real charge.</div>';
+  }
+  if (s.n === 1) {
+    html += '<h1 tabindex="-1">Hey there, Human!</h1><p>What\'s going on with you? How are you feeling right now?</p><div class="cta-gap"><button type="button" id="doorFeel" class="tap-text">I feel</button></div><p class="muted">Tap to name your feeling</p>';
+  }
+  if (s.n === 2) {
+    html += '<h1 tabindex="-1">I feel…</h1><p>Tap a feeling to explore</p><div class="grid" id="wordGrid"></div><p class="wish-line">I wish I knew what I was feeling</p><div class="cta-gap"><button type="button" id="doorOff" class="help-btn">Help me</button></div>';
+  }
+  if (s.n === 3) {
+    state.design = 3;
+    state.spinning = false;
+    html += '<h1 tabindex="-1">Catch a wheel</h1><p>Tap any wheel to try on a feeling.</p><div class="float-stage" id="drawGrid"></div>';
+  }
+  if (s.n === 4) {
+    const feels = (st.feels || []).map(f => "<li>" + f + "</li>").join("");
+    html += '<h1 class="locked-title" tabindex="-1">You\'ve chosen the ' + st.noun + ' card.</h1><div id="cardScroll"><div class="cardish rec-card" id="recCard" style="border-color:' + stationBorderColor(st.id) + '; background:' + stationFillColor(st.id) + ';"><div class="card-wheels"></div><p>' + st.noun + ' can leave you feeling:</p><ul>' + feels + '</ul><p>These are all symptoms of being out of alignment with your personal creative process. This is what happens to all of us when we\'re not in our creative flow.</p><p>And when you look at the map of your creative process, ' + st.noun + ' is just outside…</p></div><div class="cta-follow"><span class="tap-text" id="toWheel" role="button" tabindex="0">See where you are</span></div><p class="muted" style="margin:0.6em 0 0.2em">Not quite sure if this fits?</p><div class="cta-gap"><button type="button" id="chooseAnother" class="help-btn">Choose another card</button></div></div>';
+  }
+  if (s.n === 5) {
+    html += '<h1 tabindex="-1">Illumination</h1><p>' + st.phrase + '</p><p>Experience: ' + st.experience + '</p><p>Task: ' + st.task + '</p><p>Reward: ' + st.reward + '</p>';
+  }
+  if (s.n === 6) {
+    html += '<h1 tabindex="-1">You are here</h1><p>' + st.noun + ' sits just outside <strong>' + st.name + '</strong>. The rest of the wheel is visible. Only this station is open.</p><div class="wheel" id="wheel"><div class="wheel-center">You are here<br>' + st.name + '</div></div><div class="cta-gap"><span class="tap-text" id="toIllum" role="button" tabindex="0">See illumination</span></div>';
+  }
+  if (s.n === 7) {
+    html += '<h1 tabindex="-1">Go deeper</h1><p>For <strong>' + st.name + '</strong>, the full course still holds:</p>';
+    html += '<div class="ph">Held back: A teaching video and a worksheet for this station. They live in the full course, not in this free illumination.</div>';
+    html += '<div class="row"><button class="primary" type="button" id="toEmail">Continue</button></div>';
+  }
+  if (s.n === 8) {
+    html += '<h1 tabindex="-1">Email capture</h1><p>Optional. If you enter an email, this scaffolding would tag it with <strong>' + st.name + '</strong>. Nothing is sent or stored.</p>';
+    html += '<form id="emailForm"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" placeholder="name@example.com"><div class="row"><button class="primary" type="submit">Submit email</button><button type="button" id="skipEmail">Skip</button></div></form>';
+  }
+  main.innerHTML = html;
+  document.documentElement.setAttribute("data-page", s.n === 4 ? "recognition" : s.n === 5 ? "illum" : s.n === 6 ? "station" : "other");
+  document.documentElement.setAttribute("data-bg", "mark");
+  if (s.n === 2) {
+    const g = document.getElementById("wordGrid");
+    STATIONS.forEach(item => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "door";
+      b.textContent = item.adjective;
+      b.onclick = () => chooseStation(item.id, item.adjective, "know");
+      g.appendChild(b);
+    });
+    const doorOff = document.getElementById("doorOff"); if (doorOff) doorOff.onclick = () => { state.door = "off"; state.design = 3; go(3); };
+    const chooseAnother = document.getElementById("chooseAnother"); if (chooseAnother) chooseAnother.onclick = () => { go(2); };
+  }
+  if (s.n === 1) {
+    document.getElementById("doorFeel").onclick = () => { state.door = "know"; go(2); };
+  }
+  if (s.n === 4) {
+    document.getElementById("toWheel").onclick = () => go(6);
+  }
+  if (s.n === 6) {
+    document.getElementById("toIllum").onclick = () => go(5);
+  }
+  if (s.n === 7) {
+    document.getElementById("toEmail").onclick = () => go(8);
+  }
+}
+
+function chooseStation(id, pick, door) {
+  state.stationId = id;
+  state.pick = pick;
+  state.door = door;
+  go(4);
+}
+
+document.getElementById("backBtn").onclick = back;
+document.getElementById("homeBtn").onclick = () => { state.history = []; go(1, false); };
+document.getElementById("menuBtn").onclick = () => {
+  const s = document.getElementById("settings");
+  s.hidden = !s.hidden;
+};
+document.getElementById("themeBtn").onclick = () => {
+  const t = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", t);
+};
+document.getElementById("logLink").onclick = () => { window.location.href = "timelog.html"; };
+
+fetch("version.json").then(r => r.json()).then(v => { document.getElementById("ver").textContent = v.version; }).catch(() => {});
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+render();
+</script>
+</body>
+</html>
