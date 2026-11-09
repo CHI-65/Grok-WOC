@@ -23,7 +23,11 @@ Clustered by the 10-minute gap rule, excluding time-log update commits. Closed s
 2026-11-09. Integrated Katherine's Oct 27 Master Copy Grid (new second-person "You feel…" options for Screen 4 recognition cards).
 - Counted: 15 min
 
-## Running total
-12 hours 22 minutes.
+### Version 3.09–3.10 layout restore
+2026-11-09. Restored working index.html after placeholder break, applied Katherine spreadsheet fixes (colors, Screen 2 text, Choose another card), restored collapsible bottom version banner, positioned entry-screen "I feel" button and "Tap to name your feeling" below the wheel watermark.
+- Counted: 25 min
 
-Zoom calls are listed with the versions. 60 min Zoom (Oct 7), 10 min on 1.5, 657 min on 16 clustered app commits through Version 3.07, 15 min on 3.08 content update.
+## Running total
+12 hours 47 minutes.
+
+Zoom calls are listed with the versions. 60 min Zoom (Oct 7), 10 min on 1.5, 657 min on 16 clustered app commits through Version 3.07, 15 min on 3.08 content update, 25 min on 3.09–3.10 layout restore.
