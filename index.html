@@ -394,7 +394,7 @@
   footer.tools .row button { min-height: 32px; padding: 4px 8px; font-size: 14px; }
   .wish-line { text-align: center; margin: 10px 0 4px; }
   .help-btn { min-height: 32px; padding: 4px 8px; font-size: 14px; }
-  #mapIllum, .tap-text, #doorOff, #doorFeel, #toDeep {
+  #mapIllum, .tap-text, #doorOff, #toDeep {
     display: inline-block; min-height: 44px; padding: 10px 16px; border-radius: 12px;
     border: 3px solid transparent;
     background:
@@ -402,7 +402,7 @@
       conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
     cursor: pointer; font-weight: 700;
   }
-  html[data-theme="dark"] #mapIllum, html[data-theme="dark"] .tap-text, html[data-theme="dark"] #doorOff, html[data-theme="dark"] #doorFeel, html[data-theme="dark"] #toDeep {
+  html[data-theme="dark"] #mapIllum, html[data-theme="dark"] .tap-text, html[data-theme="dark"] #doorOff, html[data-theme="dark"] #toDeep {
     background:
       linear-gradient(rgba(36,30,24,0.48), rgba(36,30,24,0.48)) padding-box,
       conic-gradient(from 30deg, #e2b000, #d4145a, #2b6fd6, #2f9e38, #e2b000) border-box;
@@ -437,9 +437,10 @@
   .ver-banner { flex-wrap: wrap; }
   body { padding-bottom: 150px; }
   /* Entry screen: push CTAs below the wheel watermark */
-  html[data-page="entry"] .cta-gap { margin-top: 18vh; }
+  html[data-page="entry"] .cta-gap { margin-top: 4vh; }
   html[data-page="entry"] .muted { margin-top: 0.6em; }
-  html[data-page="entry"] #bgLayer { top: 38%; }
+  .entry-wheel-space { height: 22vh; }
+  html[data-page="entry"] #bgLayer { top: 34%; width: 56vmin; }
 </style>
 </head>
 <body>
@@ -553,7 +554,7 @@ function render() {
     html += '<div class="paywall"><strong>Paywall boundary.</strong> Free illumination journey ends here. What follows is the paid full course. This is a review divider, not a real charge.</div>';
   }
   if (s.n === 1) {
-    html += '<h1 tabindex="-1">Hey there, Human!</h1><p>What\'s going on with you? How are you feeling right now?</p><div class="cta-gap"><button type="button" id="doorFeel" class="tap-text">I feel</button></div><p class="muted">Tap to name your feeling</p>';
+    html += '<h1 tabindex="-1">Hey there, Human!</h1><p>What\'s going on with you? How are you feeling right now?</p><div class="entry-wheel-space"></div><div class="cta-gap"><button type="button" id="doorFeel" class="help-btn">I feel</button></div><p class="muted">Tap to name your feeling</p>';
   }
   if (s.n === 2) {
     html += '<h1 tabindex="-1">I feel…</h1><p>Tap a feeling to explore</p><div class="grid" id="wordGrid"></div><p class="wish-line">I wish I knew what I was feeling</p><div class="cta-gap"><button type="button" id="doorOff" class="help-btn">Help me</button></div>';
@@ -645,3 +646,4 @@ render();
 </script>
 </body>
 </html>
+
