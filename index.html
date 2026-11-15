@@ -441,6 +441,19 @@
   html[data-page="entry"] .muted { margin-top: 0.6em; }
   .entry-wheel-space { height: 22vh; }
   html[data-page="entry"] #bgLayer { top: 34%; width: 56vmin; }
+
+  .map-page {
+    position: fixed; inset: 0; z-index: 200; background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .map-stage { position: relative; width: min(100%, calc(100dvh - 140px)); max-height: calc(100dvh - 140px); }
+  .map-stage img.map { width: 100%; height: auto; display: block; }
+  .map-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .map-stage path { fill: transparent; stroke: transparent; pointer-events: none; }
+  .map-back { position: absolute; top: 12px; left: 12px; z-index: 2; min-height: 40px; }
+  #mapIllum { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 2; }
+  body.map-open .wrap { visibility: hidden; }
+
 </style>
 </head>
 <body>
@@ -584,6 +597,7 @@ function render() {
     html += '<form id="emailForm"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" placeholder="name@example.com"><div class="row"><button class="primary" type="submit">Submit email</button><button type="button" id="skipEmail">Skip</button></div></form>';
   }
   main.innerHTML = html;
+  drawMap();
   document.documentElement.setAttribute("data-page", s.n === 1 ? "entry" : s.n === 4 ? "recognition" : s.n === 5 ? "illum" : s.n === 6 ? "station" : "other");
   document.documentElement.setAttribute("data-bg", "mark");
   if (s.n === 2) {
@@ -602,7 +616,7 @@ function render() {
     document.getElementById("doorFeel").onclick = () => { state.door = "know"; go(2); };
   }
   if (s.n === 4) {
-    const toWheel = document.getElementById("toWheel"); if (toWheel) toWheel.onclick = () => go(6);
+    const toWheel = document.getElementById("toWheel"); if (toWheel) toWheel.onclick = () => { state.mapLit = state.stationId; state.mapOpen = true; render(); };
     const chooseAnother = document.getElementById("chooseAnother"); if (chooseAnother) chooseAnother.onclick = () => { go(2); };
   }
   if (s.n === 6) {
@@ -643,6 +657,55 @@ if ("serviceWorker" in navigator) {
   });
 }
 render();
+
+function drawMap() {
+  const old = document.getElementById("mapPage");
+  if (old) old.remove();
+  document.body.classList.toggle("map-open", state.mapOpen);
+  if (!state.mapOpen) return;
+  const page = document.createElement("div");
+  page.id = "mapPage";
+  page.className = "map-page";
+  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel-bw.png"><svg viewBox="0 0 1253 1253"></svg></div><button type="button" class="primary" id="mapIllum">See illumination</button>';
+  const svg = page.querySelector("svg");
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  svg.appendChild(defs);
+  STATIONS.forEach((item, i) => {
+    const cx = 626, cy = 626, r0 = 468, r1 = 590;
+    const a1 = (90 - i * 30) * Math.PI / 180;
+    const a0 = a1 - 30 * Math.PI / 180;
+    const pt = (a, r) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+    const [x0, y0] = pt(a0, r1);
+    const [x1, y1] = pt(a1, r1);
+    const [x2, y2] = pt(a1, r0);
+    const [x3, y3] = pt(a0, r0);
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const d = "M " + x0 + " " + y0 + " A " + r1 + " " + r1 + " 0 0 1 " + x1 + " " + y1 + " L " + x2 + " " + y2 + " A " + r0 + " " + r0 + " 0 0 0 " + x3 + " " + y3 + " Z";
+    path.setAttribute("d", d);
+    if (state.mapLit === item.id) {
+      const clip = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+      clip.id = "stationClip";
+      clip.setAttribute("clipPathUnits", "userSpaceOnUse");
+      const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      clipPath.setAttribute("d", d);
+      clip.appendChild(clipPath);
+      defs.appendChild(clip);
+      const lit = document.createElementNS("http://www.w3.org/2000/svg", "image");
+      lit.setAttribute("href", "images/printed-wheel-color.png");
+      lit.setAttribute("width", "1253");
+      lit.setAttribute("height", "1253");
+      lit.setAttribute("clip-path", "url(#stationClip)");
+      lit.setAttribute("pointer-events", "none");
+      svg.appendChild(lit);
+    }
+    path.setAttribute("aria-label", item.name);
+    svg.appendChild(path);
+  });
+  document.body.appendChild(page);
+  document.getElementById("closeMap").onclick = () => { state.mapOpen = false; state.mapLit = 0; render(); };
+  document.getElementById("mapIllum").onclick = () => { state.mapOpen = false; go(5); };
+}
+
 </script>
 </body>
 </html>
