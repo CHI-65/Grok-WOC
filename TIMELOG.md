@@ -4,7 +4,7 @@ For client review. Clock runs on work in this Wheel of Creativity chat and on ap
 
 ## Running total
 
-14 hours 20 minutes
+14 hours 21 minutes
 
 ## By date
 
@@ -28,10 +28,10 @@ For client review. Clock runs on work in this Wheel of Creativity chat and on ap
 - Versions 3.08–3.11: Katherine Master Copy / spreadsheet content (Screen 4 feels), banner restore, entry-screen CTA positioning below watermark, “I feel” button sized to match footer buttons (48 min)
 
 ### 2026-11-15
-- Time log restructured by date with times in parentheses; restored printed black-and-white wheel with color station highlight on “See where you are”; re-enabled new-version banner (12 min)
+- Time log restructured by date with times in parentheses; restored printed black-and-white wheel with color station highlight on “See where you are”; re-enabled new-version banner; banner now starts closed (13 min)
 
 ## Notes
 Zooms: 140 min  
 Version 1.5: 10 min  
-Development: 710 min  
-**Running total: 14 hours 20 minutes**
+Development: 711 min  
+**Running total: 14 hours 21 minutes**
