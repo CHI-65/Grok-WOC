@@ -13,9 +13,12 @@
   a { color:var(--accent); }
   h1 { font-size:34px; line-height:1.15; margin:8px 0 12px; }
   h2 { font-size:26px; margin:22px 0 8px; }
+  h3 { font-size:22px; margin:18px 0 6px; }
   p { margin:0 0 12px; }
   .muted { color:var(--muted); }
   .total { border:3px solid var(--line); background:var(--card); border-radius:14px; padding:14px; font-size:28px; font-weight:700; }
+  ul { margin:0 0 16px; padding-left:1.2em; }
+  li { margin:4px 0; }
   table { width:100%; border-collapse:collapse; background:var(--card); }
   th, td { text-align:left; border-bottom:2px solid var(--line); padding:10px 8px; vertical-align:top; }
   th { font-size:16px; letter-spacing:0.04em; text-transform:uppercase; }
@@ -27,9 +30,29 @@
 <div class="wrap">
   <p><a class="back" href="index.html">Back to the app</a></p>
   <h1>Time log</h1>
-  <p class="muted">Time spent on this app. A version number opens that version, so you can see the progress.</p>
-  <p class="total">12 hours 48 minutes</p>
-  <p class="muted">Includes the Zoom call, version 1.5, and 20 clustered app sessions through Version 3.11.</p>
+  <p class="muted">Time spent on this app. Entries are listed by date with allocated time in parentheses.</p>
+  <p class="total">14 hours 8 minutes</p>
+  <p class="muted">Includes two Zoom calls, version 1.5, and development sessions through Version 3.12.</p>
+
+  <h2>By date</h2>
+  <h3>2026-10-07</h3>
+  <ul><li>Zoom call, about 4:00–5:00 PM local (60 min)</li></ul>
+  <h3>2026-10-08</h3>
+  <ul>
+    <li>Initial scaffolding PWA, versions 1.0–1.7 (90 min)</li>
+    <li>Version 1.5: approved clean wheel mark (10 min)</li>
+  </ul>
+  <h3>2026-10-09 through 2026-10-19</h3>
+  <ul><li>Core UI work: adjust mode, backgrounds, zoom/pan, station cards, printed wheel, banners, versioning, iPad layout, illumination and recognition pages, design iterations (500 min)</li></ul>
+  <h3>2026-10-14</h3>
+  <ul><li>Zoom call, 4:00–5:20 PM local (80 min)</li></ul>
+  <h3>2026-10-28</h3>
+  <ul><li>Versions 3.02–3.07: button styling, adjective sizing and fit, Help me button, Catch a wheel line, tappable controls (60 min)</li></ul>
+  <h3>2026-11-09</h3>
+  <ul><li>Versions 3.08–3.11: Katherine content updates, banner restore, entry-screen CTA positioning, “I feel” button sized to match footer buttons (48 min)</li></ul>
+  <h3>2026-11-15</h3>
+  <ul><li>Time log restructured by date with times in parentheses (this update)</li></ul>
+
   <h2>Versions</h2>
   <table>
     <thead><tr><th>Version</th><th>What changed</th></tr></thead>
@@ -103,9 +126,14 @@
       <tr><td><a class="ver" href="versions/3.05/index.html">3.05</a></td><td>Adjective text is 30% larger. The button size stays the same.</td></tr>
       <tr><td><a class="ver" href="versions/3.06/index.html">3.06</a></td><td>I wish I knew what I was feeling is text. Help me as a button the size of Back and Start over.</td></tr>
       <tr><td><a class="ver" href="versions/3.07/index.html">3.07</a></td><td>Catch a wheel says tap any wheel to try on a feeling.</td></tr>
+      <tr><td><a class="ver" href="versions/3.08/index.html">3.08</a></td><td>Screen 4 feels from Katherine Master Copy Grid.</td></tr>
+      <tr><td><a class="ver" href="versions/3.09/index.html">3.09</a></td><td>Katherine content and color fixes.</td></tr>
+      <tr><td><a class="ver" href="versions/3.10/index.html">3.10</a></td><td>Collapsible banner restored; entry CTAs below wheel.</td></tr>
+      <tr><td><a class="ver" href="versions/3.11/index.html">3.11</a></td><td>I feel button sized to match footer buttons; spacer below watermark.</td></tr>
+      <tr><td><a class="ver" href="index.html">3.12</a></td><td>Time log delineated by date with times in parentheses. Total 14h 8m.</td></tr>
     </tbody>
   </table>
-  <p class="muted">A version number opens that version of the app itself. A banner at the bottom names the version, returns to this log, and can open the current version. The current app stays on 2.5.</p>
+  <p class="muted">A version number opens that version of the app itself. The current app is on 3.12.</p>
 </div>
 </body>
 </html>
