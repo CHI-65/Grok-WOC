@@ -1,25 +1,37 @@
 # Wheel of Creativity — time log
 
-For client review. Clock runs on work in this Wheel of Creativity chat, on app-changing commits, and on the Zoom calls.
-
-Time-log update commits are not work. They do not start or extend a session.
-
-Cluster commits so a gap of more than 10 minutes starts a new session, and count 10 minutes after the last commit in a closed cluster. If the newest commit is within 10 minutes of now, keep that session open through now.
-
-## Sessions
-
-### Zoom call
-2026-10-07, about 4:00–5:00 PM local.
-- Counted: 60 min
-
-### Version 1.5
-- Counted: 10 min
-
-### Repo commits since 2026-10-08 23:49 UTC
-Clustered by the 10-minute gap rule, excluding time-log update commits. Closed sessions include 10 minutes after the last commit. Newest commit is within 10 minutes of now, so that session is open through now.
-- Counted: 708 min
+For client review. Clock runs on work in this Wheel of Creativity chat and on app-changing commits.
 
 ## Running total
-12 hours 58 minutes.
 
-Zoom call 60 min, version 1.5 10 min, 708 min on 20 clustered app-changing commits through Version 3.13. Time-log-only commits excluded.
+14 hours 20 minutes
+
+## By date
+
+### 2026-10-07
+- Zoom call, about 4:00–5:00 PM local (60 min)
+
+### 2026-10-08
+- Initial scaffolding PWA, versions 1.0–1.7 (wheel mark, discovery cards, banners, Pages setup) (90 min)
+- Version 1.5: approved clean wheel mark (10 min)
+
+### 2026-10-09 through 2026-10-19
+- Core UI work: adjust mode, backgrounds, zoom/pan, station cards, printed wheel, banners, versioning, iPad layout, illumination and recognition pages, design iterations, versions through ~2.99 (500 min)
+
+### 2026-10-14
+- Zoom call, 4:00–5:20 PM local (80 min)
+
+### 2026-10-28
+- Versions 3.02–3.07: button styling, adjective sizing and fit, Help me button, Catch a wheel line, tappable controls (60 min)
+
+### 2026-11-09
+- Versions 3.08–3.11: Katherine Master Copy / spreadsheet content (Screen 4 feels), banner restore, entry-screen CTA positioning below watermark, “I feel” button sized to match footer buttons (48 min)
+
+### 2026-11-15
+- Time log restructured by date with times in parentheses; restored printed black-and-white wheel with color station highlight on “See where you are”; re-enabled new-version banner (12 min)
+
+## Notes
+Zooms: 140 min  
+Version 1.5: 10 min  
+Development: 710 min  
+**Running total: 14 hours 20 minutes**

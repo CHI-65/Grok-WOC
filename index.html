@@ -650,7 +650,23 @@ document.getElementById("bannerHandle").onclick = () => {
   document.documentElement.setAttribute("data-banner", cur === "hide" ? "" : "hide");
 };
 
-fetch("version.json").then(r => r.json()).then(v => { document.getElementById("ver").textContent = v.version; const vl = document.getElementById("verLabel"); if (vl) vl.textContent = "You are on version " + v.version; }).catch(() => {});
+fetch("version.json").then(r => r.json()).then(v => {
+  const verEl = document.getElementById("ver");
+  if (verEl) verEl.textContent = v.version;
+  const vl = document.getElementById("verLabel");
+  if (vl) vl.textContent = "You are on version " + v.version;
+  const seen = localStorage.getItem("wocSeenVersion");
+  const updateBtn = document.getElementById("verUpdate");
+  if (updateBtn && seen && seen !== v.version) {
+    updateBtn.classList.remove("hidden");
+    updateBtn.onclick = () => {
+      localStorage.setItem("wocSeenVersion", v.version);
+      updateBtn.classList.add("hidden");
+      location.reload();
+    };
+  }
+  if (!seen) localStorage.setItem("wocSeenVersion", v.version);
+}).catch(() => {});
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch(() => {});
