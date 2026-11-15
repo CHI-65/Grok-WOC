@@ -698,7 +698,7 @@ function drawMap() {
   const page = document.createElement("div");
   page.id = "mapPage";
   page.className = "map-page";
-  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png"><svg viewBox="0 0 1253 1253"></svg></div><button type="button" class="primary" id="mapIllum">See illumination</button>';
+  page.innerHTML = '<button type="button" class="map-back" id="closeMap">Back</button><div class="map-stage"><img class="map" alt="Printed Wheel of Creativity" src="images/printed-wheel.png?v=319"><svg viewBox="0 0 1253 1253"></svg></div><button type="button" class="primary" id="mapIllum">See illumination</button>';
   const svg = page.querySelector("svg");
   const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
   svg.appendChild(defs);
@@ -723,7 +723,7 @@ function drawMap() {
       clip.appendChild(clipPath);
       defs.appendChild(clip);
       const lit = document.createElementNS("http://www.w3.org/2000/svg", "image");
-      lit.setAttribute("href", "images/printed-wheel-color.png");
+      lit.setAttribute("href", "images/printed-wheel-color.png?v=319");
       lit.setAttribute("width", "1253");
       lit.setAttribute("height", "1253");
       lit.setAttribute("clip-path", "url(#stationClip)");
