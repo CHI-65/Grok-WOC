@@ -455,9 +455,22 @@
   #mapIllum { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 2; }
   body.map-open .wrap { visibility: hidden; }
 
+
+  .top-update {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 400;
+    background: #ffd36a; color: #1c1612;
+    font: 700 22px/1.2 Georgia, "Iowan Old Style", Palatino, serif;
+    text-align: center; padding: 14px 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    animation: verFlash 1s linear infinite;
+    cursor: pointer;
+  }
+  .top-update.hidden { display: none; }
+
 </style>
 </head>
 <body>
+<div id="topUpdate" class="top-update hidden" role="button" tabindex="0">New version available — tap to load</div>
 <div class="ver-banner" role="status"><button type="button" class="banner-handle" id="bannerHandle" aria-label="Show version bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="verLabel">You are on version 3.10</span><button type="button" id="verUpdate" class="ver-update hidden">New version available</button><a href="timelog.html">Time log</a></div>
 <div class="wrap">
   <header class="app">
@@ -657,14 +670,16 @@ fetch("version.json").then(r => r.json()).then(v => {
   const vl = document.getElementById("verLabel");
   if (vl) vl.textContent = "You are on version " + v.version;
   const seen = localStorage.getItem("wocSeenVersion");
-  const updateBtn = document.getElementById("verUpdate");
-  if (updateBtn && seen && seen !== v.version) {
-    updateBtn.classList.remove("hidden");
-    updateBtn.onclick = () => {
+  const topUpdate = document.getElementById("topUpdate");
+  if (topUpdate && seen && seen !== v.version) {
+    topUpdate.classList.remove("hidden");
+    const loadNew = () => {
       localStorage.setItem("wocSeenVersion", v.version);
-      updateBtn.classList.add("hidden");
+      topUpdate.classList.add("hidden");
       location.reload();
     };
+    topUpdate.onclick = loadNew;
+    topUpdate.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") loadNew(); };
   }
   if (!seen) localStorage.setItem("wocSeenVersion", v.version);
 }).catch(() => {});
