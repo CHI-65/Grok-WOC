@@ -422,14 +422,15 @@
   }
   .banner-handle {
     position: absolute; top: 2px; left: 50%; transform: translateX(-50%);
-    width: 64px; height: 22px; border-radius: 11px; background: #ffd36a; color: #1c1612;
+    width: 72px; height: 28px; border-radius: 14px; background: #ffd36a; color: #1c1612;
     display: flex; align-items: center; justify-content: center; padding: 0;
     min-height: 0; z-index: 2;
   }
   .banner-handle svg { width: 18px; height: 18px; display: block; }
-  html[data-banner="hide"] .ver-banner { transform: translateY(calc(100% - 26px)); }
-  html[data-banner="hide"] footer.tools { bottom: 32px; }
+  html[data-banner="hide"] .ver-banner { transform: translateY(calc(100% - 36px)); }
+  html[data-banner="hide"] footer.tools { bottom: 48px; }
   html[data-banner="hide"] .banner-handle svg { transform: rotate(180deg); }
+  .banner-handle { pointer-events: auto; }
   .ver-banner a, .ver-banner button { color: #ffd36a; font-weight: 700; font-size: 22px; background: transparent; border: 0; padding: 0; min-height: 0; text-align: center; }
   .ver-update.hidden { display: none; }
   .ver-update { display: block; width: 100%; margin-top: 6px; color: #1c1612; background: #ffd36a; border-radius: 10px; padding: 10px 12px; text-align: center; animation: verFlash 1s linear infinite; }
