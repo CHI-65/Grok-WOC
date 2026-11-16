@@ -17,9 +17,9 @@ Cluster commits so a gap of more than 10 minutes starts a new session, and count
 
 ### Repo commits since 2026-10-08 23:49 UTC
 Clustered by the 10-minute gap rule, excluding time-log update commits. Closed sessions include 10 minutes after the last commit. Newest commit is more than 10 minutes before now, so that session is closed.
-- Counted: 746 min
+- Counted: 558 min
 
 ## Running total
-13 hours 36 minutes.
+10 hours 28 minutes.
 
-Zoom call 60 min, version 1.5 10 min, 746 min on 23 clustered app-changing commits through Version 3.21. Time-log-only commits excluded.
+Zoom call 60 min, version 1.5 10 min, 558 min on 17 clustered app-changing commits through Version 3.21. Time-log-only commits excluded.
